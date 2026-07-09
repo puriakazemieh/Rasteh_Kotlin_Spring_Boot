@@ -1,0 +1,52 @@
+package com.kazemieh.rasteh.catalog.api
+
+import com.kazemieh.rasteh.catalog.api.dto.AdminCreateVariantRequest
+import com.kazemieh.rasteh.catalog.api.dto.AdminInventoryAdjustRequest
+import com.kazemieh.rasteh.catalog.api.dto.AdminInventorySetRequest
+import com.kazemieh.rasteh.catalog.api.dto.AdminUpdateVariantRequest
+import com.kazemieh.rasteh.catalog.application.AdminCatalogService
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@PreAuthorize("hasRole('ADMIN')")
+class AdminVariantController(
+    private val adminCatalogService: AdminCatalogService
+) {
+
+    @PostMapping("/api/admin/products/{productId}/variants")
+    fun createVariant(
+        @PathVariable productId: Long,
+        @Valid @RequestBody req: AdminCreateVariantRequest
+    ) = adminCatalogService.createVariant(productId, req)
+
+    @PatchMapping("/api/admin/variants/{variantId}")
+    fun updateVariant(
+        @PathVariable variantId: Long,
+        @Valid @RequestBody req: AdminUpdateVariantRequest
+    ) = adminCatalogService.updateVariant(variantId, req)
+
+    @DeleteMapping("/api/admin/variants/{variantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteVariant(@PathVariable variantId: Long) {
+        adminCatalogService.deleteVariant(variantId)
+    }
+
+    @GetMapping("/api/admin/variants/{variantId}/inventory")
+    fun getInventory(@PathVariable variantId: Long) =
+        adminCatalogService.getInventory(variantId)
+
+    @PutMapping("/api/admin/variants/{variantId}/inventory")
+    fun setInventory(
+        @PathVariable variantId: Long,
+        @Valid @RequestBody req: AdminInventorySetRequest
+    ) = adminCatalogService.setInventory(variantId, req)
+
+    @PatchMapping("/api/admin/variants/{variantId}/inventory/adjust")
+    fun adjustInventory(
+        @PathVariable variantId: Long,
+        @Valid @RequestBody req: AdminInventoryAdjustRequest
+    ) = adminCatalogService.adjustInventory(variantId, req)
+}

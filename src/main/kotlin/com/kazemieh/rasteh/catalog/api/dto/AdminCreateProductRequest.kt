@@ -1,0 +1,21 @@
+package com.kazemieh.rasteh.catalog.api.dto
+
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
+import java.math.BigDecimal
+
+// ---------- Product ----------
+data class AdminCreateProductRequest(
+    val categoryId: Long? = null,
+    @field:NotBlank @field:Size(max = 255) val title: String,
+    @field:NotBlank @field:Size(max = 280) val slug: String,
+    val description: String? = null,
+    val brand: String? = null,
+    val attributes: List<ProductAttributeDto>? = null,
+    val basePrice: BigDecimal? = null,
+    val discountedPrice: BigDecimal? = null,
+    val isActive: Boolean = true,
+    val variants: List<AdminCreateVariantRequest>? = null,
+    val sku: String? = null,
+    val initialOnHand: Int? = null
+)

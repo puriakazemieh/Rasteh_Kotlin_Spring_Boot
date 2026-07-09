@@ -1,0 +1,25 @@
+package com.kazemieh.rasteh.catalog.api.mapper
+
+import com.kazemieh.rasteh.catalog.api.dto.*
+import com.kazemieh.rasteh.catalog.persistence.entity.*
+
+object CatalogMapper {
+
+    fun toImage(i: ProductImageEntity) = ProductImageResponse(i.url, i.sortOrder)
+
+    fun toVideo(v: ProductVideoEntity) = ProductVideoResponse(v.url, v.sortOrder)
+
+    fun toVariant(v: ProductVariantEntity, availableQty: Int): VariantResponse {
+        val options = v.optionValues.associate { it.optionType.name to it.value }
+        return VariantResponse(
+            id = v.id,
+            sku = v.sku,
+            price = v.price,
+            discountedPrice = v.discountedPrice,
+            compareAtPrice = v.compareAtPrice,
+            options = options,
+            availableQty = availableQty,
+            isActive = v.isActive
+        )
+    }
+}

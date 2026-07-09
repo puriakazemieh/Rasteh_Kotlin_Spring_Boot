@@ -1,0 +1,84 @@
+package com.kazemieh.rasteh.payment.application
+
+import com.kazemieh.rasteh.order.application.OrderService
+import com.kazemieh.rasteh.order.persistence.entity.OrderStatus
+import com.kazemieh.rasteh.payment.persistence.PaymentRepository
+import com.kazemieh.rasteh.payment.persistence.entity.PaymentEntity
+import com.kazemieh.rasteh.payment.persistence.entity.PaymentStatus
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+
+@Service
+class PaymentService(
+    private val zarinPalService: ZarinPalService,
+    private val paymentRepository: PaymentRepository,
+    private val orderService: OrderService,
+    private val walletService: com.kazemieh.rasteh.wallet.application.WalletService,
+    private val transactionRepository: com.kazemieh.rasteh.wallet.persistence.WalletTransactionRepository
+) {
+
+    @Transactional
+    fun startPayment(orderId: Long?, amount: BigDecimal, userId: Long, walletTransactionId: Long? = null): String? {
+        val payment = PaymentEntity(
+            orderId = orderId,
+            walletTransactionId = walletTransactionId,
+            amount = amount,
+            status = PaymentStatus.PENDING,
+            authority = ""
+        )
+        val savedPayment = paymentRepository.save(payment)
+
+        val paymentUrl = zarinPalService.createPaymentRequest(amount.toLong(), (orderId ?: "wallet_$walletTransactionId").toString())
+
+        if (paymentUrl != null) {
+            val authority = paymentUrl.substringAfterLast("/")
+            savedPayment.authority = authority
+            paymentRepository.save(savedPayment)
+        }
+
+        return paymentUrl
+    }
+
+    @Transactional
+    fun verifyPayment(authority: String, status: String): Boolean {
+        val payment = paymentRepository.findByAuthority(authority)
+            ?: return false // پرداخت پیدا نشد
+
+        // 4. جلوگیری از پردازش تکراری (Idempotency)
+        if (payment.status != PaymentStatus.PENDING) {
+            // این تراکنش قبلاً پردازش شده است. فقط نتیجه قبلی را برمی‌گردانیم.
+            return payment.status == PaymentStatus.SUCCESS
+        }
+
+        // 2. عدم کنسل کردن سفارش در صورت انصراف کاربر
+        if (status != "OK") {
+            payment.status = PaymentStatus.FAILED
+            paymentRepository.save(payment)
+            // دیگر سفارش را کنسل نمی‌کنیم. کاربر می‌تواند دوباره تلاش کند.
+            return false
+        }
+
+        val verificationResponse = zarinPalService.verifyPayment(authority, payment.amount.toLong())
+
+        if (verificationResponse.isSuccess) {
+            payment.status = PaymentStatus.SUCCESS
+            payment.refId = verificationResponse.refId
+            paymentRepository.save(payment)
+
+            if (payment.orderId != null) {
+                orderService.updateStatus(payment.orderId!!, OrderStatus.PROCESSING)
+                orderService.clearCartAfterSuccessfulPayment(payment.orderId!!)
+            } else if (payment.walletTransactionId != null) {
+                walletService.confirmTransaction(payment.walletTransactionId!!, payment.refId ?: "")
+            }
+
+            return true
+        } else {
+            payment.status = PaymentStatus.FAILED
+            paymentRepository.save(payment)
+            // در صورت شکست در وریفای هم سفارش را کنسل نمی‌کنیم.
+            return false
+        }
+    }
+}

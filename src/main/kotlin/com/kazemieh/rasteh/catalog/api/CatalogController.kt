@@ -1,0 +1,57 @@
+package com.kazemieh.rasteh.catalog.api
+
+import com.kazemieh.rasteh.catalog.api.dto.PageResponse
+import com.kazemieh.rasteh.catalog.api.dto.ProductDetailResponse
+import com.kazemieh.rasteh.catalog.api.dto.ProductSummaryResponse
+import com.kazemieh.rasteh.catalog.application.CatalogService
+import com.kazemieh.rasteh.shared.security.UserPrincipal
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.*
+import java.math.BigDecimal
+
+@RestController
+@RequestMapping("/api")
+class CatalogController(
+    private val catalogService: CatalogService
+) {
+
+    @GetMapping("/categories")
+    fun categories() = catalogService.categoriesTree()
+
+    @GetMapping("/products")
+    fun products(
+        @RequestParam(required = false) q: String?,
+        @RequestParam(required = false) categoryId: Long?,
+        @RequestParam(required = false) categorySlug: String?,
+        @RequestParam(required = false) options: Map<String, String>?,
+        @RequestParam(required = false) minPrice: BigDecimal?,
+        @RequestParam(required = false) maxPrice: BigDecimal?,
+        @RequestParam(required = false) inStock: Boolean?,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int,
+        @RequestParam(required = false) sort: String?, // newest | price_asc | price_desc
+        @RequestParam(required = false, defaultValue = "false") discountedOnly: Boolean,
+        @AuthenticationPrincipal principal: UserPrincipal?,
+    ): PageResponse<ProductSummaryResponse> =
+        catalogService.listProducts(
+            q = q,
+            categoryId = categoryId,
+            options = options,
+            minPrice = minPrice,
+            maxPrice = maxPrice,
+            inStock = inStock,
+            page = page,
+            size = size,
+            categorySlug = categorySlug,
+            sort = sort,
+            discountedOnly = discountedOnly,
+            currentUserId = principal?.id
+        )
+
+    @GetMapping("/products/{slug}")
+    fun productDetail(
+        @PathVariable slug: String,
+        @AuthenticationPrincipal principal: UserPrincipal?,
+    ): ProductDetailResponse =
+        catalogService.productDetail(slug, principal?.id)
+}
