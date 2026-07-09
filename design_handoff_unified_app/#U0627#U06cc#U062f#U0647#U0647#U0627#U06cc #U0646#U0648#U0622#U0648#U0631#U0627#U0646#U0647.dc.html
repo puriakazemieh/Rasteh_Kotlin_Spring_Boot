@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin:0; background:oklch(0.95 0.012 300); overflow:auto; -webkit-overflow-scrolling:touch; }
+    * { font-family:'Vazirmatn', sans-serif; box-sizing:border-box; }
+    ::-webkit-scrollbar { height:8px; width:8px; }
+    ::-webkit-scrollbar-thumb { background:oklch(0.8 0.02 300); border-radius:8px; }
+    input, textarea { font-family:'Vazirmatn', sans-serif; }
+    a { color:oklch(0.5 0.19 300); }
+    a:hover { color:oklch(0.42 0.19 300); }
+  </style>
+</helmet>
+
+<div dir="rtl" style="padding:34px 40px 80px; direction:rtl;">
+
+  <div style="max-width:960px; margin-bottom:26px;">
+    <div style="display:inline-block; font-size:11px; font-weight:700; color:oklch(0.5 0.19 300); background:oklch(0.95 0.03 300); border:1px solid oklch(0.85 0.05 300); padding:4px 12px; border-radius:999px; margin-bottom:12px;">گالری ایده‌ها · نسخهٔ کاوش</div>
+    <h1 style="font-size:22px; margin:0 0 6px; color:oklch(0.22 0.02 280); font-weight:800;">ایده‌های نوآورانه برای اپلیکیشن بازارچهٔ محلی</h1>
+    <p style="font-size:13.5px; line-height:1.9; color:oklch(0.46 0.02 280); margin:0;">برگرفته از تحلیل دیوار، شیپور و تهران‌لاله‌زار و همچنین اسکرین‌شات‌های بازار (کمدا/باسلام/ترب) — به‌علاوهٔ ۲۰ ایدهٔ فراتر از این پلتفرم‌ها. هر کاشی یک صفحهٔ واقعی و قابل‌کلیک است؛ روی آن بزنید یا از نوار بالا پرش کنید. برچسب <b style="color:oklch(0.5 0.13 220)">اقتباسی</b> = الهام‌گرفته از سه سایت، <b style="color:oklch(0.5 0.16 300)">نوآورانه</b> = فراتر از آن‌ها.</p>
+  </div>
+
+  <div style="display:flex; gap:7px; flex-wrap:wrap; margin-bottom:26px; max-width:1000px;">
+    <div onclick="{{ goScreen }}" data-s="hub" style="{{ hubTabStyle }}">◉ همهٔ ایده‌ها</div>
+    <sc-for list="{{ screenTabs }}" as="tab" hint-placeholder-count="20">
+      <div onclick="{{ goScreen }}" data-s="{{ tab.id }}" style="{{ tab.style }}">{{ tab.label }}</div>
+    </sc-for>
+  </div>
+
+  <div style="display:flex; gap:28px; align-items:flex-start;">
+    <div style="width:378px; flex:0 0 auto; border:10px solid oklch(0.18 0.02 280); border-radius:44px; background:oklch(0.18 0.02 280); box-shadow:0 24px 60px oklch(0 0 0/0.28);">
+      <div style="background:oklch(0.985 0.005 300); border-radius:34px; overflow:hidden; height:800px; display:flex; flex-direction:column; position:relative;">
+
+        <div style="height:30px; flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; padding:0 22px; font-size:11px; font-weight:600; color:oklch(0.2 0.01 280); z-index:5;">
+          <span>9:41</span>
+          <span style="display:flex; gap:5px; align-items:center;">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10h2v7H3zM8 7h2v10H8zM13 4h2v13h-2zM18 12h2v5h-2z"></path></svg>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 6.5H8a2.5 2.5 0 0 0-2.5 2.5v6A2.5 2.5 0 0 0 8 17.5h9a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 17 6.5ZM19.5 10.5v3"></path></svg>
+          </span>
+        </div>
+
+        <!-- ============================ HUB ============================ -->
+        <sc-if value="{{ sc_hub }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1; overflow-y:auto;">
+          <div style="padding:20px 18px 16px; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white;">
+            <div style="font-size:17px; font-weight:800;">بازارچهٔ محلی</div>
+            <div style="font-size:12px; opacity:0.85; margin-top:3px;">۲۰ قابلیت جدید — پاساژ گلستان</div>
+          </div>
+          <div style="padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:11px;">
+            <sc-for list="{{ hubItems }}" as="it" hint-placeholder-count="20">
+              <div onclick="{{ goScreen }}" data-s="{{ it.id }}" style="border:1px solid oklch(0.9 0.01 300); border-radius:15px; background:white; padding:13px 12px; cursor:pointer; display:flex; flex-direction:column; gap:9px; min-height:118px; box-shadow:0 2px 8px oklch(0.5 0.05 300/0.05);">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="width:36px; height:36px; border-radius:11px; background:{{ it.iconBg }}; display:flex; align-items:center; justify-content:center; flex:0 0 auto;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="{{ it.iconColor }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ it.d }}"></path></svg>
+                  </div>
+                  <span style="{{ it.tagStyle }}">{{ it.tagLabel }}</span>
+                </div>
+                <div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280); line-height:1.35;">{{ it.label }}</div>
+                <div style="font-size:10.5px; color:oklch(0.55 0.02 280); line-height:1.5; margin-top:-2px;">{{ it.desc }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 1 · AI CONCIERGE ==================== -->
+        <sc-if value="{{ sc_concierge }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v3M8 8h8v9H8zM10 12h4M6 20h12"></path></svg></div>
+            <div>
+              <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">دستیار خرید هوشمند</div>
+              <div style="font-size:10px; color:oklch(0.55 0.13 150);">آنلاین · پاسخ فوری</div>
+            </div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; background:oklch(0.97 0.008 300);">
+            <div style="align-self:flex-start; max-width:80%; background:white; border:1px solid oklch(0.91 0.01 300); border-radius:14px 14px 14px 4px; padding:10px 13px; font-size:12px; color:oklch(0.3 0.02 280); line-height:1.7;">سلام! دنبال چی می‌گردی؟ بودجه و سلیقه‌ات رو بگو تا از بین فروشگاه‌های پاساژ بهترین‌ها رو بهت معرفی کنم.</div>
+            <div style="align-self:flex-end; max-width:80%; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:14px 14px 4px 14px; padding:10px 13px; font-size:12px; line-height:1.7;">یه هدیهٔ تولد زیر ۵۰۰ هزار تومن برای خواهرم می‌خوام</div>
+            <div style="align-self:flex-start; max-width:88%; background:white; border:1px solid oklch(0.91 0.01 300); border-radius:14px 14px 14px 4px; padding:12px 13px; font-size:12px; color:oklch(0.3 0.02 280); line-height:1.7;">
+              سه پیشنهاد از پاساژ برات پیدا کردم:
+              <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; gap:10px; align-items:center; border:1px solid oklch(0.92 0.01 300); border-radius:10px; padding:8px;"><div style="width:38px; height:38px; border-radius:8px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:17px;">🎁</div><div style="flex:1;"><div style="font-size:11.5px; font-weight:700; color:oklch(0.26 0.02 280);">ست دفتر و خودکار طرح‌دار</div><div style="font-size:10px; color:oklch(0.55 0.02 280);">لوازم‌التحریر رها · طبقه ۲ · ۳۲۰٬۰۰۰ ت</div></div></div>
+                <div style="display:flex; gap:10px; align-items:center; border:1px solid oklch(0.92 0.01 300); border-radius:10px; padding:8px;"><div style="width:38px; height:38px; border-radius:8px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:17px;">🕯</div><div style="flex:1;"><div style="font-size:11.5px; font-weight:700; color:oklch(0.26 0.02 280);">شمع معطر دست‌ساز</div><div style="font-size:10px; color:oklch(0.55 0.02 280);">نگارخانه آریا · همکف · ۲۴۰٬۰۰۰ ت</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:0 0 auto; padding:10px 14px; border-top:1px solid oklch(0.91 0.01 300); display:flex; gap:8px; align-items:center; background:white;">
+            <div style="flex:1; height:38px; border-radius:999px; background:oklch(0.96 0.01 300); display:flex; align-items:center; padding:0 14px; font-size:12px; color:oklch(0.55 0.02 280);">پیامت رو بنویس…</div>
+            <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 20 4l-6 16-3-7-7-1Z"></path></svg></div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 2 · INDOOR WAYFINDING ==================== -->
+        <sc-if value="{{ sc_wayfind }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">مسیریاب داخل پاساژ</div>
+          </div>
+          <div style="flex:1; overflow-y:auto;">
+            <div style="margin:14px 16px; display:flex; gap:8px;">
+              <div style="flex:1; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:11px; padding:10px 12px; font-size:11.5px; text-align:center; font-weight:700;">طبقه ۱</div>
+              <div style="flex:1; background:oklch(0.96 0.01 300); color:oklch(0.4 0.02 280); border-radius:11px; padding:10px 12px; font-size:11.5px; text-align:center; font-weight:600;">همکف</div>
+              <div style="flex:1; background:oklch(0.96 0.01 300); color:oklch(0.4 0.02 280); border-radius:11px; padding:10px 12px; font-size:11.5px; text-align:center; font-weight:600;">طبقه ۲</div>
+            </div>
+            <div style="margin:0 16px; border:1px solid oklch(0.9 0.01 300); border-radius:16px; background:oklch(0.97 0.008 300); height:260px; position:relative; overflow:hidden;">
+              <div style="position:absolute; inset:14px; display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(3,1fr); gap:7px;">
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px;"></div>
+                <div style="background:oklch(0.88 0.06 300); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:oklch(0.4 0.12 300);">کوروش</div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px;"></div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px;"></div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px; grid-column:1;"></div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px; grid-column:2 / span 2;"></div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px;"></div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px;"></div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px; grid-column:2;"></div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px;"></div>
+                <div style="background:oklch(0.92 0.02 300); border-radius:7px;"></div>
+              </div>
+              <!-- dashed route -->
+              <svg viewBox="0 0 300 260" style="position:absolute; inset:0; width:100%; height:100%;"><path d="M60 220 L60 150 L150 150 L150 70" fill="none" stroke="oklch(0.5 0.19 300)" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round"></path></svg>
+              <div style="position:absolute; left:48px; bottom:28px; width:24px; height:24px; border-radius:50%; background:oklch(0.55 0.13 150); border:3px solid white; box-shadow:0 2px 6px oklch(0 0 0/0.25); display:flex; align-items:center; justify-content:center;"><span style="width:6px; height:6px; background:white; border-radius:50%;"></span></div>
+              <div style="position:absolute; right:120px; top:44px; display:flex; flex-direction:column; align-items:center;"><svg viewBox="0 0 24 24" width="26" height="26" fill="oklch(0.55 0.22 25)"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"></path></svg></div>
+            </div>
+            <div style="margin:14px 16px; padding:13px 14px; border:1px solid oklch(0.9 0.01 300); border-radius:13px; background:white; display:flex; align-items:center; gap:12px;">
+              <div style="width:40px; height:40px; border-radius:11px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:19px;">📱</div>
+              <div style="flex:1;"><div style="font-size:13px; font-weight:700; color:oklch(0.26 0.02 280);">موبایل کوروش</div><div style="font-size:11px; color:oklch(0.55 0.02 280);">طبقه ۱، واحد ۲۴ · ۹۰ متر · ۲ دقیقه پیاده</div></div>
+              <div style="font-size:11px; font-weight:700; color:white; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); border-radius:9px; padding:8px 12px;">شروع مسیر</div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 3 · LIVE SHOPPING ==================== -->
+        <sc-if value="{{ sc_live }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; background:oklch(0.15 0.02 285);">
+          <div style="flex:1; position:relative; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg, oklch(0.35 0.08 300), oklch(0.2 0.03 285));">
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:70px; opacity:0.35;">👗</div>
+            <div onclick="{{ goScreen }}" data-s="hub" style="position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:oklch(0 0 0/0.4); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="position:absolute; top:16px; left:16px; display:flex; gap:8px; align-items:center;">
+              <span style="background:oklch(0.58 0.22 25); color:white; font-size:10px; font-weight:800; padding:4px 9px; border-radius:6px;">● زنده</span>
+              <span style="background:oklch(0 0 0/0.4); color:white; font-size:10px; font-weight:600; padding:4px 9px; border-radius:6px;">👁 ۱٬۲۴۰ نفر</span>
+            </div>
+            <div style="position:absolute; bottom:96px; left:14px; display:flex; flex-direction:column; gap:12px; align-items:center;">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:2px;"><div style="width:40px; height:40px; border-radius:50%; background:oklch(0 0 0/0.35); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="19" height="19" fill="oklch(0.62 0.2 20)" stroke="none"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5.5 6 5.5c2 0 3.2 1.3 4 2.4.8-1.1 2-2.4 4-2.4 3.5 0 5 3.5 3.5 6.5C19 16.5 12 21 12 21Z"></path></svg></div><span style="font-size:9px; color:white;">۸۹۰</span></div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:2px;"><div style="width:40px; height:40px; border-radius:50%; background:oklch(0 0 0/0.35); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="1.8"><path d="M4 5h16v11H9l-5 4V5Z"></path></svg></div><span style="font-size:9px; color:white;">چت</span></div>
+              <div style="width:40px; height:40px; border-radius:50%; background:oklch(0 0 0/0.35); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M4 12v7h16v-7M12 3v12M8 7l4-4 4 4"></path></svg></div>
+            </div>
+            <div style="position:absolute; bottom:96px; right:14px; display:flex; flex-direction:column; gap:6px; max-width:190px;">
+              <div style="background:oklch(0 0 0/0.35); border-radius:10px; padding:6px 9px; font-size:10.5px; color:white;"><b>سارا:</b> رنگ صورتیش هست؟ 😍</div>
+              <div style="background:oklch(0 0 0/0.35); border-radius:10px; padding:6px 9px; font-size:10.5px; color:white;"><b>مهدی:</b> سایز L موجوده؟</div>
+            </div>
+          </div>
+          <div style="flex:0 0 auto; background:white; padding:12px 14px; display:flex; align-items:center; gap:11px;">
+            <div style="width:46px; height:46px; border-radius:10px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:22px;">👚</div>
+            <div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">بلوز کتان بهاره — گالری رافیا</div><div style="display:flex; gap:7px; align-items:center; margin-top:2px;"><span style="font-size:13px; font-weight:800; color:oklch(0.5 0.19 300);">۲۸۰٬۰۰۰ ت</span><span style="font-size:10px; color:white; background:oklch(0.58 0.22 25); border-radius:5px; padding:2px 6px; font-weight:700;">فقط تا پایان پخش</span></div></div>
+            <div style="font-size:12px; font-weight:700; color:white; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); border-radius:10px; padding:11px 14px;">خرید</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 4 · FLASH DEALS ==================== -->
+        <sc-if value="{{ sc_flash }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:16px; background:linear-gradient(135deg, oklch(0.62 0.2 25), oklch(0.55 0.2 15)); color:white; flex:0 0 auto;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+              <div style="font-size:15px; font-weight:800;">تخفیف‌های ساعتی پاساژ ⚡</div>
+            </div>
+            <div style="margin-top:12px; display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-size:11.5px; opacity:0.9;">تا پایان این دوره:</span>
+              <div style="display:flex; gap:6px;">
+                <span style="background:oklch(0 0 0/0.25); border-radius:8px; padding:5px 9px; font-size:15px; font-weight:800; font-variant-numeric:tabular-nums;">{{ flashClock }}</span>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:11px;">
+            <sc-for list="{{ flashDeals }}" as="d" hint-placeholder-count="4">
+              <div style="display:flex; gap:12px; align-items:center; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:11px; background:white;">
+                <div style="width:52px; height:52px; border-radius:11px; background:oklch(0.94 0.02 30); display:flex; align-items:center; justify-content:center; font-size:24px; flex:0 0 auto;">{{ d.emoji }}</div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">{{ d.name }}</div>
+                  <div style="font-size:10px; color:oklch(0.55 0.02 280); margin-top:1px;">{{ d.shop }}</div>
+                  <div style="display:flex; gap:7px; align-items:center; margin-top:5px;">
+                    <span style="font-size:13px; font-weight:800; color:oklch(0.58 0.22 25);">{{ d.price }}</span>
+                    <span style="font-size:10px; color:oklch(0.6 0.02 280); text-decoration:line-through;">{{ d.old }}</span>
+                    <span style="font-size:9.5px; color:white; background:oklch(0.58 0.22 25); border-radius:5px; padding:2px 6px; font-weight:800;">{{ d.off }}</span>
+                  </div>
+                  <div style="margin-top:7px; height:5px; border-radius:99px; background:oklch(0.93 0.01 300); overflow:hidden;"><div style="width:{{ d.bar }}; height:100%; background:linear-gradient(90deg, oklch(0.62 0.2 25), oklch(0.7 0.18 40));"></div></div>
+                  <div style="font-size:9px; color:oklch(0.55 0.02 280); margin-top:3px;">{{ d.left }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 5 · GROUP BUY ==================== -->
+        <sc-if value="{{ sc_groupbuy }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">خرید گروهی</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="height:150px; border-radius:16px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:52px;">🫖</div>
+            <div style="font-size:15px; font-weight:800; color:oklch(0.24 0.02 280); margin-top:14px;">سرویس چای‌خوری چینی ۱۲ پارچه</div>
+            <div style="font-size:11.5px; color:oklch(0.55 0.02 280); margin-top:3px;">بلور و چینی نگار · طبقه ۲</div>
+            <div style="margin-top:14px; display:flex; align-items:center; gap:14px;">
+              <div><div style="font-size:10px; color:oklch(0.55 0.02 280);">قیمت تکی</div><div style="font-size:14px; color:oklch(0.5 0.02 280); text-decoration:line-through;">۱٬۲۰۰٬۰۰۰</div></div>
+              <div><div style="font-size:10px; color:oklch(0.5 0.13 150); font-weight:700;">قیمت گروهی</div><div style="font-size:18px; font-weight:800; color:oklch(0.5 0.13 150);">۸۹۰٬۰۰۰ ت</div></div>
+            </div>
+            <div style="margin-top:16px; border:1px solid oklch(0.9 0.01 300); border-radius:14px; padding:14px; background:white;">
+              <div style="display:flex; justify-content:space-between; font-size:11.5px; color:oklch(0.4 0.02 280); font-weight:600;"><span>۴ نفر از ۵ نفر پیوستند</span><span style="color:oklch(0.5 0.13 150);">۱ نفر تا فعال‌شدن!</span></div>
+              <div style="margin-top:9px; height:8px; border-radius:99px; background:oklch(0.93 0.01 300); overflow:hidden;"><div style="width:80%; height:100%; background:linear-gradient(90deg, oklch(0.55 0.13 150), oklch(0.65 0.15 155));"></div></div>
+              <div style="margin-top:12px; display:flex; gap:-8px;">
+                <div style="display:flex;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); border:2px solid white; display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:700;">ز</div>
+                  <div style="width:32px; height:32px; border-radius:50%; background:oklch(0.6 0.13 200); border:2px solid white; margin-right:-8px; display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:700;">ک</div>
+                  <div style="width:32px; height:32px; border-radius:50%; background:oklch(0.6 0.14 60); border:2px solid white; margin-right:-8px; display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:700;">ن</div>
+                  <div style="width:32px; height:32px; border-radius:50%; background:oklch(0.6 0.16 25); border:2px solid white; margin-right:-8px; display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:700;">س</div>
+                  <div style="width:32px; height:32px; border-radius:50%; background:oklch(0.92 0.01 300); border:2px dashed oklch(0.7 0.05 300); margin-right:-8px; display:flex; align-items:center; justify-content:center; color:oklch(0.5 0.1 300); font-size:15px;">+</div>
+                </div>
+              </div>
+            </div>
+            <div onclick="{{ goScreen }}" data-s="hub" style="margin-top:16px; text-align:center; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:12px; padding:13px; font-size:13px; font-weight:700; cursor:pointer;">پیوستن به گروه — ۸۹۰٬۰۰۰ ت</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 6 · LOYALTY CLUB ==================== -->
+        <sc-if value="{{ sc_loyalty }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">باشگاه وفاداری پاساژ</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="border-radius:18px; background:linear-gradient(135deg, oklch(0.4 0.12 300), oklch(0.28 0.06 285)); padding:18px; color:white; position:relative; overflow:hidden;">
+              <div style="position:absolute; top:-30px; left:-20px; width:120px; height:120px; border-radius:50%; background:oklch(1 0 0/0.06);"></div>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div><div style="font-size:11px; opacity:0.8;">کارت طلایی</div><div style="font-size:17px; font-weight:800; margin-top:2px;">علی رضایی</div></div>
+                <span style="font-size:11px; background:linear-gradient(135deg, oklch(0.8 0.13 85), oklch(0.7 0.13 70)); color:oklch(0.28 0.06 60); font-weight:800; padding:5px 11px; border-radius:999px;">🏆 سطح طلایی</span>
+              </div>
+              <div style="margin-top:22px; display:flex; justify-content:space-between; align-items:flex-end;">
+                <div><div style="font-size:26px; font-weight:800;">۳٬۸۴۰</div><div style="font-size:10px; opacity:0.8;">امتیاز قابل استفاده</div></div>
+                <div style="width:52px; height:52px; border-radius:10px; background:white; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="34" height="34" fill="oklch(0.2 0.02 280)"><path d="M3 3h6v6H3zM11 3h2v2h-2zM15 3h6v6h-6zM3 15h6v6H3zM15 15h2v2h-2zM19 15h2v2h-2zM15 19h2v2h-2zM19 19h2v2h-2zM11 7h2v4h-2zM11 13h4v2h-4z"></path></svg></div>
+              </div>
+            </div>
+            <div style="margin-top:14px; font-size:11px; color:oklch(0.5 0.02 280); display:flex; justify-content:space-between;"><span>۱٬۱۶۰ امتیاز تا سطح <b style="color:oklch(0.5 0.19 300)">الماس</b></span><span>۳۸۴۰/۵۰۰۰</span></div>
+            <div style="margin-top:7px; height:8px; border-radius:99px; background:oklch(0.93 0.01 300); overflow:hidden;"><div style="width:77%; height:100%; background:linear-gradient(90deg, oklch(0.56 0.22 300), oklch(0.7 0.15 300));"></div></div>
+            <div style="margin-top:18px; font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">جوایز قابل دریافت</div>
+            <div style="margin-top:10px; display:flex; flex-direction:column; gap:9px;">
+              <div style="display:flex; align-items:center; gap:11px; border:1px solid oklch(0.9 0.01 300); border-radius:12px; padding:11px; background:white;"><div style="width:38px; height:38px; border-radius:10px; background:oklch(0.94 0.03 145); display:flex; align-items:center; justify-content:center; font-size:18px;">☕</div><div style="flex:1;"><div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">قهوهٔ رایگان کافه پاساژ</div><div style="font-size:10px; color:oklch(0.55 0.02 280);">۵۰۰ امتیاز</div></div><span style="font-size:11px; font-weight:700; color:oklch(0.5 0.13 150); border:1px solid oklch(0.7 0.1 150); border-radius:8px; padding:6px 11px;">دریافت</span></div>
+              <div style="display:flex; align-items:center; gap:11px; border:1px solid oklch(0.9 0.01 300); border-radius:12px; padding:11px; background:white;"><div style="width:38px; height:38px; border-radius:10px; background:oklch(0.94 0.03 300); display:flex; align-items:center; justify-content:center; font-size:18px;">🎟</div><div style="flex:1;"><div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">کد تخفیف ۱۵٪ کل پاساژ</div><div style="font-size:10px; color:oklch(0.55 0.02 280);">۱٬۲۰۰ امتیاز</div></div><span style="font-size:11px; font-weight:700; color:oklch(0.5 0.13 150); border:1px solid oklch(0.7 0.1 150); border-radius:8px; padding:6px 11px;">دریافت</span></div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 7 · APPOINTMENT ==================== -->
+        <sc-if value="{{ sc_appointment }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">رزرو نوبت حضوری</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="display:flex; gap:11px; align-items:center; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:12px; background:white;"><div style="width:44px; height:44px; border-radius:11px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:20px;">👗</div><div><div style="font-size:13px; font-weight:700; color:oklch(0.26 0.02 280);">گالری رافیا</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280);">رزرو اتاق پرو و مشاورهٔ استایل</div></div></div>
+            <div style="margin-top:16px; font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">انتخاب روز</div>
+            <div style="margin-top:10px; display:flex; gap:8px;">
+              <div style="flex:1; text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:11px; padding:9px 0; background:white;"><div style="font-size:10px; color:oklch(0.55 0.02 280);">شنبه</div><div style="font-size:14px; font-weight:800; color:oklch(0.3 0.02 280);">۱۹</div></div>
+              <div style="flex:1; text-align:center; border:2px solid oklch(0.5 0.19 300); border-radius:11px; padding:9px 0; background:oklch(0.96 0.03 300);"><div style="font-size:10px; color:oklch(0.5 0.19 300);">یک‌شنبه</div><div style="font-size:14px; font-weight:800; color:oklch(0.5 0.19 300);">۲۰</div></div>
+              <div style="flex:1; text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:11px; padding:9px 0; background:white;"><div style="font-size:10px; color:oklch(0.55 0.02 280);">دوشنبه</div><div style="font-size:14px; font-weight:800; color:oklch(0.3 0.02 280);">۲۱</div></div>
+              <div style="flex:1; text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:11px; padding:9px 0; background:white;"><div style="font-size:10px; color:oklch(0.55 0.02 280);">سه‌شنبه</div><div style="font-size:14px; font-weight:800; color:oklch(0.3 0.02 280);">۲۲</div></div>
+            </div>
+            <div style="margin-top:16px; font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">ساعت خالی</div>
+            <div style="margin-top:10px; display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
+              <div style="text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:10px; padding:10px 0; font-size:12px; color:oklch(0.4 0.02 280); background:white;">۱۱:۰۰</div>
+              <div style="text-align:center; border:1px solid oklch(0.92 0.01 300); border-radius:10px; padding:10px 0; font-size:12px; color:oklch(0.75 0.01 280); background:oklch(0.96 0.005 300); text-decoration:line-through;">۱۲:۳۰</div>
+              <div style="text-align:center; border:2px solid oklch(0.5 0.19 300); border-radius:10px; padding:10px 0; font-size:12px; font-weight:700; color:oklch(0.5 0.19 300); background:oklch(0.96 0.03 300);">۱۶:۰۰</div>
+              <div style="text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:10px; padding:10px 0; font-size:12px; color:oklch(0.4 0.02 280); background:white;">۱۷:۳۰</div>
+              <div style="text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:10px; padding:10px 0; font-size:12px; color:oklch(0.4 0.02 280); background:white;">۱۸:۳۰</div>
+              <div style="text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:10px; padding:10px 0; font-size:12px; color:oklch(0.4 0.02 280); background:white;">۱۹:۳۰</div>
+            </div>
+            <div onclick="{{ goScreen }}" data-s="hub" style="margin-top:20px; text-align:center; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:12px; padding:13px; font-size:13px; font-weight:700; cursor:pointer;">ثبت نوبت — یک‌شنبه ۲۰، ۱۶:۰۰</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 8 · PRICE COMPARE (اقتباسی) ==================== -->
+        <sc-if value="{{ sc_compare }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">مقایسهٔ فروشندگان</div>
+          </div>
+          <div style="flex:1; overflow-y:auto;">
+            <div style="padding:16px; display:flex; gap:12px; align-items:center; border-bottom:8px solid oklch(0.96 0.008 300);">
+              <div style="width:60px; height:60px; border-radius:12px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:28px;">📱</div>
+              <div style="flex:1;"><div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.02 280); line-height:1.4;">گوشی سامسونگ Galaxy A55 — ۸/۲۵۶</div><div style="font-size:11px; color:oklch(0.55 0.02 280); margin-top:2px;">۱۲ فروشندهٔ این پاساژ</div></div>
+            </div>
+            <div style="padding:12px 16px; display:flex; align-items:center; justify-content:space-between;"><div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">فروشندگان</div><div style="font-size:11px; color:oklch(0.5 0.19 300); font-weight:700;">مرتب: ارزان‌ترین ⌄</div></div>
+            <div style="padding:0 16px 16px; display:flex; flex-direction:column; gap:10px;">
+              <div style="border:2px solid oklch(0.6 0.13 150); border-radius:13px; padding:12px; background:oklch(0.98 0.02 150); position:relative;">
+                <span style="position:absolute; top:-9px; right:14px; background:oklch(0.5 0.13 150); color:white; font-size:9.5px; font-weight:800; padding:3px 9px; border-radius:6px;">ارزان‌ترین</span>
+                <div style="display:flex; justify-content:space-between; align-items:center;"><div><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">موبایل کوروش</div><div style="font-size:10px; color:oklch(0.55 0.02 280); margin-top:2px;">⭐ ۴.۸ · طبقه ۱ · گارانتی اصلی</div></div><div style="text-align:left;"><div style="font-size:15px; font-weight:800; color:oklch(0.4 0.13 150);">۱۴٬۹۰۰٬۰۰۰</div><div style="font-size:9px; color:oklch(0.55 0.02 280);">تومان</div></div></div>
+              </div>
+              <div style="border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:12px; background:white;"><div style="display:flex; justify-content:space-between; align-items:center;"><div><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">دیجی‌سل مرکزی</div><div style="font-size:10px; color:oklch(0.55 0.02 280); margin-top:2px;">⭐ ۴.۶ · طبقه ۱</div></div><div style="text-align:left;"><div style="font-size:15px; font-weight:800; color:oklch(0.3 0.02 280);">۱۵٬۲۵۰٬۰۰۰</div><div style="font-size:9px; color:oklch(0.55 0.02 280);">تومان</div></div></div></div>
+              <div style="border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:12px; background:white;"><div style="display:flex; justify-content:space-between; align-items:center;"><div><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">تک‌فون همکف</div><div style="font-size:10px; color:oklch(0.55 0.02 280); margin-top:2px;">⭐ ۴.۹ · همکف · ارسال رایگان</div></div><div style="text-align:left;"><div style="font-size:15px; font-weight:800; color:oklch(0.3 0.02 280);">۱۵٬۴۰۰٬۰۰۰</div><div style="font-size:9px; color:oklch(0.55 0.02 280);">تومان</div></div></div></div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 9 · ESCROW (اقتباسی) ==================== -->
+        <sc-if value="{{ sc_escrow }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">پرداخت امن (امانی)</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:18px 16px;">
+            <div style="text-align:center; margin-bottom:6px;"><div style="width:56px; height:56px; border-radius:16px; background:oklch(0.95 0.03 150); margin:0 auto 10px; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="oklch(0.5 0.13 150)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3ZM9 12l2 2 4-4"></path></svg></div><div style="font-size:14px; font-weight:800; color:oklch(0.24 0.02 280);">پول تا تأیید شما نزد بازارچه می‌ماند</div></div>
+            <div style="margin-top:20px; display:flex; flex-direction:column; gap:0;">
+              <div style="display:flex; gap:12px;"><div style="display:flex; flex-direction:column; align-items:center;"><div style="width:26px; height:26px; border-radius:50%; background:oklch(0.5 0.13 150); color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">✓</div><div style="width:2px; flex:1; background:oklch(0.5 0.13 150);"></div></div><div style="padding-bottom:20px;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">مبلغ پرداخت شد</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280);">۱۴٬۹۰۰٬۰۰۰ ت نزد بازارچه امانت گذاشته شد</div></div></div>
+              <div style="display:flex; gap:12px;"><div style="display:flex; flex-direction:column; align-items:center;"><div style="width:26px; height:26px; border-radius:50%; background:oklch(0.6 0.16 60); color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">۲</div><div style="width:2px; flex:1; background:oklch(0.88 0.01 300);"></div></div><div style="padding-bottom:20px;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">در حال ارسال از فروشنده</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280);">موبایل کوروش کالا را آماده کرد</div></div></div>
+              <div style="display:flex; gap:12px;"><div style="display:flex; flex-direction:column; align-items:center;"><div style="width:26px; height:26px; border-radius:50%; background:oklch(0.9 0.01 300); color:oklch(0.5 0.02 280); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">۳</div></div><div><div style="font-size:12.5px; font-weight:700; color:oklch(0.5 0.02 280);">تأیید دریافت و آزادسازی وجه</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280);">بعد از دریافت سالم کالا این دکمه را بزنید</div></div></div>
+            </div>
+            <div style="margin-top:8px; background:oklch(0.97 0.01 60); border:1px solid oklch(0.85 0.06 60); border-radius:11px; padding:11px 13px; font-size:10.5px; color:oklch(0.45 0.08 60); line-height:1.7;">در صورت مغایرت کالا، تا ۴۸ ساعت می‌توانید درخواست بازگشت وجه بدهید و داوری بازارچه بررسی می‌کند.</div>
+            <div style="margin-top:16px; text-align:center; background:oklch(0.93 0.01 300); color:oklch(0.5 0.02 280); border-radius:12px; padding:13px; font-size:13px; font-weight:700;">در انتظار دریافت کالا…</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 10 · LIVE ORDER TRACKING ==================== -->
+        <sc-if value="{{ sc_tracking }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">ردیابی زندهٔ سفارش</div>
+          </div>
+          <div style="height:250px; flex:0 0 auto; background:oklch(0.94 0.01 240); position:relative; overflow:hidden;">
+            <svg viewBox="0 0 380 250" style="position:absolute; inset:0; width:100%; height:100%;">
+              <rect width="380" height="250" fill="oklch(0.95 0.008 240)"></rect>
+              <path d="M0 60 H380 M0 130 H380 M0 200 H380 M90 0 V250 M200 0 V250 M300 0 V250" stroke="oklch(0.9 0.01 240)" stroke-width="6"></path>
+              <path d="M60 210 L60 130 L200 130 L200 60 L300 60" fill="none" stroke="oklch(0.5 0.19 300)" stroke-width="4" stroke-dasharray="8 7" stroke-linecap="round"></path>
+            </svg>
+            <div style="position:absolute; left:48px; top:118px; width:26px; height:26px; border-radius:50%; background:oklch(0.5 0.19 300); border:3px solid white; box-shadow:0 3px 8px oklch(0 0 0/0.25); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="14" height="14" fill="white"><path d="M5 16h2M15 16H9m8 0h1.5a1.5 1.5 0 0 0 1.5-1.5V11l-2.5-4H14v9"></path></svg></div>
+            <div style="position:absolute; right:70px; top:44px;"><svg viewBox="0 0 24 24" width="26" height="26" fill="oklch(0.55 0.13 150)"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7Z"></path></svg></div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;"><div style="font-size:13px; font-weight:800; color:oklch(0.24 0.02 280);">پیک در راه است</div><span style="font-size:11px; font-weight:800; color:oklch(0.5 0.13 150);">۸ دقیقه تا شما</span></div>
+            <div style="margin-top:14px; display:flex; gap:11px; align-items:center; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:12px; background:white;">
+              <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700;">ر</div>
+              <div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">رضا (پیک بازارچه)</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280);">موتور · پلاک ۴۵ ط ۸۲۱ · ⭐ ۴.۹</div></div>
+              <div style="width:38px; height:38px; border-radius:50%; background:oklch(0.95 0.03 150); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="oklch(0.5 0.13 150)" stroke-width="1.8"><path d="M6 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C10 20.5 3.5 14 3.5 6A1.5 1.5 0 0 1 5 4.4"></path></svg></div>
+            </div>
+            <div style="margin-top:12px; display:flex; gap:9px;">
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:100%; height:4px; border-radius:99px; background:oklch(0.5 0.13 150);"></div><span style="font-size:9px; color:oklch(0.5 0.13 150); font-weight:700;">آماده‌سازی</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:100%; height:4px; border-radius:99px; background:oklch(0.5 0.13 150);"></div><span style="font-size:9px; color:oklch(0.5 0.13 150); font-weight:700;">تحویل به پیک</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:100%; height:4px; border-radius:99px; background:oklch(0.5 0.19 300);"></div><span style="font-size:9px; color:oklch(0.5 0.19 300); font-weight:700;">در مسیر</span></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:100%; height:4px; border-radius:99px; background:oklch(0.9 0.01 300);"></div><span style="font-size:9px; color:oklch(0.6 0.02 280);">تحویل</span></div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 11 · RETURNS CENTER ==================== -->
+        <sc-if value="{{ sc_returns }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">مرکز بازگشت کالا</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="display:flex; gap:11px; align-items:center; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:12px; background:white;"><div style="width:46px; height:46px; border-radius:11px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:22px;">🎧</div><div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">هدفون بی‌سیم TWS</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280);">سفارش ۱۰۴۲۸۸ · ۳ روز پیش</div></div></div>
+            <div style="margin-top:16px; font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">دلیل بازگشت</div>
+            <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
+              <div style="border:2px solid oklch(0.5 0.19 300); border-radius:11px; padding:12px; background:oklch(0.96 0.03 300); font-size:12px; color:oklch(0.4 0.1 300); font-weight:700; display:flex; justify-content:space-between; align-items:center;">کالا معیوب یا خراب بود <span style="width:16px; height:16px; border-radius:50%; background:oklch(0.5 0.19 300); display:inline-flex; align-items:center; justify-content:center; color:white; font-size:10px;">✓</span></div>
+              <div style="border:1px solid oklch(0.9 0.01 300); border-radius:11px; padding:12px; background:white; font-size:12px; color:oklch(0.4 0.02 280);">با توضیحات آگهی مغایرت داشت</div>
+              <div style="border:1px solid oklch(0.9 0.01 300); border-radius:11px; padding:12px; background:white; font-size:12px; color:oklch(0.4 0.02 280);">نظرم عوض شد</div>
+            </div>
+            <div style="margin-top:16px; border:1.5px dashed oklch(0.8 0.03 300); border-radius:13px; padding:20px; text-align:center; background:oklch(0.98 0.006 300);"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="oklch(0.55 0.1 300)" stroke-width="1.6" stroke-linecap="round" style="margin-bottom:6px;"><path d="M12 15V4M8 8l4-4 4 4M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"></path></svg><div style="font-size:11.5px; color:oklch(0.5 0.05 300); font-weight:600;">افزودن عکس از مشکل کالا</div></div>
+            <div onclick="{{ goScreen }}" data-s="hub" style="margin-top:18px; text-align:center; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:12px; padding:13px; font-size:13px; font-weight:700; cursor:pointer;">ثبت درخواست بازگشت</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 12 · GIFT CARD ==================== -->
+        <sc-if value="{{ sc_giftcard }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">کارت هدیهٔ پاساژ</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="border-radius:18px; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); padding:22px 20px; color:white; position:relative; overflow:hidden; min-height:150px;">
+              <div style="position:absolute; bottom:-30px; left:-10px; font-size:90px; opacity:0.16;">🎁</div>
+              <div style="font-size:11px; opacity:0.85;">کارت هدیهٔ بازارچهٔ محلی</div>
+              <div style="font-size:30px; font-weight:800; margin-top:20px;">۵۰۰٬۰۰۰ <span style="font-size:14px; font-weight:600;">تومان</span></div>
+              <div style="font-size:11px; opacity:0.85; margin-top:8px;">قابل استفاده در تمام فروشگاه‌های پاساژ</div>
+            </div>
+            <div style="margin-top:16px; font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">مبلغ کارت</div>
+            <div style="margin-top:10px; display:flex; gap:8px;">
+              <div style="flex:1; text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:10px; padding:11px 0; font-size:12px; color:oklch(0.4 0.02 280); background:white;">۲۰۰ هزار</div>
+              <div style="flex:1; text-align:center; border:2px solid oklch(0.5 0.19 300); border-radius:10px; padding:11px 0; font-size:12px; font-weight:700; color:oklch(0.5 0.19 300); background:oklch(0.96 0.03 300);">۵۰۰ هزار</div>
+              <div style="flex:1; text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:10px; padding:11px 0; font-size:12px; color:oklch(0.4 0.02 280); background:white;">۱ میلیون</div>
+            </div>
+            <div style="margin-top:16px; font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">ارسال به</div>
+            <div style="margin-top:10px; height:42px; border:1px solid oklch(0.9 0.01 300); border-radius:11px; background:white; display:flex; align-items:center; padding:0 13px; font-size:12px; color:oklch(0.55 0.02 280);">شمارهٔ موبایل گیرنده…</div>
+            <div style="margin-top:10px; height:42px; border:1px solid oklch(0.9 0.01 300); border-radius:11px; background:white; display:flex; align-items:center; padding:0 13px; font-size:12px; color:oklch(0.55 0.02 280);">پیام تبریک (اختیاری)…</div>
+            <div onclick="{{ goScreen }}" data-s="hub" style="margin-top:18px; text-align:center; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:12px; padding:13px; font-size:13px; font-weight:700; cursor:pointer;">خرید و ارسال کارت هدیه</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 13 · WARRANTY VAULT ==================== -->
+        <sc-if value="{{ sc_warranty }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">دفترچهٔ ضمانت دیجیتال</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:11px;">
+            <div style="border:1px solid oklch(0.9 0.01 300); border-radius:14px; padding:13px; background:white;">
+              <div style="display:flex; gap:11px; align-items:center;"><div style="width:42px; height:42px; border-radius:10px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:20px;">📱</div><div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">گلکسی A55</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280);">موبایل کوروش · خرید ۱۴۰۴/۰۲/۱۰</div></div><span style="font-size:10px; font-weight:700; color:oklch(0.5 0.13 150); background:oklch(0.95 0.03 150); border-radius:7px; padding:5px 9px;">۱۰ ماه اعتبار</span></div>
+              <div style="margin-top:10px; height:6px; border-radius:99px; background:oklch(0.93 0.01 300); overflow:hidden;"><div style="width:82%; height:100%; background:oklch(0.55 0.13 150);"></div></div>
+            </div>
+            <div style="border:1px solid oklch(0.9 0.01 300); border-radius:14px; padding:13px; background:white;">
+              <div style="display:flex; gap:11px; align-items:center;"><div style="width:42px; height:42px; border-radius:10px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:20px;">🔊</div><div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">اسپیکر بلوتوثی</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280);">دیجی‌سل مرکزی · خرید ۱۴۰۳/۱۱/۲۲</div></div><span style="font-size:10px; font-weight:700; color:oklch(0.6 0.16 40); background:oklch(0.96 0.04 60); border-radius:7px; padding:5px 9px;">۱ ماه مانده</span></div>
+              <div style="margin-top:10px; height:6px; border-radius:99px; background:oklch(0.93 0.01 300); overflow:hidden;"><div style="width:12%; height:100%; background:oklch(0.62 0.18 40);"></div></div>
+            </div>
+            <div style="margin-top:6px; background:oklch(0.96 0.02 300); border:1px dashed oklch(0.8 0.04 300); border-radius:13px; padding:14px; text-align:center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="oklch(0.5 0.13 300)" stroke-width="1.7" stroke-linecap="round" style="margin-bottom:5px;"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"></path></svg><div style="font-size:11.5px; color:oklch(0.45 0.1 300); font-weight:700;">اسکن فاکتور جدید برای افزودن ضمانت</div></div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 14 · EVENTS ==================== -->
+        <sc-if value="{{ sc_events }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">رویدادها و جشنواره‌های پاساژ</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:13px;">
+            <div style="border-radius:15px; overflow:hidden; border:1px solid oklch(0.9 0.01 300);">
+              <div style="height:110px; background:linear-gradient(135deg, oklch(0.6 0.18 25), oklch(0.55 0.2 340)); display:flex; align-items:center; justify-content:center; font-size:44px;">🎉</div>
+              <div style="padding:12px 13px; background:white;"><div style="font-size:13px; font-weight:800; color:oklch(0.24 0.02 280);">جشنوارهٔ فروش بهاره — تا ۵۰٪ تخفیف</div><div style="font-size:10.5px; color:oklch(0.55 0.02 280); margin-top:3px;">🗓 پنج‌شنبه ۲۴ فروردین · کل پاساژ</div><div style="margin-top:10px; display:flex; gap:8px;"><div style="flex:1; text-align:center; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:9px; padding:9px; font-size:11.5px; font-weight:700;">یادآوری کن</div><div style="text-align:center; border:1px solid oklch(0.88 0.01 300); color:oklch(0.4 0.02 280); border-radius:9px; padding:9px 13px; font-size:11.5px; font-weight:600;">جزئیات</div></div></div>
+            </div>
+            <div style="display:flex; gap:11px; align-items:center; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:11px; background:white;"><div style="width:50px; text-align:center; flex:0 0 auto;"><div style="font-size:9px; color:oklch(0.55 0.02 280);">اردیبهشت</div><div style="font-size:20px; font-weight:800; color:oklch(0.5 0.19 300);">۲</div></div><div style="flex:1;"><div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">کارگاه سفالگری رایگان</div><div style="font-size:10px; color:oklch(0.55 0.02 280);">نگارخانه آریا · ۱۷:۰۰ · ۱۲ نفر ثبت‌نام</div></div></div>
+            <div style="display:flex; gap:11px; align-items:center; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:11px; background:white;"><div style="width:50px; text-align:center; flex:0 0 auto;"><div style="font-size:9px; color:oklch(0.55 0.02 280);">اردیبهشت</div><div style="font-size:20px; font-weight:800; color:oklch(0.5 0.19 300);">۹</div></div><div style="flex:1;"><div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">شب موسیقی زندهٔ محوطه</div><div style="font-size:10px; color:oklch(0.55 0.02 280);">حیاط مرکزی · ۲۰:۰۰ · ورود آزاد</div></div></div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 15 · COMMUNITY ==================== -->
+        <sc-if value="{{ sc_community }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">انجمن محلهٔ بازارچه</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:12px; background:oklch(0.97 0.008 300);">
+            <div style="background:white; border:1px solid oklch(0.9 0.01 300); border-radius:14px; padding:13px;">
+              <div style="display:flex; gap:9px; align-items:center;"><div style="width:34px; height:34px; border-radius:50%; background:oklch(0.6 0.14 200); color:white; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;">ن</div><div><div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">نازنین</div><div style="font-size:9.5px; color:oklch(0.55 0.02 280);">۲ ساعت پیش · #پرسش</div></div></div>
+              <div style="font-size:12px; color:oklch(0.3 0.02 280); line-height:1.8; margin-top:9px;">کسی خیاطی خوب توی طبقه ۲ سراغ داره برای تنگ‌کردن مانتو؟ 🙏</div>
+              <div style="display:flex; gap:16px; margin-top:11px; font-size:10.5px; color:oklch(0.5 0.02 280);"><span>👍 ۱۴</span><span>💬 ۶ پاسخ</span><span>↗ اشتراک</span></div>
+            </div>
+            <div style="background:white; border:1px solid oklch(0.9 0.01 300); border-radius:14px; padding:13px;">
+              <div style="display:flex; gap:9px; align-items:center;"><div style="width:34px; height:34px; border-radius:50%; background:oklch(0.6 0.16 40); color:white; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;">ک</div><div><div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">کامران</div><div style="font-size:9.5px; color:oklch(0.55 0.02 280);">دیروز · #معرفی</div></div></div>
+              <div style="font-size:12px; color:oklch(0.3 0.02 280); line-height:1.8; margin-top:9px;">از «موبایل کوروش» گوشی خریدم، خیلی منصف بود و گارانتی واقعی داد. پیشنهاد می‌کنم ✅</div>
+              <div style="height:90px; border-radius:10px; background:oklch(0.94 0.02 300); margin-top:10px; display:flex; align-items:center; justify-content:center; font-size:26px;">📱</div>
+              <div style="display:flex; gap:16px; margin-top:11px; font-size:10.5px; color:oklch(0.5 0.02 280);"><span>👍 ۳۸</span><span>💬 ۹ پاسخ</span><span>↗ اشتراک</span></div>
+            </div>
+          </div>
+          <div style="flex:0 0 auto; padding:10px 14px; border-top:1px solid oklch(0.91 0.01 300); background:white;"><div style="height:38px; border-radius:999px; background:oklch(0.96 0.01 300); display:flex; align-items:center; padding:0 14px; font-size:12px; color:oklch(0.55 0.02 280);">سؤال یا تجربه‌ات رو با محله به اشتراک بذار…</div></div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 16 · PRICE ALERT ==================== -->
+        <sc-if value="{{ sc_pricealert }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">هشدار کاهش قیمت</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="display:flex; gap:11px; align-items:center; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:12px; background:white;"><div style="width:48px; height:48px; border-radius:11px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:22px;">⌚</div><div style="flex:1;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.26 0.02 280);">ساعت هوشمند سری ۹</div><div style="font-size:11px; color:oklch(0.55 0.02 280); margin-top:2px;">قیمت فعلی: <b style="color:oklch(0.3 0.02 280)">۶٬۲۰۰٬۰۰۰ ت</b></div></div></div>
+            <div style="margin-top:16px; border:1px solid oklch(0.9 0.01 300); border-radius:14px; padding:14px; background:white;">
+              <div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">روند قیمت ۳۰ روز اخیر</div>
+              <svg viewBox="0 0 300 90" style="width:100%; height:80px; margin-top:8px;"><polyline points="0,20 50,25 100,18 150,45 200,40 250,60 300,55" fill="none" stroke="oklch(0.5 0.19 300)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline><line x1="0" y1="70" x2="300" y2="70" stroke="oklch(0.6 0.13 150)" stroke-width="1.5" stroke-dasharray="4 4"></line></svg>
+              <div style="font-size:10px; color:oklch(0.5 0.13 150); font-weight:600;">─ ─ قیمت هدف شما: ۵٬۵۰۰٬۰۰۰ ت</div>
+            </div>
+            <div style="margin-top:16px; font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">وقتی قیمت رسید به:</div>
+            <div style="margin-top:10px; height:46px; border:2px solid oklch(0.5 0.19 300); border-radius:12px; background:oklch(0.98 0.02 300); display:flex; align-items:center; padding:0 14px; font-size:15px; font-weight:800; color:oklch(0.4 0.1 300);">۵٬۵۰۰٬۰۰۰ <span style="font-size:11px; font-weight:600; margin-right:5px;">تومان</span></div>
+            <div style="margin-top:14px; display:flex; align-items:center; justify-content:space-between; border:1px solid oklch(0.9 0.01 300); border-radius:12px; padding:13px; background:white;"><span style="font-size:12px; color:oklch(0.3 0.02 280);">اطلاع از راه اعلان و پیامک</span><div style="width:40px; height:23px; border-radius:99px; background:oklch(0.5 0.19 300); position:relative;"><div style="position:absolute; top:2.5px; left:2.5px; width:18px; height:18px; border-radius:50%; background:white;"></div></div></div>
+            <div onclick="{{ goScreen }}" data-s="hub" style="margin-top:18px; text-align:center; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:12px; padding:13px; font-size:13px; font-weight:700; cursor:pointer;">فعال‌کردن هشدار</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 17 · SHOP STORIES (اقتباسی) ==================== -->
+        <sc-if value="{{ sc_stories }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">استوری فروشگاه‌ها</div>
+          </div>
+          <div style="flex:0 0 auto; padding:14px 16px 4px; display:flex; gap:13px; overflow-x:auto;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:5px; flex:0 0 auto;"><div style="width:58px; height:58px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg, oklch(0.62 0.2 25), oklch(0.56 0.22 300));"><div style="width:100%; height:100%; border-radius:50%; background:oklch(0.93 0.03 300); border:2px solid white; display:flex; align-items:center; justify-content:center; font-size:24px;">📱</div></div><span style="font-size:9.5px; color:oklch(0.4 0.02 280);">کوروش</span></div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:5px; flex:0 0 auto;"><div style="width:58px; height:58px; border-radius:50%; padding:2.5px; background:linear-gradient(135deg, oklch(0.62 0.2 25), oklch(0.56 0.22 300));"><div style="width:100%; height:100%; border-radius:50%; background:oklch(0.93 0.03 300); border:2px solid white; display:flex; align-items:center; justify-content:center; font-size:24px;">👗</div></div><span style="font-size:9.5px; color:oklch(0.4 0.02 280);">رافیا</span></div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:5px; flex:0 0 auto;"><div style="width:58px; height:58px; border-radius:50%; padding:2.5px; background:oklch(0.85 0.02 300);"><div style="width:100%; height:100%; border-radius:50%; background:oklch(0.93 0.03 300); border:2px solid white; display:flex; align-items:center; justify-content:center; font-size:24px;">🖼</div></div><span style="font-size:9.5px; color:oklch(0.6 0.02 280);">آریا</span></div>
+          </div>
+          <div style="flex:1; padding:8px 16px 16px; position:relative;">
+            <div style="height:100%; border-radius:18px; background:linear-gradient(170deg, oklch(0.4 0.1 300), oklch(0.22 0.03 285)); position:relative; overflow:hidden; display:flex; align-items:flex-end;">
+              <div style="position:absolute; top:12px; left:14px; right:14px; display:flex; gap:4px;"><div style="flex:1; height:3px; border-radius:99px; background:white;"></div><div style="flex:1; height:3px; border-radius:99px; background:oklch(1 0 0/0.35);"></div><div style="flex:1; height:3px; border-radius:99px; background:oklch(1 0 0/0.35);"></div></div>
+              <div style="position:absolute; top:24px; right:14px; display:flex; gap:8px; align-items:center;"><div style="width:30px; height:30px; border-radius:50%; background:white; display:flex; align-items:center; justify-content:center; font-size:15px;">📱</div><span style="font-size:11px; font-weight:700; color:white;">موبایل کوروش</span></div>
+              <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:70px; opacity:0.4;">🎧</div>
+              <div style="position:relative; width:100%; padding:16px; background:linear-gradient(0deg, oklch(0 0 0/0.5), transparent);">
+                <div style="font-size:14px; font-weight:800; color:white;">هدفون تازه رسید! 🎧</div>
+                <div style="font-size:11px; color:white; opacity:0.9; margin-top:2px;">نمونهٔ حضوری موجوده — امروز ۱۰٪ تخفیف افتتاحیه</div>
+                <div style="margin-top:12px; background:white; border-radius:10px; padding:10px; display:flex; align-items:center; gap:9px;"><div style="width:34px; height:34px; border-radius:8px; background:oklch(0.93 0.03 300); display:flex; align-items:center; justify-content:center; font-size:16px;">🎧</div><div style="flex:1;"><div style="font-size:11px; font-weight:700; color:oklch(0.26 0.02 280);">هدفون TWS Pro</div><div style="font-size:11px; font-weight:800; color:oklch(0.5 0.19 300);">۸۹۰٬۰۰۰ ت</div></div><span style="font-size:10.5px; font-weight:700; color:white; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); border-radius:8px; padding:7px 11px;">دیدن</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 18 · VIP SUBSCRIPTION ==================== -->
+        <sc-if value="{{ sc_vipsub }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">اشتراک ویژهٔ بازارچه</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="border-radius:18px; background:linear-gradient(135deg, oklch(0.3 0.04 285), oklch(0.2 0.02 280)); padding:20px; color:white; text-align:center; position:relative; overflow:hidden;">
+              <div style="font-size:34px;">👑</div>
+              <div style="font-size:17px; font-weight:800; margin-top:6px;">بازارچه پلاس</div>
+              <div style="font-size:11.5px; opacity:0.85; margin-top:4px;">ارسال رایگان نامحدود در پاساژ · تخفیف‌های اختصاصی</div>
+              <div style="margin-top:16px; font-size:24px; font-weight:800;">۷۹٬۰۰۰ <span style="font-size:12px; font-weight:600;">تومان / ماه</span></div>
+            </div>
+            <div style="margin-top:16px; display:flex; flex-direction:column; gap:11px;">
+              <div style="display:flex; gap:11px; align-items:center;"><span style="width:22px; height:22px; border-radius:50%; background:oklch(0.95 0.03 150); color:oklch(0.5 0.13 150); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">✓</span><span style="font-size:12px; color:oklch(0.3 0.02 280);">ارسال رایگان همهٔ سفارش‌های داخل پاساژ</span></div>
+              <div style="display:flex; gap:11px; align-items:center;"><span style="width:22px; height:22px; border-radius:50%; background:oklch(0.95 0.03 150); color:oklch(0.5 0.13 150); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">✓</span><span style="font-size:12px; color:oklch(0.3 0.02 280);">۲٪ کش‌بک روی هر خرید به کیف‌پول</span></div>
+              <div style="display:flex; gap:11px; align-items:center;"><span style="width:22px; height:22px; border-radius:50%; background:oklch(0.95 0.03 150); color:oklch(0.5 0.13 150); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">✓</span><span style="font-size:12px; color:oklch(0.3 0.02 280);">دسترسی زودهنگام به حراج‌ها و رویدادها</span></div>
+              <div style="display:flex; gap:11px; align-items:center;"><span style="width:22px; height:22px; border-radius:50%; background:oklch(0.95 0.03 150); color:oklch(0.5 0.13 150); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">✓</span><span style="font-size:12px; color:oklch(0.3 0.02 280);">پشتیبانی و داوری اولویت‌دار</span></div>
+            </div>
+            <div onclick="{{ goScreen }}" data-s="hub" style="margin-top:20px; text-align:center; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:12px; padding:14px; font-size:13px; font-weight:700; cursor:pointer;">۷ روز رایگان امتحان کن</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 19 · PARKING ==================== -->
+        <sc-if value="{{ sc_parking }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">پارکینگ من</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="border-radius:16px; background:linear-gradient(135deg, oklch(0.5 0.13 240), oklch(0.4 0.1 250)); padding:18px; color:white; text-align:center;">
+              <div style="font-size:11px; opacity:0.85;">محل پارک خودروی شما</div>
+              <div style="font-size:30px; font-weight:800; margin-top:6px;">طبقه B2 · C-۱۴</div>
+              <div style="font-size:11px; opacity:0.85; margin-top:6px;">ثبت‌شده ساعت ۱۶:۲۰ · نزدیک آسانسور شرقی</div>
+            </div>
+            <div style="margin-top:14px; display:flex; gap:11px;">
+              <div style="flex:1; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:14px; text-align:center; background:white;"><div style="font-size:10px; color:oklch(0.55 0.02 280);">مدت توقف</div><div style="font-size:17px; font-weight:800; color:oklch(0.3 0.02 280); margin-top:3px;">۱ ساعت ۴۰′</div></div>
+              <div style="flex:1; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:14px; text-align:center; background:white;"><div style="font-size:10px; color:oklch(0.55 0.02 280);">هزینهٔ فعلی</div><div style="font-size:17px; font-weight:800; color:oklch(0.5 0.19 300); margin-top:3px;">۲۵٬۰۰۰ ت</div></div>
+            </div>
+            <div onclick="{{ goScreen }}" data-s="hub" style="margin-top:14px; text-align:center; background:linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288)); color:white; border-radius:12px; padding:13px; font-size:13px; font-weight:700; cursor:pointer;">پرداخت پارکینگ از کیف‌پول</div>
+            <div style="margin-top:12px; border:1px solid oklch(0.9 0.01 300); border-radius:13px; padding:13px; background:white; display:flex; align-items:center; gap:11px;"><div style="width:38px; height:38px; border-radius:10px; background:oklch(0.95 0.03 300); display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="oklch(0.5 0.13 300)" stroke-width="1.8" stroke-linecap="round"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7Z"></path></svg></div><div style="flex:1;"><div style="font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">مسیر تا خودرو</div><div style="font-size:10px; color:oklch(0.55 0.02 280);">۳ دقیقه پیاده از موقعیت فعلی شما</div></div><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="oklch(0.5 0.02 280)" stroke-width="2"><path d="M9.5 6 15.5 12l-6 6"></path></svg></div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ==================== 20 · VISUAL SEARCH ==================== -->
+        <sc-if value="{{ sc_visualsearch }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.91 0.01 300); flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="hub" style="cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="oklch(0.35 0.02 280)" stroke-width="2" stroke-linecap="round"><path d="M14.5 6 8.5 12l6 6"></path></svg></div>
+            <div style="font-size:13.5px; font-weight:700; color:oklch(0.26 0.03 285);">جست‌وجوی تصویری و صوتی</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px;">
+            <div style="height:200px; border-radius:16px; background:oklch(0.15 0.02 285); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+              <div style="font-size:64px; opacity:0.5;">👟</div>
+              <div style="position:absolute; inset:34px; border:2px solid oklch(0.7 0.2 300); border-radius:12px; box-shadow:0 0 0 100vmax oklch(0 0 0/0.35);"></div>
+              <div style="position:absolute; bottom:12px; right:0; left:0; text-align:center; font-size:11px; color:white;">دوربین رو روی کالا بگیر</div>
+            </div>
+            <div style="margin-top:14px; display:flex; gap:11px;">
+              <div style="flex:1; text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:12px; padding:13px; background:white; display:flex; flex-direction:column; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="oklch(0.5 0.19 300)" stroke-width="1.7" stroke-linecap="round"><path d="M4 8V6a2 2 0 0 1 2-2h1l1.5-2h5L16 4h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2ZM12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"></path></svg><span style="font-size:11px; font-weight:700; color:oklch(0.3 0.02 280);">عکس بگیر</span></div>
+              <div style="flex:1; text-align:center; border:1px solid oklch(0.9 0.01 300); border-radius:12px; padding:13px; background:white; display:flex; flex-direction:column; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="oklch(0.5 0.19 300)" stroke-width="1.7" stroke-linecap="round"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3ZM5 11a7 7 0 0 0 14 0M12 18v3"></path></svg><span style="font-size:11px; font-weight:700; color:oklch(0.3 0.02 280);">جست‌وجوی صوتی</span></div>
+            </div>
+            <div style="margin-top:18px; font-size:12px; font-weight:700; color:oklch(0.26 0.02 280);">نتایج مشابه در پاساژ</div>
+            <div style="margin-top:11px; display:grid; grid-template-columns:1fr 1fr; gap:11px;">
+              <div style="border:1px solid oklch(0.9 0.01 300); border-radius:12px; overflow:hidden; background:white;"><div style="height:80px; background:oklch(0.93 0.02 300); display:flex; align-items:center; justify-content:center; font-size:28px;">👟</div><div style="padding:9px;"><div style="font-size:11px; font-weight:700; color:oklch(0.26 0.02 280);">کتانی اسپرت</div><div style="font-size:11px; font-weight:800; color:oklch(0.5 0.19 300); margin-top:2px;">۹۲۰٬۰۰۰ ت</div><div style="font-size:9px; color:oklch(0.55 0.02 280);">۹۴٪ تطابق</div></div></div>
+              <div style="border:1px solid oklch(0.9 0.01 300); border-radius:12px; overflow:hidden; background:white;"><div style="height:80px; background:oklch(0.93 0.02 300); display:flex; align-items:center; justify-content:center; font-size:28px;">👟</div><div style="padding:9px;"><div style="font-size:11px; font-weight:700; color:oklch(0.26 0.02 280);">کفش رانینگ</div><div style="font-size:11px; font-weight:800; color:oklch(0.5 0.19 300); margin-top:2px;">۱٬۱۵۰٬۰۰۰ ت</div><div style="font-size:9px; color:oklch(0.55 0.02 280);">۸۸٪ تطابق</div></div></div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+      </div>
+    </div>
+
+    <!-- ============ SIDE NOTES: idea catalogue ============ -->
+    <div style="flex:1; min-width:300px; max-width:520px;">
+      <div style="background:white; border:1px solid oklch(0.9 0.01 300); border-radius:16px; padding:20px 22px;">
+        <div style="font-size:14px; font-weight:800; color:oklch(0.24 0.02 280); margin-bottom:4px;">تحلیل سه پلتفرم مرجع</div>
+        <p style="font-size:12px; color:oklch(0.48 0.02 280); line-height:1.9; margin:0 0 14px;">چه چیزی از هرکدام قابل استفاده است — و کجای اپ نشسته:</p>
+        <div style="display:flex; flex-direction:column; gap:11px;">
+          <div style="border:1px solid oklch(0.92 0.01 300); border-radius:12px; padding:13px;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.5 0.19 300);">دیوار</div><div style="font-size:11.5px; color:oklch(0.42 0.02 280); line-height:1.85; margin-top:5px;">پرداخت امن/امانی، چت درون‌برنامه‌ای امن، ارتقای آگهی (نردبان/فوری)، دستیار خرید هوشمند، انتخاب هم‌زمان چند شهر، پنل حرفه‌ای با کیف‌پول اشتراکی و همکاران، گزارش تخلف.</div></div>
+          <div style="border:1px solid oklch(0.92 0.01 300); border-radius:12px; padding:13px;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.58 0.22 25);">شیپور / ترب (اسکرین‌شات)</div><div style="font-size:11.5px; color:oklch(0.42 0.02 280); line-height:1.85; margin-top:5px;">مقایسهٔ قیمت میان چند فروشنده، برچسب «ارزان‌ترین»، فیلتر شهر، برچسب وضعیت (نو/کارکرده)، پروفایل فروشندهٔ اجتماعی با دنبال‌کردن و نشان‌ها و بازخوردها.</div></div>
+          <div style="border:1px solid oklch(0.92 0.01 300); border-radius:12px; padding:13px;"><div style="font-size:12.5px; font-weight:700; color:oklch(0.55 0.15 340);">کمدا (بازار) + تهران‌لاله‌زار</div><div style="font-size:11.5px; color:oklch(0.42 0.02 280); line-height:1.85; margin-top:5px;">فید اجتماعی و استوری فروشگاه‌ها، لایک/ذخیره/کامنت، فهرست فروشگاه‌های یک پاساژ بر پایهٔ دسته با تعداد محصول، نماد اعتماد و ساماندهی، ثبت آگهی رایگان.</div></div>
+        </div>
+      </div>
+
+      <div style="background:white; border:1px solid oklch(0.9 0.01 300); border-radius:16px; padding:20px 22px; margin-top:18px;">
+        <div style="font-size:14px; font-weight:800; color:oklch(0.24 0.02 280); margin-bottom:4px;">۲۰ ایدهٔ نوآورانه (فراتر از سه سایت)</div>
+        <p style="font-size:12px; color:oklch(0.48 0.02 280); line-height:1.8; margin:0 0 12px;">هرکدام به‌صورت یک صفحهٔ واقعی در همین فریم پیاده شده — روی کاشی متناظر بزنید.</p>
+        <ol style="margin:0; padding-inline-start:20px; font-size:12px; color:oklch(0.34 0.02 280); line-height:2;">
+          <li>دستیار خرید هوشمند مبتنی بر بودجه و سلیقه</li>
+          <li>مسیریاب داخل پاساژ (pin‑to‑pin) با موقعیت زندهٔ کاربر</li>
+          <li>لایو‌شاپینگ: پخش زندهٔ فروشنده + خرید در لحظه</li>
+          <li>تخفیف‌های ساعتی با شمارش معکوس و نوار موجودی</li>
+          <li>خرید گروهی؛ باز شدن قیمت با تکمیل ظرفیت</li>
+          <li>باشگاه وفاداری پاساژ با سطح‌بندی و کارت QR</li>
+          <li>رزرو نوبت حضوری و اتاق پرو</li>
+          <li>مقایسهٔ قیمت فروشندگان یک کالا در پاساژ</li>
+          <li>پرداخت امن امانی با داوری و بازگشت وجه</li>
+          <li>ردیابی زندهٔ پیک روی نقشه</li>
+          <li>مرکز بازگشت کالا با عکس و دلیل</li>
+          <li>کارت هدیهٔ دیجیتال قابل ارسال</li>
+          <li>دفترچهٔ ضمانت دیجیتال با شمارش اعتبار</li>
+          <li>تقویم رویداد‌ها و جشنواره‌های پاساژ</li>
+          <li>انجمن محلهٔ خریداران (پرسش/معرفی)</li>
+          <li>هشدار کاهش قیمت با نمودار روند و قیمت هدف</li>
+          <li>استوری زودگذر فروشگاه‌ها</li>
+          <li>اشتراک ویژهٔ «بازارچه پلاس»</li>
+          <li>یادآور محل پارک و پرداخت پارکینگ</li>
+          <li>جست‌وجوی تصویری و صوتی کالا</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'hub', flashSecs: 2*3600 + 14*60 + 32 };
+
+  componentDidMount() {
+    this._t = setInterval(() => {
+      this.setState(s => ({ flashSecs: s.flashSecs > 0 ? s.flashSecs - 1 : 3*3600 }));
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this._t); }
+
+  goScreen = (e) => {
+    const id = e.currentTarget.getAttribute('data-s');
+    if (id) this.setState({ screen: id });
+  };
+
+  fa(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+
+  SCREENS = [
+    { id:'concierge',   label:'دستیار هوشمند',  tag:'novel', d:'M12 3v3M8 8h8v9H8zM10 12h4M6 20h12', bg:'oklch(0.95 0.04 300)', c:'oklch(0.5 0.19 300)' },
+    { id:'wayfind',     label:'مسیریاب پاساژ',  tag:'novel', d:'M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7ZM12 6.5A2.5 2.5 0 1 0 12 11.5 2.5 2.5 0 0 0 12 6.5Z', bg:'oklch(0.95 0.04 300)', c:'oklch(0.5 0.19 300)' },
+    { id:'live',        label:'لایو‌شاپینگ',    tag:'novel', d:'M4 6h11v12H4zM15 10l5-3v10l-5-3', bg:'oklch(0.95 0.05 25)', c:'oklch(0.58 0.22 25)' },
+    { id:'flash',       label:'تخفیف ساعتی',    tag:'novel', d:'M13 3 4 14h6l-1 7 9-11h-6l1-7Z', bg:'oklch(0.95 0.05 25)', c:'oklch(0.58 0.22 25)' },
+    { id:'groupbuy',    label:'خرید گروهی',     tag:'novel', d:'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3 20a6 6 0 0 1 12 0M17 8a3 3 0 1 1 0 6M22 20a5 5 0 0 0-4-4.9', bg:'oklch(0.95 0.04 150)', c:'oklch(0.5 0.13 150)' },
+    { id:'loyalty',     label:'باشگاه وفاداری', tag:'novel', d:'M12 3.5l2.6 5.4 5.9.6-4.4 4 1.2 5.9-5.3-2.9-5.3 2.9 1.2-5.9-4.4-4 5.9-.6Z', bg:'oklch(0.95 0.05 85)', c:'oklch(0.62 0.14 80)' },
+    { id:'appointment', label:'رزرو نوبت',      tag:'novel', d:'M6 4h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1ZM5 9h14M9 3v3M15 3v3M9.5 14l1.5 1.5 3.5-3.5', bg:'oklch(0.95 0.04 300)', c:'oklch(0.5 0.19 300)' },
+    { id:'compare',     label:'مقایسهٔ قیمت',   tag:'adopt', d:'M9 4v16M15 4v16M4 9h5M15 9h5M4 15h5M15 15h5', bg:'oklch(0.94 0.04 220)', c:'oklch(0.5 0.13 220)' },
+    { id:'escrow',      label:'پرداخت امن',     tag:'adopt', d:'M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3ZM9 12l2 2 4-4', bg:'oklch(0.94 0.04 220)', c:'oklch(0.5 0.13 220)' },
+    { id:'tracking',    label:'ردیابی سفارش',   tag:'novel', d:'M5 16h2M15 16H9m8 0h1.5a1.5 1.5 0 0 0 1.5-1.5V11l-2.5-4H14v9M7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z', bg:'oklch(0.95 0.04 150)', c:'oklch(0.5 0.13 150)' },
+    { id:'returns',     label:'بازگشت کالا',    tag:'novel', d:'M4 12a8 8 0 1 0 2.3-5.6M4 4v3.5H7.5', bg:'oklch(0.95 0.04 300)', c:'oklch(0.5 0.19 300)' },
+    { id:'giftcard',    label:'کارت هدیه',      tag:'novel', d:'M4 9h16v11H4zM4 9l0-2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2M12 5v15M12 5C10 2 6 3 8 6M12 5C14 2 18 3 16 6', bg:'oklch(0.95 0.05 340)', c:'oklch(0.55 0.15 340)' },
+    { id:'warranty',    label:'ضمانت دیجیتال',  tag:'novel', d:'M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3ZM12 8v5M12 16v.5', bg:'oklch(0.95 0.04 150)', c:'oklch(0.5 0.13 150)' },
+    { id:'events',      label:'رویدادها',       tag:'novel', d:'M6 4h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1ZM5 9h14M9 3v3M15 3v3', bg:'oklch(0.95 0.05 25)', c:'oklch(0.58 0.2 25)' },
+    { id:'community',   label:'انجمن محله',     tag:'novel', d:'M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-5 4v-4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z', bg:'oklch(0.94 0.04 220)', c:'oklch(0.5 0.13 220)' },
+    { id:'pricealert',  label:'هشدار قیمت',     tag:'novel', d:'M12 4a5 5 0 0 0-5 5c0 6-2 7-2 7h14s-2-1-2-7a5 5 0 0 0-5-5ZM10 20a2 2 0 0 0 4 0', bg:'oklch(0.95 0.05 85)', c:'oklch(0.62 0.14 80)' },
+    { id:'stories',     label:'استوری فروشگاه', tag:'adopt', d:'M12 3a9 9 0 1 0 9 9M15 3.5a9 9 0 0 1 5.5 5.5M12 8v4l3 2', bg:'oklch(0.95 0.05 340)', c:'oklch(0.55 0.15 340)' },
+    { id:'vipsub',      label:'اشتراک ویژه',    tag:'novel', d:'M4 8l4 3 4-6 4 6 4-3v9H4z', bg:'oklch(0.95 0.05 85)', c:'oklch(0.62 0.14 80)' },
+    { id:'parking',     label:'پارکینگ من',     tag:'novel', d:'M7 20V4h6a4 4 0 0 1 0 8H7', bg:'oklch(0.94 0.04 250)', c:'oklch(0.5 0.13 250)' },
+    { id:'visualsearch',label:'جست‌وجوی تصویری',tag:'novel', d:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM20 20l-4.5-4.5M8.5 11a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0', bg:'oklch(0.95 0.04 300)', c:'oklch(0.5 0.19 300)' },
+  ];
+
+  tagChip(tag) {
+    if (tag === 'adopt') return { style:{ fontSize:'8.5px', fontWeight:700, color:'oklch(0.5 0.13 220)', background:'oklch(0.95 0.03 220)', borderRadius:'6px', padding:'2px 6px' }, label:'اقتباسی' };
+    return { style:{ fontSize:'8.5px', fontWeight:700, color:'oklch(0.5 0.16 300)', background:'oklch(0.95 0.03 300)', borderRadius:'6px', padding:'2px 6px' }, label:'نوآورانه' };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const G = 'linear-gradient(135deg, oklch(0.56 0.22 300), oklch(0.4 0.19 288))';
+
+    const tabBase = { padding:'6px 12px', borderRadius:'999px', fontSize:'11.5px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap' };
+    const screenTabs = this.SCREENS.map(sc => {
+      const active = s.screen === sc.id;
+      return { id: sc.id, label: sc.label, style: { ...tabBase,
+        background: active ? G : 'white',
+        color: active ? 'white' : 'oklch(0.4 0.02 280)',
+        border: active ? 'none' : '1px solid oklch(0.88 0.01 300)' } };
+    });
+    const hubActive = s.screen === 'hub';
+    const hubTabStyle = { ...tabBase, background: hubActive ? G : 'white', color: hubActive ? 'white' : 'oklch(0.4 0.02 280)', border: hubActive ? 'none' : '1px solid oklch(0.88 0.01 300)' };
+
+    const hubItems = this.SCREENS.map(sc => {
+      const t = this.tagChip(sc.tag);
+      const descMap = {
+        concierge:'پیشنهاد بر پایهٔ بودجه و سلیقه', wayfind:'مسیریابی داخل پاساژ',
+        live:'پخش زنده + خرید لحظه‌ای', flash:'حراج با شمارش معکوس',
+        groupbuy:'قیمت بهتر با خرید جمعی', loyalty:'امتیاز و سطح‌بندی',
+        appointment:'رزرو نوبت و اتاق پرو', compare:'قیمت چند فروشنده',
+        escrow:'وجه امانی تا تأیید', tracking:'پیک زنده روی نقشه',
+        returns:'مرجوعی با عکس و دلیل', giftcard:'ارسال کارت هدیه',
+        warranty:'اعتبار ضمانت‌ها', events:'جشنواره‌های پاساژ',
+        community:'گفت‌وگوی خریداران', pricealert:'هشدار افت قیمت',
+        stories:'استوری زودگذر فروشگاه', vipsub:'مزایای اشتراک ویژه',
+        parking:'یادآور و پرداخت پارکینگ', visualsearch:'جست‌وجو با عکس و صدا',
+      };
+      return { id: sc.id, label: sc.label, desc: descMap[sc.id] || '', d: sc.d,
+        iconBg: sc.bg, iconColor: sc.c, tagStyle: t.style, tagLabel: t.label };
+    });
+
+    const bools = {};
+    ['hub', ...this.SCREENS.map(x=>x.id)].forEach(id => { bools['sc_'+id] = s.screen === id; });
+
+    const h = Math.floor(s.flashSecs/3600), m = Math.floor((s.flashSecs%3600)/60), sec = s.flashSecs%60;
+    const pad = n => this.fa(String(n).padStart(2,'0'));
+    const flashClock = `${pad(h)} : ${pad(m)} : ${pad(sec)}`;
+
+    const flashDeals = [
+      { emoji:'🎧', name:'هدفون بی‌سیم TWS', shop:'موبایل کوروش · طبقه ۱', price:'۸۹۰٬۰۰۰', old:'۱٬۴۰۰٬۰۰۰', off:'٪۳۶', bar:'70%', left:'۷ عدد از ۲۰ باقی' },
+      { emoji:'👜', name:'کیف چرم دست‌دوز', shop:'گالری رافیا · طبقه ۲', price:'۱٬۲۵۰٬۰۰۰', old:'۱٬۹۰۰٬۰۰۰', off:'٪۳۴', bar:'40%', left:'۱۲ عدد از ۲۰ باقی' },
+      { emoji:'🕯', name:'شمع معطر دست‌ساز', shop:'نگارخانه آریا · همکف', price:'۱۸۰٬۰۰۰', old:'۲۶۰٬۰۰۰', off:'٪۳۱', bar:'88%', left:'فقط ۳ عدد باقی!' },
+      { emoji:'⌚', name:'ساعت هوشمند سری ۹', shop:'دیجی‌سل مرکزی · طبقه ۱', price:'۵٬۴۰۰٬۰۰۰', old:'۶٬۲۰۰٬۰۰۰', off:'٪۱۳', bar:'25%', left:'۱۵ عدد از ۲۰ باقی' },
+    ];
+
+    return { goScreen: this.goScreen, screenTabs, hubTabStyle, hubItems, flashClock, flashDeals, ...bools };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { margin:0; }
+    doc-page:not(:defined){ visibility:hidden; }
+    * { font-family:'Vazirmatn', sans-serif; }
+  </style>
+</helmet>
+<x-import component-from-global-scope="doc-page" from="./doc-page.js" hint-size="100%,100%">
+<doc-page size="a4" margin="0.9in" dir="rtl" style="direction:rtl; text-align:right; color:oklch(0.22 0.01 60); font-family:'Vazirmatn', sans-serif;">
+
+<h1 style="font-size:28px; font-weight:800; margin:0 0 4px; color:oklch(0.24 0.03 40);">اپلیکیشن بازارچه محلی — سند فنی و محصولی</h1>
+<p style="font-size:14px; color:oklch(0.5 0.02 40); margin:0 0 28px;">مارکت‌پلیس چندفروشنده برای پاساژ / مجتمع تجاری — معماری، مدل داده، صفحات و اولویت‌بندی MVP</p>
+
+<h2 style="font-size:19px; font-weight:700; border-bottom:2px solid oklch(0.85 0.04 55); padding-bottom:6px; margin-top:36px;">۱. معماری کلی و ساختار ماژول‌ها</h2>
+<p style="font-size:14.5px; line-height:1.8;">پیشنهاد: Kotlin Multiplatform (Android اولویت، iOS بعداً) + Clean Architecture با ماژول‌بندی feature-first، مشابه اسکلت فنی موجود در ریپازیتوری فعلی تیم (core/*، feature/*) اما با مدل داده‌ی چندفروشنده از پایه.</p>
+
+<div style="border:1px solid oklch(0.85 0.02 60); border-radius:10px; padding:20px; margin:16px 0; background:oklch(0.98 0.005 60); break-inside:avoid;">
+  <div style="font-weight:700; font-size:13px; color:oklch(0.45 0.02 40); margin-bottom:12px;">لایه‌های ماژول</div>
+  <div style="display:flex; flex-direction:column; gap:8px; font-size:13px;">
+    <div style="background:white; border:1px solid oklch(0.88 0.02 60); border-radius:8px; padding:10px 14px;"><b>app (composeApp)</b> — ناوبری اصلی، تفکیک گراف مشتری / فروشنده / ادمین</div>
+    <div style="background:white; border:1px solid oklch(0.88 0.02 60); border-radius:8px; padding:10px 14px;"><b>feature-onboarding-vendor</b> — ثبت‌نام فروشگاه، آپلود مدارک، انتخاب حالت کاتالوگ</div>
+    <div style="background:white; border:1px solid oklch(0.88 0.02 60); border-radius:8px; padding:10px 14px;"><b>feature-store</b> — پروفایل فروشگاه، مدیریت فروشگاه توسط Vendor (ساعات کاری، گالری، موقعیت)</div>
+    <div style="background:white; border:1px solid oklch(0.88 0.02 60); border-radius:8px; padding:10px 14px;"><b>feature-product</b> — کاتالوگ محصول با دو حالت Showcase/Commerce، مدیریت محصول Vendor</div>
+    <div style="background:white; border:1px solid oklch(0.88 0.02 60); border-radius:8px; padding:10px 14px;"><b>feature-search</b> — جست‌وجو، فیلتر (طبقه/دسته/قیمت)، نقشه پاساژ</div>
+    <div style="background:white; border:1px solid oklch(0.88 0.02 60); border-radius:8px; padding:10px 14px;"><b>feature-cart-checkout</b> — سبد خرید، سفارش، درگاه پرداخت (فقط برای فروشگاه‌های Commerce Mode)</div>
+    <div style="background:white; border:1px solid oklch(0.88 0.02 60); border-radius:8px; padding:10px 14px;"><b>feature-admin-mall</b> — تایید فروشگاه، مدیریت محتوا، گزارش‌ها (پنل وب یا موبایل جدا)</div>
+    <div style="background:white; border:1px solid oklch(0.88 0.02 60); border-radius:8px; padding:10px 14px;"><b>core/domain, core/data, core/network, core/designSystem, core/navigation</b> — مشترک بین همه فیچرها</div>
+  </div>
+</div>
+
+<ul style="font-size:14.5px; line-height:1.9;">
+  <li><b>UI:</b> Jetpack Compose (Multiplatform) — امکان اپ فروشنده و ادمین به‌صورت وب/دسکتاپ با همان Compose برای وب</li>
+  <li><b>State/DI:</b> MVVM + ViewModel per screen، Koin برای DI</li>
+  <li><b>Local cache:</b> Room — کاتالوگ، سبد خرید آفلاین، لیست علاقه‌مندی</li>
+  <li><b>Network:</b> Ktor Client (یا Retrofit روی اندروید) — REST روی بک‌اند Ktor/Spring</li>
+  <li><b>Auth/Storage/Push:</b> Firebase Auth (OTP موبایل) + Firebase Storage برای گالری تصاویر + FCM برای اعلان تایید فروشگاه/سفارش</li>
+  <li><b>پرداخت:</b> زرین‌پال یا آیدی‌پی، فقط در مسیر Commerce Mode؛ Showcase Mode اصلاً به درگاه وصل نمی‌شود</li>
+  <li><b>نقشه داخلی:</b> فاز اول = SVG/Compose Canvas ساده از پلان پاساژ با pin؛ فاز بعد = یکپارچه‌سازی با نقشه واقعی طبقات</li>
+</ul>
+
+<h2 style="font-size:19px; font-weight:700; border-bottom:2px solid oklch(0.85 0.04 55); padding-bottom:6px; margin-top:36px;">۲. مدل داده (Entities)</h2>
+
+<table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:12px;">
+<thead><tr style="background:oklch(0.94 0.02 55);">
+<th style="border:1px solid oklch(0.85 0.02 60); padding:8px; text-align:right;">Entity</th>
+<th style="border:1px solid oklch(0.85 0.02 60); padding:8px; text-align:right;">فیلدهای کلیدی</th>
+</tr></thead>
+<tbody>
+<tr><td style="border:1px solid oklch(0.88 0.02 60); padding:8px; font-weight:700;">User</td><td style="border:1px solid oklch(0.88 0.02 60); padding:8px;">id, phone, name, role (CUSTOMER/VENDOR/ADMIN), avatarUrl, createdAt</td></tr>
+<tr><td style="border:1px solid oklch(0.88 0.02 60); padding:8px; font-weight:700;">Shop</td><td style="border:1px solid oklch(0.88 0.02 60); padding:8px;">id, ownerId (User), name, logoUrl, coverUrl, description, categoryId, floor, unitNumber, mapX, mapY, phone, workingHours[], catalogMode (SHOWCASE/COMMERCE/MIXED), status (PENDING/APPROVED/REJECTED/SUSPENDED), rating, createdAt</td></tr>
+<tr><td style="border:1px solid oklch(0.88 0.02 60); padding:8px; font-weight:700;">Category</td><td style="border:1px solid oklch(0.88 0.02 60); padding:8px;">id, name, iconUrl, parentId (nullable, برای زیردسته)</td></tr>
+<tr><td style="border:1px solid oklch(0.88 0.02 60); padding:8px; font-weight:700;">Product</td><td style="border:1px solid oklch(0.88 0.02 60); padding:8px;">id, shopId, name, brand, categoryId, images[], description, mode (SHOWCASE/COMMERCE — می‌تواند مستقل از Shop.catalogMode برای MIXED باشد), price (nullable در Showcase), discountPrice, stock, variants[] (رنگ/سایز), status</td></tr>
+<tr><td style="border:1px solid oklch(0.88 0.02 60); padding:8px; font-weight:700;">Order</td><td style="border:1px solid oklch(0.88 0.02 60); padding:8px;">id, customerId, shopId, items[] (productId, variant, qty, price), status (PENDING/PROCESSING/SHIPPED/DELIVERED/CANCELED), paymentMethod, totalAmount, addressId, createdAt</td></tr>
+<tr><td style="border:1px solid oklch(0.88 0.02 60); padding:8px; font-weight:700;">Review</td><td style="border:1px solid oklch(0.88 0.02 60); padding:8px;">id, productId یا shopId, customerId, rating, comment, createdAt</td></tr>
+<tr><td style="border:1px solid oklch(0.88 0.02 60); padding:8px; font-weight:700;">Floor / MallMap</td><td style="border:1px solid oklch(0.88 0.02 60); padding:8px;">id, floorNumber, label, mapImageUrl, shops[] (با مختصات mapX/mapY)</td></tr>
+</tbody>
+</table>
+<p style="font-size:13px; color:oklch(0.5 0.02 40); margin-top:8px;">نکته: Product.mode مستقل از Shop.catalogMode تعریف شده تا حالت «ترکیبی» درخواستی (بخشی کاتالوگ، بخشی قابل‌خرید) در سطح هر محصول پیاده شود، نه فقط سطح فروشگاه.</p>
+
+<h2 style="font-size:19px; font-weight:700; border-bottom:2px solid oklch(0.85 0.04 55); padding-bottom:6px; margin-top:36px;">۳. لیست صفحات و فلوی ناوبری</h2>
+
+<div style="font-size:14px; line-height:1.9;">
+<b>مشترک / احراز هویت:</b> ورود با OTP → انتخاب نقش (اولین بار) → Splash/Onboarding
+<br><b>خریدار (Customer):</b> خانه (پیشنهادها + دسته‌های محبوب) → جست‌وجو/فیلتر → نتایج (لیست یا نقشه طبقات) → پروفایل فروشگاه → جزئیات محصول (Showcase: تماس/مسیریابی | Commerce: افزودن به سبد) → سبد خرید → پرداخت → پیگیری سفارش → پروفایل کاربر/علاقه‌مندی‌ها
+<br><b>فروشنده (Vendor):</b> ثبت‌نام فروشگاه (فرم چندمرحله‌ای + انتخاب حالت کاتالوگ) → صفحه «در انتظار تایید» → داشبورد فروشگاه → مدیریت محصولات (افزودن/ویرایش، سوییچ Showcase/Commerce به ازای هر محصول) → مدیریت سفارش‌های ورودی (فقط Commerce) → ویرایش پروفایل فروشگاه
+<br><b>ادمین پاساژ (Admin):</b> صف تاییدِ فروشگاه‌های جدید → بررسی مدارک/پروفایل → تایید/رد → مدیریت دسته‌بندی‌ها و نقشه طبقات → گزارش تخلف/گزارش عملکرد فروشگاه‌ها
+</div>
+
+<h2 style="font-size:19px; font-weight:700; border-bottom:2px solid oklch(0.85 0.04 55); padding-bottom:6px; margin-top:36px;">۴. اولویت‌بندی MVP در مقابل نسخه‌های بعدی</h2>
+
+<div style="display:flex; gap:16px; margin-top:12px;">
+<div style="flex:1; border:1px solid oklch(0.7 0.09 155); border-radius:10px; padding:16px; background:oklch(0.97 0.02 155); break-inside:avoid;">
+<div style="font-weight:700; font-size:14px; margin-bottom:10px; color:oklch(0.4 0.08 155);">MVP (فاز ۱)</div>
+<ul style="font-size:13px; line-height:1.85; margin:0; padding-inline-start:18px;">
+<li>ثبت‌نام و پروفایل فروشگاه (اطلاعات پایه، بدون تایید پیچیده — تایید دستی ساده)</li>
+<li>کاتالوگ Showcase Mode کامل (بدون قیمت/خرید)</li>
+<li>جست‌وجو و فیلتر پایه (دسته، طبقه)</li>
+<li>لیست طبقات پاساژ (بدون نقشه تصویری تعاملی)</li>
+<li>دکمه تماس / نمایش آدرس روی نقشه بیرونی (مثلاً نشان دادن روی نقشه بیرونی گوگل)</li>
+<li>پنل ادمین حداقلی: تایید/رد فروشگاه</li>
+</ul>
+</div>
+<div style="flex:1; border:1px solid oklch(0.75 0.09 60); border-radius:10px; padding:16px; background:oklch(0.97 0.02 60); break-inside:avoid;">
+<div style="font-weight:700; font-size:14px; margin-bottom:10px; color:oklch(0.45 0.1 55);">نسخه‌های بعدی</div>
+<ul style="font-size:13px; line-height:1.85; margin:0; padding-inline-start:18px;">
+<li>Commerce Mode کامل: سبد خرید، درگاه پرداخت، پیگیری سفارش</li>
+<li>حالت ترکیبی (Mixed) در سطح محصول</li>
+<li>نقشه تصویری تعاملی داخل پاساژ با مسیریابی pin به pin</li>
+<li>داشبورد آماری فروشنده و ادمین (فروش، بازدید، پرطرفدارترین)</li>
+<li>اعلان push برای تخفیف/محصول جدید فروشگاه‌های دنبال‌شده</li>
+<li>چت پشتیبانی / تیکتینگ بین خریدار و فروشنده</li>
+</ul>
+</div>
+</div>
+
+</doc-page>
+</x-import>
+</x-dc>
+</body>
+</html>
