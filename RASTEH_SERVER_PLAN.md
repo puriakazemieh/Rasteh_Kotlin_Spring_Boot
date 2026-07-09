@@ -1,149 +1,287 @@
 # پلنِ ساخت — Rasteh_Kotlin_Spring_Boot (سرور)
 
-> مارکت‌پلیسِ محلی برایِ پاساژ/راسته: چند فروشگاهِ مستقل زیرِ یک چتر، هرکدوم با پروفایلِ خودش،
-> که می‌توانند محصولاتشان را به‌صورتِ «فقط نمایشی» (Showcase) یا «کامل قابلِ‌خرید» (Commerce) عرضه کنند.
+> مارکت‌پلیسِ محلیِ پاساژ/راسته (ترکیبی از دیوار/شیپور/باسلام/ترب): چند فروشگاهِ مستقل زیرِ یک چتر،
+> با سه نقشِ یکپارچه (خریدار / فروشنده / ادمینِ پاساژ)، کاتالوگِ دوحالته
+> («خرید آنلاین» = buyable / «فقط بازدید حضوری» = visitOnly)، سیستمِ دنبال‌کردن + هدیهٔ دنبال‌کننده،
+> چتِ درون‌برنامه‌ای، پیشنهادِ قیمت، و ۲۰ قابلیتِ ویژه (لایوشاپینگ، خرید گروهی، تخفیف ساعتی،
+> مسیریابِ داخلِ پاساژ، وفاداری، پرداختِ امانی و…).
 
-این سند خروجیِ یک تحلیلِ اورلپ با پروژه‌ی خواهرِ تک‌مستأجری (`shop-kotlin-spring-boot`) است.
-حدودِ ۴۰-۵۰٪ زیرساخت (auth، پرداخت، تخفیف، فایل/تصویر) قابلِ کپیِ مستقیم است؛ کاتالوگ و سفارش
-نیازِ ریفکتورِ vendor-scoping دارند؛ Vendor/تاییدِ ونـدور/Showcase-Commerce/نقشه‌ی طبقات کاملاً نو هستند.
+این سند خروجیِ **تلفیقِ دو منبع** است:
+1. تحلیلِ اورلپ با پروژه‌ی خواهرِ تک‌مستأجری (`shop-kotlin-spring-boot`) — ~۴۰-۵۰٪ زیرساخت قابلِ کپی.
+2. **بستهٔ طراحیِ نهایی** (`design_handoff_unified_app` — «اپلیکیشن بازارچهٔ محلی»، hi-fi، RTL فارسی)
+   که ساختارِ صفحات، مدلِ داده، و ۲۰ قابلیتِ ویژه را قطعی می‌کند.
 
----
-
-## ۱) تصمیمِ تکنولوژی (فرق با پیشنهادِ اولیه‌ی کاربر)
-
-پیشنهادِ اولیه Android+Compose تنها با Firebase بود. به‌جایِ آن **همان استکِ اثبات‌شده‌ی پروژه‌ی
-فروشگاه** را ادامه می‌دهیم چون کدِ زیادی از آن قابلِ بازاستفاده است و تیم از قبل با آن آشناست:
-
-- Kotlin + Spring Boot (Web MVC یا WebFlux — هرکدام که در `shop-kotlin-spring-boot` هست، همان)
-- PostgreSQL + Hibernate/JPA، migration با فایل‌هایِ idempotent در `db/init/NNN_*.sql`
-- ساختارِ ماژولی به سبکِ Clean Architecture: `api` (controller/dto/mapper) → `application` (service) → `persistence` (entity/repository)
-- JWT auth (کپی از `shop/identity`)
-- پرداخت: Zarinpal/IDPay از طریقِ همان `shop/payment` (کپی مستقیم)
+نسخهٔ هم‌سویِ کلاینت: `RASTEH_KMP_PLAN.md` در ریپویِ `Rasteh_KMP`.
 
 ---
 
-## ۲) نقش‌ها
+## ۰) منبعِ حقیقت: بستهٔ طراحی
 
-| نقش | معادل در پروژه‌ی فروشگاه | تفاوت |
+مرجعِ نهاییِ UI/UX و دامنه، پوشهٔ `design_handoff_unified_app` است:
+- `Unified App.dc.html` — اپِ کامل (~۵۸ صفحه، همه در یک state machine با متغیرِ `screen`).
+- `Local-Marketplace-Spec.dc.html` — سندِ فلوی اولیه.
+- `README.md` — توکن‌های طراحی، مدلِ داده، فهرستِ صفحات و رفتار.
+
+**قاعده:** هر تصمیمِ محصولی که این پلن پوشش نمی‌دهد، از روی این فایل‌ها استخراج شود، نه از حدس.
+سرور باید همهٔ داده‌ای را که این صفحات نمایش می‌دهند، فراهم کند (contract-first از روی صفحات).
+
+---
+
+## ۱) تصمیمِ تکنولوژی
+
+**همان استکِ اثبات‌شدهٔ پروژه‌ی فروشگاه** ادامه می‌یابد (بازاستفادهٔ حداکثری + آشناییِ تیم):
+
+- Kotlin + Spring Boot (Web MVC یا WebFlux — هرچه در `shop-kotlin-spring-boot` هست، همان).
+- PostgreSQL + Hibernate/JPA؛ migration با فایل‌هایِ idempotent در `db/init/NNN_*.sql`.
+- Clean Architecture لایه‌ای: `api` (controller/dto/mapper) → `application` (service) → `persistence` (entity/repository).
+- JWT auth (کپی از `shop/identity`).
+- پرداخت: Zarinpal/IDPay از طریقِ همان `shop/payment` (کپی مستقیم) — با افزودنِ حالتِ **امانی/escrow**.
+- ذخیرهٔ فایل/تصویر: همان الگویِ `shop` (آپلود یا «افزودن با لینک»).
+
+> نکتهٔ طراحی: تصاویر در پروتوتایپ با **ایموجی + placeholder** جایگزین شده‌اند؛ سرور فیلدِ `emoji`
+> و `imageUrl[]` را هردو نگه می‌دارد تا کلاینت در نبودِ تصویرِ واقعی، fallbackِ ایموجی داشته باشد.
+
+---
+
+## ۲) نقش‌ها (سه نقشِ یکپارچه در یک اپ)
+
+طراحی یک اپِ واحد با **سوییچِ نقشِ درون‌پروفایلی** دارد (`role = customer | vendor | admin`).
+سرور باید RBAC سه‌سطحی بدهد و یک کاربر بتواند هم‌زمان customer و vendor (و در صورتِ اعطا، admin) باشد.
+
+| نقش | معادلِ فروشگاه | تفاوت |
 |---|---|---|
-| Customer | `customer` | همان، به‌علاوه‌یِ جست‌وجویِ چندونـدوری |
-| Vendor (صاحبِ فروشگاه) | نزدیک‌ترین: `clinic/TherapistEntity` (ارائه‌دهنده‌ی خدمتی که ادمین تاییدش می‌کند) | ولی Vendor علاوه‌براین صاحبِ کاتالوگِ خودش هم هست |
-| Admin پاساژ | `admin` | به‌علاوه‌یِ فرایندِ تاییدِ Vendor |
+| Customer | `customer` | + جست‌وجوی چندونـدوری، دنبال‌کردن، بوکمارک، چت، پیشنهادِ قیمت، ۲۰ قابلیت |
+| Vendor (صاحبِ فروشگاه) | نزدیک‌ترین: `clinic/TherapistEntity` (ارائه‌دهنده‌ای که ادمین تأییدش می‌کند) | + صاحبِ کاتالوگِ خودش، آمار، تخفیفِ دنبال‌کننده، QR |
+| Admin پاساژ | `admin` | + صفِ تأییدِ فروشگاه، مدیریتِ گزارشِ تخلف، سوپروایزرها |
+
+`RoleEntity` مقدارِ `VENDOR` می‌گیرد. یک کاربر می‌تواند چند نقش داشته باشد؛ نقشِ فعال سمتِ کلاینت است.
 
 ---
 
-## ۳) مدلِ داده (Entityهایِ اصلی)
+## ۳) مدلِ داده (منطبق بر بخشِ Data Models طراحی)
 
-### جدید — از صفر
+فیلدهای زیر مستقیماً از objectهای دادهٔ `Unified App.dc.html` استخراج شده‌اند.
 
-```
-Mall                 (id, name, address, floorCount, description)
-Vendor               (id, mallId, ownerUserId, name, logoUrl, coverUrl,
-                       floorNumber, unitNumber, mapX, mapY,   -- موقعیت روی نقشه‌ی داخلی
-                       primaryCategory, phone, workingHoursJson,
-                       description, status: PENDING|APPROVED|REJECTED|SUSPENDED,
-                       createdAt, approvedAt)
-VendorCategoryMode   (vendorId, categoryId, mode: SHOWCASE|COMMERCE)   -- انتخاب per دسته، نه فقط per فروشگاه
-```
-
-### اقتباسی — کپی از `shop/catalog` با اضافه‌شدنِ `vendorId`
+### هستهٔ مارکت‌پلیس — جدید
 
 ```
-ProductEntity        += vendorId (FK -> Vendor), isPurchasable (Boolean, از VendorCategoryMode مشتق/کش می‌شود)
-CategoryEntity       += vendorId (nullable اگر دسته‌بندیِ سراسری/مشترک هم بخواهیم)
-ProductImageEntity, ProductVideoEntity, OptionType/OptionValue, InventoryEntity   -- بدون تغییرِ ساختاری، فقط از طریقِ product.vendorId قابلِ اسکوپ هستند
+Mall / Pasaj      (id, name, city, address, floorCount, description, floorLabelsJson)
+City              (id, name, province, isActive)           -- صفحهٔ citySelect
+Shop (=Vendor)    (id, mallId, ownerUserId, name, category(=primaryCategory), floor,
+                   type: BUYABLE|VISIT_ONLY,                 -- «خرید آنلاین» / «فقط بازدید حضوری»
+                   verified: Boolean, rating, reviewsCount,
+                   followersCount, salesCount, satisfaction, performance,  -- نوارِ آمارِ shopDetail
+                   phone, hasChat: Boolean, acceptsOffers: Boolean,        -- toggleهای becomeVendor
+                   about, workingHoursJson, address, mapX, mapY,           -- موقعیت روی نقشهٔ داخلی
+                   emoji, coverUrl, logoUrl,
+                   status: PENDING|APPROVED|REJECTED|SUSPENDED,
+                   createdAt, approvedAt)
+VendorCategoryMode (shopId, categoryId, mode: SHOWCASE|COMMERCE)  -- override per دسته روی type فروشگاه
 ```
 
-### اقتباسی — کپی از `shop/order` با split per-vendor
+### کاتالوگ — اقتباس از `shop/catalog` + `shopId`
 
 ```
-OrderEntity          += (بدون تغییر ساختاری اگر سبد تک‌ونـدوری باشد — رجوع به بخشِ ۴)
-OrderItemEntity      += vendorId (برایِ گزارش‌گیریِ جداگانه حتی اگر سفارش تکی بماند)
+ProductEntity     += shopId (FK), condition: NEW|USED, stock, discountPercent, oldPrice,
+                     isPurchasable (مشتق از type فروشگاه + VendorCategoryMode), emoji
+CategoryEntity    += shopId (nullable برای دسته‌بندیِ سراسری)
+ProductImageEntity, OptionType/OptionValue (=مدل/model chip), InventoryEntity  -- ساختار بدون تغییر، از طریقِ product.shopId اسکوپ‌شونده
+```
+
+### دنبال‌کردن + هدیهٔ دنبال‌کننده — جدید (قلبِ تجربهٔ طراحی)
+
+```
+ShopFollow        (userId, shopId, createdAt)                 -- toggle در shopDetail/manageFollowing
+FollowerPerk      (id, shopId, code, percent, label, expiry, usesCount, showSpecialPrice: Boolean, active)
+                                                              -- FOLLOW15 و ساختِ کدِ جدید توسطِ ونـدور
+```
+
+### تعامل — جدید
+
+```
+Conversation      (id, customerUserId, shopId, lastMessageAt)  -- chatList
+Message           (id, conversationId, senderUserId, body, sentAt, readAt)  -- chatThread
+Offer             (id, productId, buyerUserId, shopId, amount, status: PENDING|ACCEPTED|REJECTED, createdAt)
+                                                              -- makeOffer («پذیرش پیشنهاد قیمت»)
+Bookmark          (userId, productId?, shopId?, createdAt)     -- bookmarks (تب محصولات/فروشگاه‌ها)
+ActivityEvent     (id, userId, action: LIKE|SAVE|MESSAGE|FOLLOW, targetType, targetId, icon, createdAt)  -- activity
+Review            (id, productId?, shopId?, userId, stars, comment, createdAt)  -- {name, stars, comment}
+Report            (id, reporterUserId, targetType: SHOP|PRODUCT, targetId, reason, note, photoUrls,
+                   status: OPEN|RESOLVED|REJECTED, createdAt)  -- «گزارش تخلف» + adminDash/reportDetail
+Notification      (id, userId, type, title, body, isRead, createdAt)  -- زنگولهٔ هدر + صفحهٔ notifications
+```
+
+### سبد/سفارش — اقتباس از `shop`
+
+```
+CartEntity        += shopId (سبدِ تک‌ونـدوری — بخشِ ۵)
+CartItemEntity
+OrderEntity       (تک‌ونـدوری)، OrderItemEntity += shopId (گزارش‌گیریِ per-vendor)
+```
+
+### مالی/وفاداری — جدید (از صفحاتِ wallet/loyalty/giftcard/vipsub/referral)
+
+```
+Wallet            (userId, balance)                           -- wallet
+WalletTransaction (id, walletId, amount, type, ref, createdAt)
+LoyaltyAccount    (userId, points, tier: SILVER|GOLD|PLATINUM) -- loyalty (کارت طلایی + QR)
+LoyaltyReward     (id, title, cost, active)
+GiftCard          (id, code, amount, buyerUserId, recipient, redeemedByUserId?, status)  -- giftcard
+Referral          (id, inviterUserId, code, inviteeUserId?, rewardStatus)  -- referral («دعوت دوستان»)
+Subscription      (userId, plan: BAZARCHE_PLUS, startedAt, expiresAt, active)  -- vipsub («بازارچه پلاس»)
 ```
 
 ### بدون تغییر — کپیِ مستقیم
 
 ```
-UserEntity, RoleEntity   (شاید یک enum مقدار VENDOR اضافه شود)
-DiscountEntity, CampaignEntity
-PaymentTransactionEntity
+UserEntity, RoleEntity (+VENDOR), DiscountEntity, CampaignEntity, PaymentTransactionEntity
 ```
 
 ---
 
-## ۴) تصمیمِ کلیدیِ معماری: سبدِ خرید تک‌ونـدوری یا چندونـدوری؟
+## ۴) مدلِ دادهٔ ۲۰ قابلیتِ ویژه (features)
 
-**پیشنهاد برایِ MVP: سبدِ خرید تک‌ونـدوری** (مثلِ اسنپ‌فود/دیجی‌کالا-پلاس در حالتِ pickup).
-دلیل: چک‌اوتِ چندونـدوری (split کردنِ یک پرداخت بینِ چند فروشگاه، ارسال‌های جدا، لغوِ جزئی) پیچیدگیِ
-مالی/لجستیکیِ زیادی اضافه می‌کند که در MVP لازم نیست. اگر کاربر از فروشگاهِ دیگری هم بخواهد بخرد،
-یا باید سبدِ قبلی را ببندد یا (نسخه‌ی بعدی) واقعاً چندسبدی/چندسفارشی کار کند.
+هر قابلیت یک صفحه در `features` دارد. جدولِ زیر تعیین می‌کند هرکدام چه پشتیبانیِ سروری می‌خواهد و در کدام فاز است.
 
-این یعنی `CartEntity` یک `vendorId` می‌گیرد و افزودنِ آیتم از ونـدورِ دیگر یا خطا می‌دهد یا سبد را خالی
-می‌کند و هشدار می‌دهد (تصمیمِ UX، فازِ ۳).
+| # | قابلیت (screen) | نیازِ سرور | فاز |
+|---|---|---|---|
+| 1 | concierge (دستیارِ خریدِ هوشمند) | endpoint چت‌بات؛ در MVP پاسخِ قالبی/جست‌وجو، بعداً LLM | F7 |
+| 2 | wayfind / floorMap (مسیریابِ داخلِ پاساژ) | برگرداندنِ `mapX/mapY/floor` فروشگاه‌ها + متادیتای طبقات | F6 |
+| 3 | live (لایوشاپینگ) | `LiveSession` (shopId, streamUrl, status)، چتِ زنده، کارتِ محصولِ pinned | F7 |
+| 4 | flash (تخفیفِ ساعتی) | `FlashSale` (productId, percent, startsAt, endsAt, stock) — توسعهٔ discount | F5 |
+| 5 | groupbuy (خرید گروهی) | `GroupBuy` (productId, targetQty, currentQty, price, deadline) + `GroupBuyParticipant` | F5 |
+| 6 | loyalty (باشگاهِ وفاداری) | LoyaltyAccount/Reward (بخشِ ۳) | F5 |
+| 7 | appointment (رزروِ نوبتِ حضوری) | `Appointment` (shopId, userId, slotStart, status) + ظرفیتِ اسلات | F6 |
+| 8 | compare (مقایسهٔ فروشندگان) | کوئریِ «فروشندگانِ دیگرِ این کالا» + ارزان‌ترین (بخشِ listing) | F4 |
+| 9 | escrow (پرداختِ امانِ امانی) | حالتِ نگه‌داریِ وجه در PaymentTransaction + تایم‌لاینِ مرحله‌ای | F7 |
+| 10 | tracking (ردیابیِ زندهٔ سفارش) | `OrderTracking` (orderId, stage, courier, lat/lng) | F7 |
+| 11 | returns (مرکزِ بازگشتِ کالا) | `ReturnRequest` (orderItemId, reason, photoUrls, status) | F6 |
+| 12 | giftcard (کارتِ هدیه) | GiftCard (بخشِ ۳) | F6 |
+| 13 | warranty (دفترچهٔ ضمانتِ دیجیتال) | `Warranty` (orderItemId, serial, validUntil) | F6 |
+| 14 | events (رویدادها/جشنواره‌ها) | `Event` (mallId, title, date, description) | F6 |
+| 15 | community (انجمنِ محله) | `CommunityPost` + `Comment` (اجتماعی) | F7 |
+| 16 | pricealert (هشدارِ کاهشِ قیمت) | `PriceAlert` (userId, productId, targetPrice) + تریگرِ نوتیف | F5 |
+| 17 | stories (استوریِ فروشگاه‌ها) | `Story` (shopId, mediaUrl, expiresAt) | F6 |
+| 18 | vipsub (بازارچه پلاس) | Subscription (بخشِ ۳) + پرداختِ دوره‌ای | F7 |
+| 19 | parking (پارکینگِ من) | `ParkingSession` (userId, spot, enteredAt, fee, paid) | F7 |
+| 20 | visualsearch (جست‌وجوی تصویری/صوتی) | آپلودِ تصویر + تطبیق (ML) — MVP: صرفاً آپلود+جست‌وجوی متنی | F7+ |
 
----
-
-## ۵) فازبندی
-
-### فازِ ۰ — اسکلتِ پروژه
-- کپیِ ساختارِ Gradle/Spring Boot از `shop-kotlin-spring-boot` (build.gradle.kts, application.yml, Docker/compose برایِ Postgres)
-- کپیِ کاملِ `shop/identity` → `rasteh/identity` (auth/JWT بدون تغییر)
-- کپیِ `shop/payment`, `shop/discount` → بدون تغییر
-- migration اول: جدولِ `mall`, `vendor`, `vendor_category_mode`
-
-### فازِ ۱ — Vendor + تاییدِ ادمین
-- `VendorController` (ثبتِ درخواستِ ونـدور توسطِ کاربر) + `AdminVendorController` (approve/reject/suspend)
-- الگو: دقیقاً شبیهِ Admin-approve-therapist در clinic، ولی موجودیتش جدید است
-- migration: enum status + ایندکس رویِ `(mallId, status)`
-
-### فازِ ۲ — کاتالوگِ Vendor-scoped
-- کپیِ `shop/catalog` کامل → اضافه‌کردنِ `vendorId` به `ProductEntity`/`CategoryEntity`
-- هر endpoint ادمینِ کاتالوگ باید چک کند caller همان Vendor است (یا Admin پاساژ) — RBAC جدید
-- `VendorCategoryMode` سرویس: تعیینِ Showcase/Commerce per دسته + مشتق‌کردنِ `isPurchasable` رویِ محصول
-
-### فازِ ۳ — سبد/سفارش تک‌ونـدوری
-- کپیِ `shop/cart` + اضافه‌کردنِ چکِ vendorId
-- کپیِ `shop/order` + `vendorId` رویِ `OrderItem` برایِ گزارش
-- `AdminOrderController` per-vendor: هر Vendor فقط سفارش‌هایِ خودش را می‌بیند
-
-### فازِ ۴ — جست‌وجو/کشف چندونـدوری
-- کپیِ `ProductSearchRepository` + اضافه‌کردنِ فیلترِ `floorNumber`/`mallId`/`primaryCategory`
-- endpoint فهرستِ ونـدورهایِ یک پاساژ با فیلترِ طبقه/دسته
-- (اختیاری فازِ بعد) endpoint مسیریابی/نقشه — فقط برگرداندنِ `mapX/mapY` کافی است؛ رندرِ نقشه کارِ کلاینت است
-
-### فازِ ۵ — صیقل
-- کپیِ `ReviewService`/`QuestionService` با vendorId
-- گزارشِ مالیِ per-vendor در دشبوردِ ادمین پاساژ (شبیهِ فازِ M/N پروژه‌ی فروشگاه)
-- Notification: تاییدِ ونـدور، سفارشِ جدید برایِ ونـدور (کپیِ الگویِ `StockNotification`)
+**MVP (F0–F4)** فقط قابلیت ۸ (compare) را واجب دارد؛ بقیه از F5 به بعد موج‌به‌موج اضافه می‌شوند.
+launcherِ `features` می‌تواند از ابتدا موجود باشد و قابلیت‌های نیامده را «به‌زودی» نشان دهد.
 
 ---
 
-## ۶) جدولِ «چه‌فایلی از کجا کپی شود» (مرجعِ سریع)
+## ۵) تصمیمِ کلیدیِ معماری: سبدِ خریدِ تک‌ونـدوری
+
+**MVP: سبدِ خرید تک‌ونـدوری** (مثلِ pickupِ محلی). چک‌اوتِ چندونـدوری (splitِ پرداخت بینِ چند فروشگاه،
+ارسال‌های جدا، لغوِ جزئی) پیچیدگیِ مالی/لجستیکیِ بالایی دارد و برای MVP لازم نیست.
+
+`CartEntity` یک `shopId` می‌گیرد؛ افزودنِ آیتم از فروشگاهِ دیگر → خطای `CART_VENDOR_MISMATCH`
+(کلاینت هشدارِ «سبد را خالی می‌کنید؟» می‌دهد — تصمیمِ UX در فازِ F3 کلاینت).
+برای فروشگاه‌های `VISIT_ONLY` دکمهٔ خرید نمایش داده نمی‌شود؛ به‌جایش «تماس/مسیریابی/رزروِ بازدید».
+
+---
+
+## ۶) فازبندی
+
+### فازِ ۰ — اسکلت + دیزاین‌کانترکت
+- کپیِ ساختارِ Gradle/Spring Boot از `shop-kotlin-spring-boot` (build.gradle.kts، application.yml، docker-compose برای Postgres).
+- کپیِ کاملِ `shop/identity` → `rasteh/identity` (auth/JWT بدون تغییر) + افزودنِ نقشِ `VENDOR` و چند-نقشی.
+- کپیِ `shop/payment`, `shop/discount` بدون تغییر.
+- migration اول: `city`, `mall`, `shop`, `vendor_category_mode`.
+- سندِ contract: فهرستِ ~۵۸ صفحه از طراحی → جدولِ endpointهای موردِ نیاز.
+
+### فازِ ۱ — Vendor onboarding + تأییدِ ادمین
+- `ShopController` (ثبتِ درخواستِ فروشگاه: نام، دسته، طبقه، `type`، تلفن، آدرس، ساعاتِ کاری، about،
+  toggleهای `hasChat`/`acceptsOffers`) — منطبق بر صفحهٔ **becomeVendor**.
+- `AdminShopController` (approve/reject/suspend) — الگویِ Admin-approve-therapist در clinic.
+- `CityController` (فهرست/جست‌وجوی شهر) — صفحهٔ **citySelect**.
+- migration: enum status + ایندکسِ `(mallId, status)`, `(city)`.
+
+### فازِ ۲ — کاتالوگِ دوحالته (Vendor-scoped)
+- کپیِ `shop/catalog` + افزودنِ `shopId` به Product/Category + فیلدهای `condition/stock/discountPercent/oldPrice/emoji`.
+- RBAC: هر endpointِ ادمینِ کاتالوگ چک کند caller همان Vendor است (یا Admin پاساژ).
+- `VendorCategoryMode` سرویس: Showcase/Commerce per دسته + مشتق‌کردنِ `isPurchasable`.
+- منطبق بر صفحاتِ **addProduct / manageListings / editShop**.
+
+### فازِ ۳ — دنبال‌کردن + هدیهٔ دنبال‌کننده + چت + پیشنهادِ قیمت
+- `FollowController` (toggle follow، فهرستِ دنبال‌شده‌ها) — **shopDetail / manageFollowing**.
+- `FollowerPerkController` (ونـدور کدِ FOLLOW15 می‌سازد؛ خریدارِ دنبال‌کننده استفاده می‌کند) — **followerPerk**.
+- `ChatController` + WebSocket/polling برای Conversation/Message — **chatList / chatThread**.
+- `OfferController` (ثبت/پذیرش/ردِ پیشنهادِ قیمت، فقط اگر `shop.acceptsOffers`) — **makeOffer**.
+- `BookmarkController`, `ActivityController` — **bookmarks / activity**.
+
+### فازِ ۴ — سبد/سفارش + جست‌وجو/مقایسه/کشف
+- کپیِ `shop/cart` + چکِ تک‌ونـدوری؛ کپیِ `shop/order` + `shopId` روی OrderItem — **cart / orderConfirm / vendorOrders**.
+- کپیِ `ProductSearchRepository` + فیلترهایِ طراحی: **دسته، قیمت، برند، وضعیت(new/used)، مرتب‌سازی، طبقه، شهر** — **search**.
+- کوئریِ «فروشندگانِ دیگرِ این کالا» + ارزان‌ترین (بوردر سبز/badge) — **listing / compare**.
+- `ReviewController` (نظرات + میانگین) — تبِ نظراتِ **shopDetail**.
+- endpointِ «کالاها و سفارش‌های من» (کالاها/سفارش‌هایِ خودِ کاربر، اسکوپ به ownerUserId) — **myListings** (بازاستفاده از order/catalog). خروجِ کاربر (**logoutConfirm**) صرفاً کلاینتی است (پاک‌کردنِ توکن).
+
+### فازِ ۵ — قابلیت‌هایِ تجاریِ موجِ اول
+- `FlashSaleController` (تخفیفِ ساعتی + شمارشِ معکوس + موجودی) — **flash**.
+- `GroupBuyController` (ظرفیت + شرکت‌کننده‌ها) — **groupbuy**.
+- `LoyaltyController` (امتیاز/سطح/جوایز/QR) — **loyalty**.
+- `PriceAlertController` (+ تریگرِ نوتیف) — **pricealert**.
+
+### فازِ ۶ — قابلیت‌هایِ خدماتی + نقشه
+- `FloorMapController` (`mapX/mapY/floor` + متادیتای طبقات) — **wayfind / floorMap**.
+- `AppointmentController` (رزروِ بازدید) — **appointment**.
+- `ReturnController`, `WarrantyController`, `GiftCardController`, `EventController`, `StoryController`.
+
+### فازِ ۷ — قابلیت‌هایِ پیشرفته
+- `LiveSessionController` (لایوشاپینگ + چتِ زنده + محصولِ pinned) — **live**.
+- Escrow (نگه‌داریِ وجهِ امانی + تایم‌لاین) — **escrow**؛ `OrderTrackingController` — **tracking**.
+- `SubscriptionController` (بازارچه پلاس) — **vipsub**؛ `ParkingController` — **parking**.
+- `CommunityController` (پست/کامنت) — **community**؛ `ConciergeController` (چت‌بات) — **concierge**؛ visualsearch.
+
+### فازِ ۸ — صیقل
+- گزارشِ مالیِ per-vendor در دشبوردِ ادمین (شبیهِ فازِ M/N فروشگاه) — **vendorAnalytics**.
+- Notificationها: تأییدِ ونـدور، سفارشِ جدید، پیشنهادِ قیمت، هشدارِ قیمت، پاسخِ چت (کپیِ الگویِ `StockNotification`).
+- ماژراسیونِ گزارشِ تخلف: `AdminReportController` — **adminDash / reportDetail**؛ سوپروایزرها.
+
+---
+
+## ۷) جدولِ «چه‌فایلی از کجا کپی شود» (مرجعِ سریع)
 
 | مقصد در Rasteh | منبع در shop-kotlin-spring-boot | تغییرِ لازم |
 |---|---|---|
-| `identity/*` | `shop/identity/*` | هیچ |
-| `payment/*` | `shop/payment/*` | هیچ |
-| `discount/*` | `shop/discount/*` | هیچ |
-| `catalog/*` | `shop/catalog/*` | `+vendorId` روی Product/Category، RBAC ادمین |
-| `order/*` | `shop/order/*` | `+vendorId` روی OrderItem |
-| `cart/*` | `shop/cart/*` | چکِ تک‌ونـدوری‌بودن |
-| `vendor/*` (approve flow) | الگو از `clinic/therapist` approve | موجودیت کاملاً جدید |
-| `mall/*` | ندارد | جدید |
+| `identity/*` | `shop/identity/*` | `+VENDOR`، چند-نقشی بودنِ کاربر |
+| `payment/*` | `shop/payment/*` | + حالتِ escrow (فازِ ۷) |
+| `discount/*` | `shop/discount/*` | مبنایِ flash/groupbuy/perk |
+| `catalog/*` | `shop/catalog/*` | `+shopId`، condition/stock/discount، RBAC ادمینِ ونـدور |
+| `order/*` | `shop/order/*` | `+shopId` روی OrderItem، tracking/returns/warranty |
+| `cart/*` | `shop/cart/*` | چکِ تک‌ونـدوری |
+| `review/*`, `question/*` | `shop/review/*` | اسکوپ به shopId/productId |
+| `shop/*` (approve flow) | الگو از `clinic/therapist` approve | موجودیتِ Shop کاملاً جدید |
+| `mall/*`, `city/*`, `follow/*`, `chat/*`, `offer/*`, `wallet/*`, `loyalty/*`, feature-ها | ندارد | جدید (از روی طراحی) |
 
 ---
 
-## ۷) قراردادهای ثابت (از پروژه‌ی فروشگاه ادامه بده)
+## ۸) قراردادهای ثابت (از پروژه‌ی فروشگاه ادامه بده)
 
-- هر جدولِ جدید → migration idempotent (`CREATE TABLE IF NOT EXISTS`).
-- منابعِ محدود (مثلِ رزروِ اسم/اسلاگِ یکتایِ Vendor) → قفلِ pessimistic در صورتِ نیاز.
-- ستون‌هایِ JSON (`workingHoursJson`) → `@JdbcTypeCode(SqlTypes.JSON)`؛ برایِ dirty-checking لیست‌ها را reassign کن، نه mutate.
-- کدهایِ خطا به سبکِ `VENDOR_NOT_APPROVED`, `PRODUCT_NOT_PURCHASABLE`, `CART_VENDOR_MISMATCH`.
+- هر جدولِ جدید → migration idempotent (`CREATE TABLE IF NOT EXISTS`) در `db/init/NNN_*.sql`.
+- منابعِ محدود (رزروِ نامِ/اسلاگِ یکتایِ Shop، ظرفیتِ groupbuy، اسلاتِ appointment، موجودیِ flash)
+  → قفلِ pessimistic در صورتِ نیاز تا از over-sell/over-book جلوگیری شود.
+- ستون‌هایِ JSON (`workingHoursJson`, `floorLabelsJson`) → `@JdbcTypeCode(SqlTypes.JSON)`؛
+  برای dirty-checking لیست‌ها را reassign کن، نه mutate.
+- کدهایِ خطا به سبکِ فروشگاه: `VENDOR_NOT_APPROVED`, `PRODUCT_NOT_PURCHASABLE`, `CART_VENDOR_MISMATCH`,
+  `SHOP_DOES_NOT_ACCEPT_OFFERS`, `PERK_ALREADY_USED`, `FLASH_SOLD_OUT`, `GROUPBUY_CLOSED`.
+- **RTL/فارسی سمتِ کلاینت است**، ولی سرور اعداد را **خام** (لاتین/عدد) برگرداند؛ تبدیل به ارقامِ فارسی وظیفهٔ کلاینت است.
+  رشته‌های نمایشیِ فارسی (نامِ دسته، وضعیت) از سرور می‌آیند.
+- توکن‌های طراحی (رنگ/فونت/شعاع) صرفاً کلاینتی‌اند؛ سرور دخالتی ندارد جز فراهم‌کردنِ `emoji`/`color` placeholder برای هر موجودیت.
 
 ---
 
-## ۸) MVP در برابرِ بعدی
+## ۹) MVP در برابرِ بعدی
 
-**MVP (فازِ ۰ تا ۴):** ثبتِ ونـدور، تاییدِ ادمین، کاتالوگِ دوحالته، سبد/سفارشِ تک‌ونـدوری، جست‌وجو با فیلترِ طبقه.
+**MVP (فازِ ۰ تا ۴):** ثبتِ ونـدور با تأییدِ ادمین، انتخابِ شهر، کاتالوگِ دوحالته (buyable/visitOnly)،
+دنبال‌کردن + هدیهٔ دنبال‌کننده، چت، پیشنهادِ قیمت، بوکمارک، سبد/سفارشِ تک‌ونـدوری،
+جست‌وجو با فیلترِ طبقه/شهر/وضعیت + مقایسهٔ فروشندگان، نظرات.
 
-**بعدی:** چک‌اوتِ چندونـدوری واقعی، نقشه‌ی تعاملیِ پاساژ (رندرِ گرافیکی، نه فقط مختصات)، پنلِ آنالیتیکسِ Vendor، اشتراکِ پولیِ Vendor برایِ featured-listing، چند-پاساژی (یک اپ برایِ چند مجتمعِ مختلف در شهرهایِ مختلف).
+**موجِ بعدی (فازِ ۵ به بعد):** ۲۰ قابلیتِ ویژه (flash/groupbuy/loyalty/pricealert →
+wayfind/appointment/returns/warranty/giftcard/events/stories →
+live/escrow/tracking/vipsub/parking/community/concierge/visualsearch).
+
+**آینده:** چک‌اوتِ چندونـدوریِ واقعی، اپِ ونـدورِ جدا، آنالیتیکسِ ونـدور، featured-listingِ پولی،
+چند-پاساژی/چندشهری (یک اپ برای چند مجتمع در شهرهای مختلف).
