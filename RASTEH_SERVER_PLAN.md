@@ -2,7 +2,7 @@
 
 > مارکت‌پلیسِ محلیِ پاساژ/راسته (ترکیبی از دیوار/شیپور/باسلام/ترب): چند فروشگاهِ مستقل زیرِ یک چتر،
 > با سه نقشِ یکپارچه (خریدار / فروشنده / ادمینِ پاساژ)، کاتالوگِ دوحالته
-> («خرید آنلاین» = buyable / «فقط بازدید حضوری» = visitOnly)، سیستمِ دنبال‌کردن + هدیهٔ دنبال‌کننده،
+> («خرید آنلاین» = buyable / «فقط بازدید حضوری» = visitOnly)، کشفِ **راسته × محل**، نشان‌کردن (Bookmark)،
 > چتِ درون‌برنامه‌ای، پیشنهادِ قیمت، و ۲۰ قابلیتِ ویژه (لایوشاپینگ، خرید گروهی، تخفیف ساعتی،
 > مسیریابِ داخلِ پاساژ، وفاداری، پرداختِ امانی و…).
 
@@ -18,12 +18,19 @@
 ## ۰) منبعِ حقیقت: بستهٔ طراحی
 
 مرجعِ نهاییِ UI/UX و دامنه، پوشهٔ `design_handoff_unified_app` است:
-- `Unified App.dc.html` — اپِ کامل (~۵۸ صفحه، همه در یک state machine با متغیرِ `screen`).
-- `Local-Marketplace-Spec.dc.html` — سندِ فلوی اولیه.
-- `README.md` — توکن‌های طراحی، مدلِ داده، فهرستِ صفحات و رفتار.
+- **`design_handoff_v2/`** — **نسخهٔ به‌روزِ طراحی و منبعِ حقیقتِ فعلی** (بازطراحیِ خانه/فروشگاه/محصول + مدلِ راسته×محل + حذفِ فالو).
+- `design_handoff_unified_app/` — نسخهٔ اولِ طراحی (تاریخی؛ برای صفحاتِ تغییرنکرده و شرحِ کاملِ ۲۰ قابلیت هنوز مرجع است).
+- در هر دو: `Unified App.dc.html` (اپِ کامل)، `README.md` (توکن‌ها/مدلِ داده/صفحات)، `Local-Marketplace-Spec.dc.html`.
 
 **قاعده:** هر تصمیمِ محصولی که این پلن پوشش نمی‌دهد، از روی این فایل‌ها استخراج شود، نه از حدس.
-سرور باید همهٔ داده‌ای را که این صفحات نمایش می‌دهند، فراهم کند (contract-first از روی صفحات).
+جایی که v2 و v1 اختلاف دارند، **v2 حاکم است**. سرور باید همهٔ داده‌ای را که صفحات نمایش می‌دهند فراهم کند.
+
+### تغییراتِ کلیدیِ v2 نسبت به v1 (این پلن بر اساسِ آن‌ها به‌روز شده)
+1. **مدلِ «راسته × محل»** جایگزینِ ناوبریِ سنتیِ دسته‌بندی شد: کاربر ابتدا یک **راسته** (صنف: مبل، موبایل، طلا، پوشاک…) انتخاب می‌کند، سپس از یک **باتم‌شیت** یک **محل** (پاساژ/بازار: یافت‌آباد، علاءالدین، بازار بزرگ…) را برمی‌گزیند و به `rastehSearch` می‌رود.
+2. **حذفِ کاملِ سیستمِ دنبال‌کردن (Follow) و هدیهٔ دنبال‌کننده (FollowerPerk/FOLLOW15):** فروشگاه دیگر مفهومِ فالو ندارد؛ نوارِ آمار (دنبال‌کننده/رضایت/عملکرد) و دکمهٔ «دنبال کردن» از `shopDetail` حذف شدند. جایِ آن **پیام + تماس**.
+3. **حذفِ سربرگِ خانه** (انتخاب شهر/زنگوله/آواتار)؛ خانه با **سرچ‌بار** آغاز می‌شود، سپس گریدِ راسته‌ها.
+4. **نشان‌کردن (Bookmark)** جایگزینِ «دنبال‌شده‌ها» به‌عنوانِ سازوکارِ ذخیرهٔ فروشگاه/محصول شد.
+5. **نقشِ `SUPERADMIN`** به نقش‌ها اضافه شد (customer/vendor/admin/superadmin).
 
 ---
 
@@ -50,11 +57,14 @@
 
 | نقش | معادلِ فروشگاه | تفاوت |
 |---|---|---|
-| Customer | `customer` | + جست‌وجوی چندونـدوری، دنبال‌کردن، بوکمارک، چت، پیشنهادِ قیمت، ۲۰ قابلیت |
-| Vendor (صاحبِ فروشگاه) | نزدیک‌ترین: `clinic/TherapistEntity` (ارائه‌دهنده‌ای که ادمین تأییدش می‌کند) | + صاحبِ کاتالوگِ خودش، آمار، تخفیفِ دنبال‌کننده، QR |
-| Admin پاساژ | `admin` | + صفِ تأییدِ فروشگاه، مدیریتِ گزارشِ تخلف، سوپروایزرها |
+| Customer | `customer` | + جست‌وجوی راسته×محل، بوکمارک، چت، پیشنهادِ قیمت، ۲۰ قابلیت |
+| Vendor (صاحبِ فروشگاه) | نزدیک‌ترین: `clinic/TherapistEntity` (ارائه‌دهنده‌ای که ادمین تأییدش می‌کند) | + صاحبِ کاتالوگِ خودش، آمار، QR |
+| Admin پاساژ/محل | `admin` | + صفِ تأییدِ فروشگاه، مدیریتِ گزارشِ تخلف، سوپروایزرها |
+| **SuperAdmin** | — (جدید در v2) | نظارتِ سراسری بر همهٔ محل‌ها/راسته‌ها، مدیریتِ ادمین‌ها |
 
-`RoleEntity` مقدارِ `VENDOR` می‌گیرد. یک کاربر می‌تواند چند نقش داشته باشد؛ نقشِ فعال سمتِ کلاینت است.
+`RoleEntity` مقادیرِ `VENDOR` و `SUPERADMIN` می‌گیرد. یک کاربر می‌تواند چند نقش داشته باشد؛ نقشِ فعال سمتِ کلاینت است.
+
+> **حذف‌شده در v2:** «تخفیفِ دنبال‌کننده» از توانمندی‌های Vendor حذف شد (فالو دیگر وجود ندارد).
 
 ---
 
@@ -62,22 +72,29 @@
 
 فیلدهای زیر مستقیماً از objectهای دادهٔ `Unified App.dc.html` استخراج شده‌اند.
 
-### هستهٔ مارکت‌پلیس — جدید
+### هستهٔ مارکت‌پلیس — جدید (مدلِ راسته×محل در v2)
 
 ```
-Mall / Pasaj      (id, name, city, address, floorCount, description, floorLabelsJson)
-City              (id, name, province, isActive)           -- صفحهٔ citySelect
-Shop (=Vendor)    (id, mallId, ownerUserId, name, category(=primaryCategory), floor,
+City              (id, name, province, isActive)           -- شهر (پیش‌فرض: تهران)
+Rasteh            (id, label, colorOklch, iconKey, sortOrder)  -- صنف: مبل/موبایل/طلا/پوشاک/… (گریدِ خانه)
+Location (محل)    (id, cityId, name, kind: PASSAGE|BAZAAR|STREET,   -- پاساژ/بازار/راستهٔ فیزیکی: یافت‌آباد، علاءالدین…
+                   address, floorCount, floorLabelsJson, mapImageUrl, lat, lng)
+RastehLocation    (rastehId, locationId)                    -- نگاشتِ چند-به-چند: هر راسته چند محل، هر محل چند راسته
+                                                            -- (باتم‌شیت: با انتخابِ راسته، محل‌هایش لیست می‌شوند)
+Shop (=Vendor)    (id, locationId (=محل، جایگزینِ mallId), rastehId, ownerUserId,
+                   name, category(=primaryCategory), floor,
                    type: BUYABLE|VISIT_ONLY,                 -- «خرید آنلاین» / «فقط بازدید حضوری»
-                   verified: Boolean, rating, reviewsCount,
-                   followersCount, salesCount, satisfaction, performance,  -- نوارِ آمارِ shopDetail
+                   verified: Boolean, rating, reviewsCount, salesCount,
                    phone, hasChat: Boolean, acceptsOffers: Boolean,        -- toggleهای becomeVendor
-                   about, workingHoursJson, address, mapX, mapY,           -- موقعیت روی نقشهٔ داخلی
-                   emoji, coverUrl, logoUrl,
+                   about, workingHoursJson, address, mapX, mapY,           -- موقعیت روی نقشهٔ محل
+                   emoji, coverStyle, coverUrl, logoUrl,
                    status: PENDING|APPROVED|REJECTED|SUSPENDED,
                    createdAt, approvedAt)
 VendorCategoryMode (shopId, categoryId, mode: SHOWCASE|COMMERCE)  -- override per دسته روی type فروشگاه
 ```
+
+> **تغییرِ v2:** موجودیتِ `Mall/Pasaj` به `Location (محل)` تعمیم یافت و `Rasteh` (صنف) به‌عنوانِ محورِ اصلیِ کشف اضافه شد.
+> فیلدهایِ `followersCount / satisfaction / performance` از `Shop` **حذف شدند** (نوارِ آمار و فالو در v2 وجود ندارد).
 
 ### کاتالوگ — اقتباس از `shop/catalog` + `shopId`
 
@@ -88,23 +105,21 @@ CategoryEntity    += shopId (nullable برای دسته‌بندیِ سراسر�
 ProductImageEntity, OptionType/OptionValue (=مدل/model chip), InventoryEntity  -- ساختار بدون تغییر، از طریقِ product.shopId اسکوپ‌شونده
 ```
 
-### دنبال‌کردن + هدیهٔ دنبال‌کننده — جدید (قلبِ تجربهٔ طراحی)
+### ~~دنبال‌کردن + هدیهٔ دنبال‌کننده~~ — **حذف‌شده در v2**
 
-```
-ShopFollow        (userId, shopId, createdAt)                 -- toggle در shopDetail/manageFollowing
-FollowerPerk      (id, shopId, code, percent, label, expiry, usesCount, showSpecialPrice: Boolean, active)
-                                                              -- FOLLOW15 و ساختِ کدِ جدید توسطِ ونـدور
-```
+> در v1 این قلبِ تجربه بود؛ در v2 **کاملاً حذف شد**. موجودیت‌های `ShopFollow` و `FollowerPerk`
+> (کدِ FOLLOW15) **ساخته نمی‌شوند**. صفحاتِ `manageFollowing`/`followerPerk` هنوز در پروتوتایپ
+> باقی‌مانده‌اند ولی legacy تلقی می‌شوند و در scopeِ پیاده‌سازی نیستند. جایگزین: **Bookmark** (نشان‌کردن).
 
 ### تعامل — جدید
 
 ```
 Conversation      (id, customerUserId, shopId, lastMessageAt)  -- chatList
-Message           (id, conversationId, senderUserId, body, sentAt, readAt)  -- chatThread
+Message           (id, conversationId, senderUserId, body, sentAt, readAt)  -- chatThread («پیام به فروشگاه»)
 Offer             (id, productId, buyerUserId, shopId, amount, status: PENDING|ACCEPTED|REJECTED, createdAt)
-                                                              -- makeOffer («پذیرش پیشنهاد قیمت»)
-Bookmark          (userId, productId?, shopId?, createdAt)     -- bookmarks (تب محصولات/فروشگاه‌ها)
-ActivityEvent     (id, userId, action: LIKE|SAVE|MESSAGE|FOLLOW, targetType, targetId, icon, createdAt)  -- activity
+                                                              -- makeOffer («پیشنهاد قیمت»)
+Bookmark          (userId, productId?, shopId?, createdAt)     -- bookmarks + نشان‌شده‌هایِ خانه (جایگزینِ فالو)
+ActivityEvent     (id, userId, action: LIKE|SAVE|MESSAGE, targetType, targetId, icon, createdAt)  -- activity
 Review            (id, productId?, shopId?, userId, stars, comment, createdAt)  -- {name, stars, comment}
 Report            (id, reporterUserId, targetType: SHOP|PRODUCT, targetId, reason, note, photoUrls,
                    status: OPEN|RESOLVED|REJECTED, createdAt)  -- «گزارش تخلف» + adminDash/reportDetail
@@ -158,7 +173,7 @@ UserEntity, RoleEntity (+VENDOR), DiscountEntity, CampaignEntity, PaymentTransac
 | 11 | returns (مرکزِ بازگشتِ کالا) | `ReturnRequest` (orderItemId, reason, photoUrls, status) | F6 |
 | 12 | giftcard (کارتِ هدیه) | GiftCard (بخشِ ۳) | F6 |
 | 13 | warranty (دفترچهٔ ضمانتِ دیجیتال) | `Warranty` (orderItemId, serial, validUntil) | F6 |
-| 14 | events (رویدادها/جشنواره‌ها) | `Event` (mallId, title, date, description) | F6 |
+| 14 | events (رویدادها/جشنواره‌ها) | `Event` (locationId, title, date, description) | F6 |
 | 15 | community (انجمنِ محله) | `CommunityPost` + `Comment` (اجتماعی) | F7 |
 | 16 | pricealert (هشدارِ کاهشِ قیمت) | `PriceAlert` (userId, productId, targetPrice) + تریگرِ نوتیف | F5 |
 | 17 | stories (استوریِ فروشگاه‌ها) | `Story` (shopId, mediaUrl, expiresAt) | F6 |
@@ -188,15 +203,16 @@ launcherِ `features` می‌تواند از ابتدا موجود باشد و �
 - کپیِ ساختارِ Gradle/Spring Boot از `shop-kotlin-spring-boot` (build.gradle.kts، application.yml، docker-compose برای Postgres).
 - کپیِ کاملِ `shop/identity` → `rasteh/identity` (auth/JWT بدون تغییر) + افزودنِ نقشِ `VENDOR` و چند-نقشی.
 - کپیِ `shop/payment`, `shop/discount` بدون تغییر.
-- migration اول: `city`, `mall`, `shop`, `vendor_category_mode`.
-- سندِ contract: فهرستِ ~۵۸ صفحه از طراحی → جدولِ endpointهای موردِ نیاز.
+- migration اول: `city`, `rasteh`, `location`, `rasteh_location`, `shop`, `vendor_category_mode`.
+- سندِ contract: فهرستِ صفحاتِ v2 → جدولِ endpointهای موردِ نیاز.
 
-### فازِ ۱ — Vendor onboarding + تأییدِ ادمین
-- `ShopController` (ثبتِ درخواستِ فروشگاه: نام، دسته، طبقه، `type`، تلفن، آدرس، ساعاتِ کاری، about،
+### فازِ ۱ — راسته/محل + Vendor onboarding + تأییدِ ادمین
+- `RastehController` (فهرستِ راسته‌ها با رنگ/آیکون — گریدِ خانه) + `LocationController` (محل‌هایِ یک راسته — باتم‌شیت `rastehSheetOpen`).
+- `ShopController` (ثبتِ درخواستِ فروشگاه: نام، **راسته**، **محل**، طبقه، `type`، تلفن، آدرس، ساعاتِ کاری، about،
   toggleهای `hasChat`/`acceptsOffers`) — منطبق بر صفحهٔ **becomeVendor**.
 - `AdminShopController` (approve/reject/suspend) — الگویِ Admin-approve-therapist در clinic.
 - `CityController` (فهرست/جست‌وجوی شهر) — صفحهٔ **citySelect**.
-- migration: enum status + ایندکسِ `(mallId, status)`, `(city)`.
+- migration: enum status + نقشِ `SUPERADMIN` + ایندکسِ `(locationId, status)`, `(rastehId)`, `(cityId)`.
 
 ### فازِ ۲ — کاتالوگِ دوحالته (Vendor-scoped)
 - کپیِ `shop/catalog` + افزودنِ `shopId` به Product/Category + فیلدهای `condition/stock/discountPercent/oldPrice/emoji`.
@@ -204,17 +220,18 @@ launcherِ `features` می‌تواند از ابتدا موجود باشد و �
 - `VendorCategoryMode` سرویس: Showcase/Commerce per دسته + مشتق‌کردنِ `isPurchasable`.
 - منطبق بر صفحاتِ **addProduct / manageListings / editShop**.
 
-### فازِ ۳ — دنبال‌کردن + هدیهٔ دنبال‌کننده + چت + پیشنهادِ قیمت
-- `FollowController` (toggle follow، فهرستِ دنبال‌شده‌ها) — **shopDetail / manageFollowing**.
-- `FollowerPerkController` (ونـدور کدِ FOLLOW15 می‌سازد؛ خریدارِ دنبال‌کننده استفاده می‌کند) — **followerPerk**.
-- `ChatController` + WebSocket/polling برای Conversation/Message — **chatList / chatThread**.
+### فازِ ۳ — چت + پیشنهادِ قیمت + بوکمارک  ~~(دنبال‌کردن حذف شد)~~
+- `ChatController` + WebSocket/polling برای Conversation/Message — **chatThread** («پیام به فروشگاه» در shopDetail) / **chatList**.
 - `OfferController` (ثبت/پذیرش/ردِ پیشنهادِ قیمت، فقط اگر `shop.acceptsOffers`) — **makeOffer**.
-- `BookmarkController`, `ActivityController` — **bookmarks / activity**.
+- `BookmarkController` (نشان‌کردنِ فروشگاه/محصول — جایگزینِ فالو؛ «نشان‌شده‌ها»یِ خانه) + `ActivityController` — **bookmarks / activity**.
+- ~~`FollowController` / `FollowerPerkController`~~ — **حذف‌شده در v2** (نساز).
 
-### فازِ ۴ — سبد/سفارش + جست‌وجو/مقایسه/کشف
+### فازِ ۴ — سبد/سفارش + جست‌وجویِ راسته×محل + مقایسه
 - کپیِ `shop/cart` + چکِ تک‌ونـدوری؛ کپیِ `shop/order` + `shopId` روی OrderItem — **cart / orderConfirm / vendorOrders**.
-- کپیِ `ProductSearchRepository` + فیلترهایِ طراحی: **دسته، قیمت، برند، وضعیت(new/used)، مرتب‌سازی، طبقه، شهر** — **search**.
-- کوئریِ «فروشندگانِ دیگرِ این کالا» + ارزان‌ترین (بوردر سبز/badge) — **listing / compare**.
+- **`RastehSearchController`**: فهرستِ فروشگاه‌ها یا محصولاتِ یک **محل** (با تبِ shops/products) — صفحهٔ **rastehSearch**؛
+  خروجی: شمارش + کارت‌ها. فیلترِ ضمنی: `locationId` (+ اختیاری `rastehId`).
+- کپیِ `ProductSearchRepository` + فیلترهایِ v2: **راسته، محل، دسته، قیمت، برند، وضعیت(new/used)، مرتب‌سازی** — **search**.
+- کوئریِ «دیدن در فروشگاه‌های دیگر» + ارزان‌ترین (بوردر سبز/badge) — **listing / compare** (در v2 پایین‌تر از نظرات نمایش داده می‌شود؛ صرفاً ترتیبِ UI).
 - `ReviewController` (نظرات + میانگین) — تبِ نظراتِ **shopDetail**.
 - endpointِ «کالاها و سفارش‌های من» (کالاها/سفارش‌هایِ خودِ کاربر، اسکوپ به ownerUserId) — **myListings** (بازاستفاده از order/catalog). خروجِ کاربر (**logoutConfirm**) صرفاً کلاینتی است (پاک‌کردنِ توکن).
 
@@ -254,7 +271,8 @@ launcherِ `features` می‌تواند از ابتدا موجود باشد و �
 | `cart/*` | `shop/cart/*` | چکِ تک‌ونـدوری |
 | `review/*`, `question/*` | `shop/review/*` | اسکوپ به shopId/productId |
 | `shop/*` (approve flow) | الگو از `clinic/therapist` approve | موجودیتِ Shop کاملاً جدید |
-| `mall/*`, `city/*`, `follow/*`, `chat/*`, `offer/*`, `wallet/*`, `loyalty/*`, feature-ها | ندارد | جدید (از روی طراحی) |
+| `rasteh/*`, `location/*`, `city/*`, `chat/*`, `offer/*`, `bookmark/*`, feature-ها | ندارد | جدید (از روی طراحیِ v2) |
+| ~~`follow/*`, `followerPerk/*`~~ | — | **حذف‌شده در v2** (نساز) |
 
 ---
 
@@ -266,7 +284,7 @@ launcherِ `features` می‌تواند از ابتدا موجود باشد و �
 - ستون‌هایِ JSON (`workingHoursJson`, `floorLabelsJson`) → `@JdbcTypeCode(SqlTypes.JSON)`؛
   برای dirty-checking لیست‌ها را reassign کن، نه mutate.
 - کدهایِ خطا به سبکِ فروشگاه: `VENDOR_NOT_APPROVED`, `PRODUCT_NOT_PURCHASABLE`, `CART_VENDOR_MISMATCH`,
-  `SHOP_DOES_NOT_ACCEPT_OFFERS`, `PERK_ALREADY_USED`, `FLASH_SOLD_OUT`, `GROUPBUY_CLOSED`.
+  `SHOP_DOES_NOT_ACCEPT_OFFERS`, `FLASH_SOLD_OUT`, `GROUPBUY_CLOSED`, `LOCATION_NOT_FOUND`, `RASTEH_NOT_FOUND`.
 - **RTL/فارسی سمتِ کلاینت است**، ولی سرور اعداد را **خام** (لاتین/عدد) برگرداند؛ تبدیل به ارقامِ فارسی وظیفهٔ کلاینت است.
   رشته‌های نمایشیِ فارسی (نامِ دسته، وضعیت) از سرور می‌آیند.
 - توکن‌های طراحی (رنگ/فونت/شعاع) صرفاً کلاینتی‌اند؛ سرور دخالتی ندارد جز فراهم‌کردنِ `emoji`/`color` placeholder برای هر موجودیت.
@@ -275,9 +293,10 @@ launcherِ `features` می‌تواند از ابتدا موجود باشد و �
 
 ## ۹) MVP در برابرِ بعدی
 
-**MVP (فازِ ۰ تا ۴):** ثبتِ ونـدور با تأییدِ ادمین، انتخابِ شهر، کاتالوگِ دوحالته (buyable/visitOnly)،
-دنبال‌کردن + هدیهٔ دنبال‌کننده، چت، پیشنهادِ قیمت، بوکمارک، سبد/سفارشِ تک‌ونـدوری،
-جست‌وجو با فیلترِ طبقه/شهر/وضعیت + مقایسهٔ فروشندگان، نظرات.
+**MVP (فازِ ۰ تا ۴):** راسته‌ها + محل‌ها + `rastehSearch`، ثبتِ ونـدور با تأییدِ ادمین، انتخابِ شهر،
+کاتالوگِ دوحالته (buyable/visitOnly)، چت («پیام به فروشگاه»)، پیشنهادِ قیمت، بوکمارک (نشان‌کردن)،
+سبد/سفارشِ تک‌ونـدوری، جست‌وجو با فیلترِ راسته/محل/وضعیت + «دیدن در فروشگاه‌های دیگر»، نظرات.
+(بدونِ فالو — در v2 حذف شد.)
 
 **موجِ بعدی (فازِ ۵ به بعد):** ۲۰ قابلیتِ ویژه (flash/groupbuy/loyalty/pricealert →
 wayfind/appointment/returns/warranty/giftcard/events/stories →
