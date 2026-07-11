@@ -160,3 +160,22 @@ class BlogNotFoundException(message: String = "Blog not found")
 
 class BlogSlugAlreadyExistsException(slug: String)
     : ConflictException("Blog slug already exists: $slug", ErrorCodes.BLOG_SLUG_EXISTS)
+
+// ===== Marketplace (Rasteh × Location × Shop) =====
+class CityNotFoundException(cityId: Long)
+    : NotFoundException("City not found: $cityId", ErrorCodes.CITY_NOT_FOUND)
+
+class RastehNotFoundException(rastehId: Long)
+    : NotFoundException("Rasteh not found: $rastehId", ErrorCodes.RASTEH_NOT_FOUND)
+
+class LocationNotFoundException(locationId: Long)
+    : NotFoundException("Location not found: $locationId", ErrorCodes.LOCATION_NOT_FOUND)
+
+class ShopNotFoundException(shopId: Long)
+    : NotFoundException("Shop not found: $shopId", ErrorCodes.SHOP_NOT_FOUND)
+
+class ShopAccessDeniedException(shopId: Long)
+    : ForbiddenException("Shop access denied: $shopId", ErrorCodes.SHOP_ACCESS_DENIED)
+
+class InvalidShopStatusTransitionException(from: String, to: String)
+    : UnprocessableException("Invalid shop status transition: $from -> $to", ErrorCodes.INVALID_SHOP_STATUS_TRANSITION)

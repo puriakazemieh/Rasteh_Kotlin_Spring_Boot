@@ -1,6 +1,7 @@
 package com.kazemieh.rasteh.shared.security
 
 import com.kazemieh.rasteh.shared.security.jwt.JwtAuthFilter
+import org.springframework.http.HttpMethod
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -68,6 +69,16 @@ class SecurityConfig(
                 it.accessDeniedHandler(deniedHandler)
             }
             .authorizeHttpRequests {
+                // فروشگاه‌هایِ خودم — احرازشده (باید قبل از permitAll عمومیِ شاپ باشد)
+                it.requestMatchers(HttpMethod.GET, "/api/shops/mine").authenticated()
+                // مرورِ عمومیِ راسته/محل/شهر و نمای فروشگاه — بدونِ احراز
+                it.requestMatchers(
+                    HttpMethod.GET,
+                    "/api/cities/**",
+                    "/api/rastehs/**",
+                    "/api/locations/**",
+                    "/api/shops/*"
+                ).permitAll()
                 it.requestMatchers(
                     "/api/products/**",
                     "/api/categories/**",

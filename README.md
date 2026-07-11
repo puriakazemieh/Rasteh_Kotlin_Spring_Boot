@@ -3,17 +3,25 @@
 بک‌اندِ مارکت‌پلیسِ محلیِ پاساژ/راسته. نقشهٔ راه در [`RASTEH_SERVER_PLAN.md`](./RASTEH_SERVER_PLAN.md)
 و مرجعِ طراحی در پوشهٔ [`design_handoff_unified_app/`](./design_handoff_unified_app) است.
 
-## وضعیت: فازِ ۰ (اسکلت + احراز هویت)
+## وضعیت: فازِ ۰ + فازِ ۱
 
-پیاده‌شده در این فاز:
+**فازِ ۰ (اسکلت + احراز هویت):**
 - اسکلتِ Gradle/Spring Boot + Docker Compose برای Postgres.
-- ماژولِ `identity` (کپیِ کاملِ auth/JWT از `shop-kotlin-spring-boot`) با نقشِ `VENDOR` افزوده‌شده به `UserRole`.
-- ماژولِ `shared` (امنیت/JWT، مدیریتِ خطا، پیکربندی‌ها، سرویسِ ایمیل/پیامک).
-- migrationهای پایه: `001_identity.sql` و `002_marketplace.sql` (جدول‌های `cities/malls/shops/vendor_category_modes`).
-- `DataSeeder` سه حسابِ نقش‌محورِ نمونه می‌سازد (رمزِ همه `pass1234`):
-  - ادمین `09120000000` · فروشنده `09122222222` · خریدار `09121111111`
+- ماژول‌های `identity` (auth/JWT، نقش‌های `CUSTOMER/VENDOR/ADMIN/SUPERADMIN`) و `shared`.
+- پاریتیِ کاملِ ماژول‌هایِ فروشگاه (catalog/order/cart/…) به‌عنوانِ پایهٔ بازاستفاده.
 
-فازهای بعدی (Vendor onboarding، کاتالوگِ دوحالته، دنبال‌کردن/چت/پیشنهاد، سبد/سفارش، ۲۰ قابلیت) در پلن آمده‌اند.
+**فازِ ۱ (راسته/محل + Vendor onboarding + تأییدِ ادمین) — ماژولِ `marketplace`:**
+- موجودیت‌ها: `City`, `Rasteh`(صنف), `Location`(محل, نگاشتِ چند-به-چندِ راسته↔محل), `Shop`, `VendorCategoryMode`.
+- endpointها:
+  - `GET /api/rastehs` — گریدِ راسته‌هایِ خانه (با رنگ/آیکون).
+  - `GET /api/rastehs/{id}/locations` — محل‌هایِ یک راسته (باتم‌شیت).
+  - `GET /api/locations/{id}` · `GET /api/cities?query=` — محل/انتخابِ شهر.
+  - `POST /api/shops` — ثبتِ درخواستِ فروشگاه (becomeVendor؛ وضعیتِ PENDING). `GET /api/shops/mine` · `GET /api/shops/{id}`.
+  - `GET/POST /api/admin/shops` + `.../{id}/approve|reject|suspend` — صفِ تأیید (ADMIN/SUPERADMIN). تأیید → نقشِ VENDOR به مالک اعطا می‌شود.
+- migration `002_marketplace.sql` بازنویسی شد به مدلِ v2؛ `MarketplaceSeeder` راسته‌ها/محل‌های نمونه را می‌سازد.
+- `DataSeeder` سه حسابِ نقش‌محورِ نمونه می‌سازد (رمزِ همه `pass1234`): ادمین `09120000000` · فروشنده `09122222222` · خریدار `09121111111`.
+
+فازهای بعدی (کاتالوگِ دوحالته، چت/پیشنهاد/بوکمارک، سبد/سفارش + rastehSearch، ۲۰ قابلیت) در `RASTEH_SERVER_PLAN.md`.
 
 ## اجرا (روی دستگاهِ محلی)
 
