@@ -49,7 +49,14 @@
   و `GET /api/search/products?query=&shopId=&condition=&minPrice=&maxPrice=&sort=` — صفحهٔ search.
 - migration `005_reviews.sql`.
 
-فازهای بعدی (سبد/سفارشِ تک‌ونـدوری، ۲۰ قابلیت) در `RASTEH_SERVER_PLAN.md`.
+**فازِ ۴b (سفارشِ تک‌ونـدوری) — `marketplace/order`:**
+- موجودیت‌های `MarketplaceOrder`/`MarketplaceOrderItem`؛ سبد سمتِ کلاینت، سفارش سمتِ سرور.
+- `POST /api/orders` (checkout: اعتبارسنجی، تک‌ونـدوری، کسرِ موجودی، محاسبهٔ مبلغ)
+  · `GET /api/orders/mine` · `GET /api/orders/{id}` · `POST /api/orders/{id}/status`
+  · `GET /api/vendor/orders/shop/{shopId}` (vendorOrders).
+- migration `006_orders.sql`.
+
+فازهای بعدی (۲۰ قابلیتِ ویژه) در `RASTEH_SERVER_PLAN.md`.
 
 ## اجرا (روی دستگاهِ محلی)
 

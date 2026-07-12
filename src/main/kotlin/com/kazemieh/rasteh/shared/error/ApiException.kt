@@ -195,3 +195,16 @@ class OfferAccessDeniedException(id: Long)
 
 class ShopDoesNotAcceptOffersException(shopId: Long)
     : UnprocessableException("Shop does not accept offers: $shopId", ErrorCodes.SHOP_DOES_NOT_ACCEPT_OFFERS)
+
+// ===== Marketplace orders =====
+class ProductNotPurchasableException(productId: Long)
+    : UnprocessableException("Product not purchasable: $productId", ErrorCodes.PRODUCT_NOT_PURCHASABLE)
+
+class OrderVendorMismatchException(message: String = "All items must belong to the same shop")
+    : UnprocessableException(message, ErrorCodes.ORDER_VENDOR_MISMATCH)
+
+class MarketplaceOrderNotFoundException(id: Long)
+    : NotFoundException("Order not found: $id", ErrorCodes.MARKETPLACE_ORDER_NOT_FOUND)
+
+class MarketplaceInsufficientStockException(productId: Long)
+    : UnprocessableException("Insufficient stock for product: $productId", ErrorCodes.MARKETPLACE_INSUFFICIENT_STOCK)
