@@ -32,7 +32,17 @@
 - migration `003_catalog.sql` (جدولِ `shop_products`)؛ `MarketplaceShopSeeder` سه فروشگاهِ تأییدشدهٔ نمونه
   با کالا می‌سازد (فروشندهٔ نمونه: `09122222222` / رمز `vendor1234`).
 
-فازهای بعدی (چت/پیشنهاد/بوکمارک، سبد/سفارش + جست‌وجو، ۲۰ قابلیت) در `RASTEH_SERVER_PLAN.md`.
+**فازِ ۳ (چت + پیشنهادِ قیمت + بوکمارک) — ماژولِ `interaction`:**
+- **چت** (`Conversation`/`Message`): `POST /api/chat/conversations` (ساخت/گرفتن) · `GET /api/chat/conversations`
+  (خریدار+فروشنده) · `GET|POST /api/chat/conversations/{id}/messages` — «پیام به فروشگاه» (polling).
+- **پیشنهادِ قیمت** (`Offer`): `POST /api/offers` (فقط اگر `acceptsOffers`) · `GET /api/offers/mine`
+  · `GET /api/offers/shop/{shopId}` · `POST /api/offers/{id}/accept|reject` — makeOffer.
+- **بوکمارک** (`Bookmark`، جایگزینِ فالو): `GET /api/bookmarks` · `POST /api/bookmarks` (فروشگاه/کالا)
+  · `DELETE /api/bookmarks/{id}`.
+- RBAC: شرکت‌کنندهٔ گفت‌وگو (خریدار/فروشنده/ادمین)؛ پیشنهاد فقط برایِ مالکِ فروشگاه قابلِ پذیرش/رد.
+- migration `004_interaction.sql`.
+
+فازهای بعدی (سبد/سفارش + جست‌وجو، ۲۰ قابلیت) در `RASTEH_SERVER_PLAN.md`.
 
 ## اجرا (روی دستگاهِ محلی)
 

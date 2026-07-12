@@ -179,3 +179,19 @@ class ShopAccessDeniedException(shopId: Long)
 
 class InvalidShopStatusTransitionException(from: String, to: String)
     : UnprocessableException("Invalid shop status transition: $from -> $to", ErrorCodes.INVALID_SHOP_STATUS_TRANSITION)
+
+// ===== Interaction (chat / offer / bookmark) =====
+class ConversationNotFoundException(id: Long)
+    : NotFoundException("Conversation not found: $id", ErrorCodes.CONVERSATION_NOT_FOUND)
+
+class ChatAccessDeniedException(id: Long)
+    : ForbiddenException("Chat access denied: $id", ErrorCodes.CHAT_ACCESS_DENIED)
+
+class OfferNotFoundException(id: Long)
+    : NotFoundException("Offer not found: $id", ErrorCodes.OFFER_NOT_FOUND)
+
+class OfferAccessDeniedException(id: Long)
+    : ForbiddenException("Offer access denied: $id", ErrorCodes.OFFER_ACCESS_DENIED)
+
+class ShopDoesNotAcceptOffersException(shopId: Long)
+    : UnprocessableException("Shop does not accept offers: $shopId", ErrorCodes.SHOP_DOES_NOT_ACCEPT_OFFERS)
