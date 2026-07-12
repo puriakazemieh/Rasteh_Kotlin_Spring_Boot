@@ -21,7 +21,18 @@
 - migration `002_marketplace.sql` بازنویسی شد به مدلِ v2؛ `MarketplaceSeeder` راسته‌ها/محل‌های نمونه را می‌سازد.
 - `DataSeeder` سه حسابِ نقش‌محورِ نمونه می‌سازد (رمزِ همه `pass1234`): ادمین `09120000000` · فروشنده `09122222222` · خریدار `09121111111`.
 
-فازهای بعدی (کاتالوگِ دوحالته، چت/پیشنهاد/بوکمارک، سبد/سفارش + rastehSearch، ۲۰ قابلیت) در `RASTEH_SERVER_PLAN.md`.
+**فازِ ۲ (کاتالوگِ دوحالتهٔ فروشگاه‌محور) — `marketplace` گسترش یافت:**
+- موجودیتِ `ShopProduct` (نام، قیمت، قیمتِ قبلی، درصدِ تخفیف، وضعیت new/used، موجودی، دسته، اموجی، تصویر، فعال).
+  قابلِ خرید بودن (`purchasable`) سمتِ سرور مشتق می‌شود: `type=BUYABLE` + موجودی>۰.
+- endpointها:
+  - عمومی: `GET /api/products?shopId=` · `GET /api/products/{id}` — کاتالوگِ فروشگاه.
+  - عمومی: `GET /api/locations/{id}/shops?rastehId=` — فهرستِ فروشگاه‌هایِ محل (**rastehSearch**).
+  - ونـدور (احرازشده، مالک یا ادمین): `GET /api/vendor/products/shop/{shopId}` · `POST /api/vendor/products`
+    · `PUT /api/vendor/products/{id}` · `DELETE /api/vendor/products/{id}` — **manageListings/addProduct**.
+- migration `003_catalog.sql` (جدولِ `shop_products`)؛ `MarketplaceShopSeeder` سه فروشگاهِ تأییدشدهٔ نمونه
+  با کالا می‌سازد (فروشندهٔ نمونه: `09122222222` / رمز `vendor1234`).
+
+فازهای بعدی (چت/پیشنهاد/بوکمارک، سبد/سفارش + جست‌وجو، ۲۰ قابلیت) در `RASTEH_SERVER_PLAN.md`.
 
 ## اجرا (روی دستگاهِ محلی)
 

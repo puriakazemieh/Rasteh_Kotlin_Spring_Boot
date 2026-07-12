@@ -69,4 +69,15 @@ class ShopService(
         if (shop.status != ShopStatus.APPROVED) throw ShopNotFoundException(shopId)
         return ShopMapper.toResponse(shop)
     }
+
+    /** فهرستِ فروشگاه‌هایِ تأییدشدهٔ یک محل (rastehSearch) — با فیلترِ اختیاریِ راسته. */
+    @Transactional(readOnly = true)
+    fun listByLocation(locationId: Long, rastehId: Long?): List<ShopResponse> {
+        val shops = if (rastehId != null) {
+            shopRepository.findAllByLocationIdAndRastehIdAndStatusOrderByRatingDesc(locationId, rastehId, ShopStatus.APPROVED)
+        } else {
+            shopRepository.findAllByLocationIdAndStatusOrderByRatingDesc(locationId, ShopStatus.APPROVED)
+        }
+        return shops.map(ShopMapper::toResponse)
+    }
 }
