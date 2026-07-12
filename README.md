@@ -42,7 +42,14 @@
 - RBAC: شرکت‌کنندهٔ گفت‌وگو (خریدار/فروشنده/ادمین)؛ پیشنهاد فقط برایِ مالکِ فروشگاه قابلِ پذیرش/رد.
 - migration `004_interaction.sql`.
 
-فازهای بعدی (سبد/سفارش + جست‌وجو، ۲۰ قابلیت) در `RASTEH_SERVER_PLAN.md`.
+**فازِ ۴a (نظرات + جست‌وجو):**
+- **نظرات** (`Review`): `GET /api/reviews?shopId=` · `POST /api/reviews` (یک نظر به‌ازای هر کاربر؛
+  میانگین/شمارش در `shops.rating/reviews_count` بازمحاسبه می‌شود) — تبِ نظراتِ shopDetail.
+- **جست‌وجو** (`Specification`): `GET /api/search/shops?query=&rastehId=&locationId=&type=&sort=`
+  و `GET /api/search/products?query=&shopId=&condition=&minPrice=&maxPrice=&sort=` — صفحهٔ search.
+- migration `005_reviews.sql`.
+
+فازهای بعدی (سبد/سفارشِ تک‌ونـدوری، ۲۰ قابلیت) در `RASTEH_SERVER_PLAN.md`.
 
 ## اجرا (روی دستگاهِ محلی)
 
