@@ -63,7 +63,13 @@
 - **هشدارِ قیمت** `GET /api/pricealerts/mine` · `POST /api/pricealerts` · `DELETE /api/pricealerts/{id}`.
 - migration `007_features_wave1.sql`.
 
-فازهای بعدی (خدماتی/نقشه، پیشرفته، صیقل) در `RASTEH_SERVER_PLAN.md`.
+**فازِ ۶ (خدماتی) — ماژولِ `services`:**
+- **رزروِ بازدید** `POST /api/appointments` · `GET /api/appointments/mine`.
+- **کارتِ هدیه** `POST /api/giftcards` · `POST /api/giftcards/redeem` · `GET /api/giftcards/mine`.
+- **مرجوعی** `POST /api/returns` · `GET /api/returns/mine`.
+- migration `008_services.sql`.
+
+فازهای بعدی (پیشرفته، صیقل) در `RASTEH_SERVER_PLAN.md`.
 
 ## اجرا (روی دستگاهِ محلی)
 
