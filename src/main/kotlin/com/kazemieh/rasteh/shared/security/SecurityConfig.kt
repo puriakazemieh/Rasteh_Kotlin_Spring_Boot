@@ -81,7 +81,8 @@ class SecurityConfig(
                     "/api/reviews/**",
                     "/api/search/**",
                     "/api/flash/**",
-                    "/api/groupbuys/**"
+                    "/api/groupbuys/**",
+                    "/api/community/**"
                 ).permitAll()
                 it.requestMatchers(
                     "/api/products/**",

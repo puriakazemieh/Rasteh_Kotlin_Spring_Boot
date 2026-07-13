@@ -69,7 +69,14 @@
 - **مرجوعی** `POST /api/returns` · `GET /api/returns/mine`.
 - migration `008_services.sql`.
 
-فازهای بعدی (پیشرفته، صیقل) در `RASTEH_SERVER_PLAN.md`.
+**فازِ ۷+۸ (پیشرفته + صیقل) — ماژولِ `advanced`:**
+- **انجمن** `GET/POST /api/community` · `GET/POST /api/community/{id}/comments`.
+- **اشتراکِ پلاس** `GET /api/subscription/me` · `POST /api/subscription/subscribe`.
+- **اعلان‌ها** `GET /api/notifications` · `POST /api/notifications/{id}/read`.
+- **آنالیتیکسِ ونـدور** `GET /api/vendor/analytics/shop/{shopId}` (تعدادِ کالا/سفارش، درآمد، پیشنهادهای معلق).
+- migration `009_advanced.sql`.
+
+قابلیت‌های نیازمندِ زیرساختِ سنگین (live/escrow/concierge/visualsearch/parking) طبقِ پلن به‌عنوانِ «آینده» می‌مانند.
 
 ## اجرا (روی دستگاهِ محلی)
 
