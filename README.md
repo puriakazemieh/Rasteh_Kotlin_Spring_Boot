@@ -56,7 +56,14 @@
   · `GET /api/vendor/orders/shop/{shopId}` (vendorOrders).
 - migration `006_orders.sql`.
 
-فازهای بعدی (۲۰ قابلیتِ ویژه) در `RASTEH_SERVER_PLAN.md`.
+**فازِ ۵ (قابلیت‌های تجاریِ موجِ اول) — ماژولِ `features`:**
+- **فلش** `GET /api/flash` (عمومی) · `POST /api/flash` (ونـدور/ادمین).
+- **خریدِ گروهی** `GET /api/groupbuys` · `POST /api/groupbuys` · `POST /api/groupbuys/{id}/join`.
+- **وفاداری** `GET /api/loyalty/me` (امتیاز/سطح).
+- **هشدارِ قیمت** `GET /api/pricealerts/mine` · `POST /api/pricealerts` · `DELETE /api/pricealerts/{id}`.
+- migration `007_features_wave1.sql`.
+
+فازهای بعدی (خدماتی/نقشه، پیشرفته، صیقل) در `RASTEH_SERVER_PLAN.md`.
 
 ## اجرا (روی دستگاهِ محلی)
 
