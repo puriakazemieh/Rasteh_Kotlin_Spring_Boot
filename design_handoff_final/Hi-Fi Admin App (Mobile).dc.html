@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin:0; background:oklch(0.94 0.006 60); overflow-x:auto; overflow-y:auto; -webkit-overflow-scrolling:touch; height:auto; min-height:100%; }
+    * { font-family:'Vazirmatn', sans-serif; box-sizing:border-box; }
+  </style>
+</helmet>
+
+<div dir="rtl" style="padding:36px 40px 80px; direction:rtl;">
+  <div style="margin-bottom:24px;">
+    <h1 style="font-size:20px; margin:0 0 4px; color:oklch(0.26 0.02 40);">اپ ادمین پاساژ (موبایل)</h1>
+    <p style="font-size:13px; color:oklch(0.5 0.02 40); margin:0;">صف تایید فروشگاه، بررسی و تصمیم، دسته‌بندی‌ها، نقشه طبقات — از موبایل.</p>
+  </div>
+
+  <div style="display:flex; gap:28px; overflow-x:auto; padding-bottom:20px;">
+    <div style="width:375px; flex:0 0 auto; border:10px solid oklch(0.15 0.005 40); border-radius:44px; background:oklch(0.15 0.005 40); box-shadow:0 20px 50px oklch(0 0 0/0.25);">
+      <div style="background:white; border-radius:34px; overflow:hidden; height:780px; display:flex; flex-direction:column; position:relative;">
+
+        <div style="height:28px; flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; padding:0 22px; font-size:11px; font-weight:600; color:oklch(0.2 0.01 40);">
+          <span>9:41</span><span>🔋 📶</span>
+        </div>
+
+        <!-- ===== QUEUE ===== -->
+        <sc-if value="{{ isQueue }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <div style="padding:16px 18px 10px; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div style="font-size:15px; font-weight:800; color:oklch(0.24 0.02 40);">صف تایید فروشگاه‌ها</div>
+            <div style="font-size:11px; color:oklch(0.5 0.01 40); margin-top:3px;">{{ pendingCountLabel }}</div>
+          </div>
+          <div style="padding:12px 18px 90px; display:flex; flex-direction:column; gap:10px;">
+            <sc-for list="{{ pendingShops }}" as="ps" hint-placeholder-count="3">
+              <div onclick="{{ openReview }}" data-i="{{ ps.idx }}" style="border:1px solid oklch(0.9 0.005 60); border-radius:12px; padding:12px; display:flex; gap:10px; align-items:center; cursor:pointer;">
+                <div style="width:42px; height:42px; border-radius:10px; background:oklch(0.55 0.14 40); color:white; font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center; flex:0 0 auto;">{{ ps.initial }}</div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:12.5px; font-weight:700; color:oklch(0.24 0.02 40); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ps.name }}</div>
+                  <div style="font-size:10.5px; color:oklch(0.5 0.01 40); margin-top:2px;">{{ ps.category }} · طبقه {{ ps.floor }} · {{ ps.since }}</div>
+                </div>
+                <div style="{{ ps.modeBadgeStyle }}">{{ ps.modeLabel }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== REVIEW ===== -->
+        <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <div style="padding:14px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div onclick="{{ goSection }}" data-s="queue" style="cursor:pointer;">→</div>
+            <div style="font-size:14px; font-weight:700; color:oklch(0.26 0.02 40);">بررسی درخواست</div>
+          </div>
+          <div style="padding:16px 18px;">
+            <div style="display:flex; gap:12px; align-items:center; margin-bottom:14px;">
+              <div style="width:52px; height:52px; border-radius:12px; background:oklch(0.55 0.14 40); color:white; font-size:18px; font-weight:700; display:flex; align-items:center; justify-content:center;">{{ reviewShop.initial }}</div>
+              <div><div style="font-size:14px; font-weight:800; color:oklch(0.24 0.02 40);">{{ reviewShop.name }}</div><div style="font-size:11px; color:oklch(0.5 0.01 40); margin-top:2px;">{{ reviewShop.category }}</div></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:12px;">
+              <div style="display:flex; justify-content:space-between;"><span style="color:oklch(0.55 0.01 40);">طبقه / پلاک</span><span style="font-weight:600; color:oklch(0.3 0.01 40);">طبقه {{ reviewShop.floor }}، پلاک {{ reviewShop.unit }}</span></div>
+              <div style="display:flex; justify-content:space-between;"><span style="color:oklch(0.55 0.01 40);">تماس</span><span style="font-weight:600; color:oklch(0.3 0.01 40);">{{ reviewShop.phone }}</span></div>
+              <div style="display:flex; justify-content:space-between;"><span style="color:oklch(0.55 0.01 40);">ساعات کاری</span><span style="font-weight:600; color:oklch(0.3 0.01 40);">{{ reviewShop.hours }}</span></div>
+              <div style="display:flex; justify-content:space-between; align-items:center;"><span style="color:oklch(0.55 0.01 40);">حالت کاتالوگ</span><span style="{{ reviewShop.modeBadgeStyle }}">{{ reviewShop.modeLabel }}</span></div>
+            </div>
+            <div style="margin-top:12px; font-size:12px; color:oklch(0.35 0.01 40); line-height:1.8; border-top:1px solid oklch(0.92 0.005 60); padding-top:12px;">{{ reviewShop.description }}</div>
+            <div style="margin-top:12px; display:flex; gap:8px;">
+              <sc-for list="{{ reviewShop.docs }}" as="d" hint-placeholder-count="2">
+                <div style="width:56px; height:56px; border-radius:8px; background:oklch(0.94 0.005 60); border:1px dashed oklch(0.8 0.005 60); display:flex; align-items:center; justify-content:center; font-size:18px;">{{ d }}</div>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ reviewDecided }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ decisionBannerStyle }}">{{ decisionMessage }}</div>
+            </sc-if>
+          </div>
+          <div style="margin-top:auto; padding:14px 18px 22px; border-top:1px solid oklch(0.92 0.005 60); display:flex; gap:8px;">
+            <div onclick="{{ rejectShop }}" style="flex:1; text-align:center; border:1.5px solid oklch(0.55 0.18 25); color:oklch(0.55 0.18 25); border-radius:9px; padding:11px; font-size:12.5px; font-weight:700; cursor:pointer;">✕ رد</div>
+            <div onclick="{{ approveShop }}" style="flex:1; text-align:center; background:oklch(0.5 0.14 145); color:white; border-radius:9px; padding:11px; font-size:12.5px; font-weight:700; cursor:pointer;">✓ تایید</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== CATEGORIES ===== -->
+        <sc-if value="{{ isCategories }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <div style="padding:16px 18px 10px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div style="font-size:15px; font-weight:800; color:oklch(0.24 0.02 40);">دسته‌بندی‌ها</div>
+            <div style="background:oklch(0.55 0.14 40); color:white; border-radius:8px; padding:7px 12px; font-size:11.5px; font-weight:700;">+ جدید</div>
+          </div>
+          <div style="padding:12px 18px 90px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="8">
+              <div style="border:1px solid oklch(0.9 0.005 60); border-radius:11px; padding:12px; display:flex; align-items:center; gap:8px;">
+                <div style="font-size:17px;">{{ cat.icon }}</div>
+                <div><div style="font-size:11.5px; font-weight:700; color:oklch(0.3 0.01 40);">{{ cat.name }}</div><div style="font-size:10px; color:oklch(0.55 0.01 40);">{{ cat.count }} فروشگاه</div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== FLOORS ===== -->
+        <sc-if value="{{ isFloors }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:14px 18px 10px; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div style="font-size:15px; font-weight:800; color:oklch(0.24 0.02 40); margin-bottom:10px;">نقشه طبقات</div>
+            <div style="display:flex; gap:6px; overflow-x:auto;">
+              <sc-for list="{{ floorTabsAdmin }}" as="f" hint-placeholder-count="4">
+                <div onclick="{{ setAdminFloor }}" data-f="{{ f.id }}" style="{{ f.style }}">{{ f.label }}</div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1; margin:14px 18px; border-radius:12px; background:repeating-linear-gradient(135deg, oklch(0.95 0.005 60), oklch(0.95 0.005 60) 10px, oklch(0.98 0.003 60) 10px, oklch(0.98 0.003 60) 20px); border:1px solid oklch(0.88 0.005 60); position:relative;">
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10.5px; color:oklch(0.6 0.01 40); font-family:monospace;">پلان {{ activeAdminFloorLabel }}</div>
+            <sc-for list="{{ adminMapPins }}" as="pin" hint-placeholder-count="3">
+              <div style="{{ pin.style }}" title="{{ pin.name }}"></div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- bottom nav -->
+        <div style="flex:0 0 auto; display:flex; border-top:1px solid oklch(0.92 0.005 60); padding:8px 0 10px;">
+          <div onclick="{{ goSection }}" data-s="queue" style="{{ navStyle_queue }}">🕒<br/>صف تایید</div>
+          <div onclick="{{ goSection }}" data-s="categories" style="{{ navStyle_categories }}">🏷️<br/>دسته‌بندی</div>
+          <div onclick="{{ goSection }}" data-s="floors" style="{{ navStyle_floors }}">🗺️<br/>نقشه طبقات</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { section: 'queue', reviewIdx: 0, decisions: {}, adminFloor: 'f1' };
+
+  navStyle(id) {
+    const active = this.state.section === id || (this.state.section === 'review' && id === 'queue');
+    return { flex:1, textAlign:'center', fontSize:'10px', cursor:'pointer', color: active ? 'oklch(0.55 0.14 40)' : 'oklch(0.55 0.01 40)', fontWeight: active ? 700 : 500 };
+  }
+
+  renderVals() {
+    const s = this.state;
+
+    const modeBadge = (mode) => ({
+      fontSize:'10px', fontWeight:700, borderRadius:'6px', padding:'4px 8px', display:'inline-block', flex:'0 0 auto',
+      background: mode === 'commerce' ? 'oklch(0.94 0.09 145)' : (mode === 'showcase' ? 'oklch(0.95 0.06 80)' : 'oklch(0.93 0.04 260)'),
+      color: mode === 'commerce' ? 'oklch(0.4 0.12 145)' : (mode === 'showcase' ? 'oklch(0.5 0.12 70)' : 'oklch(0.42 0.1 260)'),
+    });
+    const modeLabelOf = (mode) => mode === 'commerce' ? 'فروشگاهی' : (mode === 'showcase' ? 'نمایشی' : 'ترکیبی');
+
+    const pendingList = [
+      { name:'کیف و کفش شیک‌پوش', category:'پوشاک', floor:'همکف', unit:'۸', since:'۲ ساعت پیش', initial:'ش', mode:'showcase',
+        phone:'۰۹۱۲۱۱۱۲۲۳۳', hours:'شنبه تا پنجشنبه، ۹ تا ۲۱', description:'فروش کیف و کفش چرم طبیعی زنانه و مردانه.', docs:['📄','🪪'] },
+      { name:'دیجی‌هوم', category:'لوازم‌خانگی', floor:'۳', unit:'۲۲', since:'دیروز', initial:'د', mode:'commerce',
+        phone:'۰۹۱۲۲۲۲۳۳۴۴', hours:'همه‌روزه، ۱۰ تا ۲۲', description:'عرضه لوازم خانگی برقی و آشپزخانه با گارانتی رسمی.', docs:['📄','🪪','📋'] },
+      { name:'موبایل مدرن', category:'موبایل', floor:'۱', unit:'۵', since:'۳ روز پیش', initial:'م', mode:'mixed',
+        phone:'۰۹۱۲۳۳۳۴۴۵۵', hours:'شنبه تا پنجشنبه، ۱۰ تا ۲۰', description:'فروش گوشی دست دوم و لوازم جانبی موبایل.', docs:['📄'] },
+    ];
+
+    const pendingShops = pendingList
+      .map((p, idx) => ({ ...p, idx }))
+      .filter(p => !s.decisions[p.idx])
+      .map(p => ({ ...p, modeLabel: modeLabelOf(p.mode), modeBadgeStyle: modeBadge(p.mode) }));
+
+    const reviewShop = (() => {
+      const p = pendingList[s.reviewIdx];
+      if (!p) return { docs: [] };
+      return { ...p, modeLabel: modeLabelOf(p.mode), modeBadgeStyle: modeBadge(p.mode) };
+    })();
+
+    const decision = s.decisions[s.reviewIdx];
+    const reviewDecided = !!decision;
+    const decisionMessage = decision === 'approved' ? '✓ فروشگاه تایید شد.' : (decision === 'rejected' ? '✕ درخواست رد شد.' : '');
+    const decisionBannerStyle = {
+      marginTop:'14px', padding:'10px 12px', borderRadius:'9px', fontSize:'11.5px', fontWeight:700,
+      background: decision === 'approved' ? 'oklch(0.94 0.09 145)' : 'oklch(0.95 0.08 25)',
+      color: decision === 'approved' ? 'oklch(0.35 0.12 145)' : 'oklch(0.45 0.15 25)',
+    };
+
+    const categories = [
+      { name:'موبایل', icon:'📱', count:9 }, { name:'پوشاک', icon:'👗', count:14 },
+      { name:'لوازم‌خانگی', icon:'🏠', count:6 }, { name:'کیف و کفش', icon:'👜', count:5 },
+      { name:'زیورآلات', icon:'💍', count:4 }, { name:'ورزشی', icon:'⚽', count:3 },
+      { name:'کتاب و لوازم‌التحریر', icon:'📚', count:2 }, { name:'سایر', icon:'🗂️', count:5 },
+    ];
+
+    const floorList = [
+      { id:'f0', label:'همکف' }, { id:'f1', label:'طبقه ۱' }, { id:'f2', label:'طبقه ۲' }, { id:'f3', label:'طبقه ۳' },
+    ];
+    const floorTabsAdmin = floorList.map(f => ({
+      id: f.id, label: f.label,
+      style: {
+        flex:'0 0 auto', padding:'7px 14px', borderRadius:'999px', fontSize:'11px', cursor:'pointer', fontWeight: s.adminFloor === f.id ? 700 : 500,
+        border: s.adminFloor === f.id ? '1.5px solid oklch(0.28 0.02 40)' : '1.5px solid oklch(0.85 0.005 60)',
+        background: s.adminFloor === f.id ? 'oklch(0.28 0.02 40)' : 'white',
+        color: s.adminFloor === f.id ? 'white' : 'oklch(0.45 0.01 40)',
+      }
+    }));
+    const activeAdminFloorLabel = floorList.find(f => f.id === s.adminFloor)?.label ?? '';
+
+    const pinPositions = [
+      { name:'موبایل کوروش', top:'30%', right:'28%' },
+      { name:'اپل‌مارت', top:'55%', right:'55%' },
+      { name:'موبایل مدرن', top:'20%', right:'65%' },
+    ];
+    const adminMapPins = pinPositions.map(p => ({
+      name: p.name,
+      style: {
+        position:'absolute', top:p.top, right:p.right, width:'20px', height:'20px',
+        borderRadius:'50% 50% 50% 0', background:'oklch(0.55 0.14 40)', transform:'rotate(-45deg)',
+        border:'2px solid white', boxShadow:'0 2px 6px oklch(0 0 0/0.25)',
+      }
+    }));
+
+    return {
+      goSection: (e) => this.setState({ section: e.currentTarget.getAttribute('data-s') }),
+      isQueue: s.section === 'queue', isReview: s.section === 'review', isCategories: s.section === 'categories', isFloors: s.section === 'floors',
+      navStyle_queue: this.navStyle('queue'), navStyle_categories: this.navStyle('categories'), navStyle_floors: this.navStyle('floors'),
+
+      pendingCountLabel: `${pendingShops.length} درخواست در انتظار`,
+      pendingShops,
+      openReview: (e) => this.setState({ section: 'review', reviewIdx: Number(e.currentTarget.getAttribute('data-i')) }),
+
+      reviewShop, reviewDecided, decisionMessage, decisionBannerStyle,
+      approveShop: () => this.setState(st => ({ decisions: { ...st.decisions, [st.reviewIdx]: 'approved' } })),
+      rejectShop: () => this.setState(st => ({ decisions: { ...st.decisions, [st.reviewIdx]: 'rejected' } })),
+
+      categories,
+
+      floorTabsAdmin,
+      setAdminFloor: (e) => this.setState({ adminFloor: e.currentTarget.getAttribute('data-f') }),
+      activeAdminFloorLabel,
+      adminMapPins,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

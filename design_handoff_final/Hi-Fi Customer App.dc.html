@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin:0; background:oklch(0.94 0.006 60); overflow-x:auto; overflow-y:auto; -webkit-overflow-scrolling:touch; height:auto; min-height:100%; }
+    * { font-family:'Vazirmatn', sans-serif; box-sizing:border-box; }
+    ::-webkit-scrollbar { height:8px; width:8px; }
+  </style>
+</helmet>
+
+<div dir="rtl" style="padding:36px 40px 80px; direction:rtl;">
+
+  <div style="margin-bottom:24px;">
+    <h1 style="font-size:20px; margin:0 0 4px; color:oklch(0.26 0.02 40);">اپ خریدار — پاساژ گلستان</h1>
+    <p style="font-size:13px; color:oklch(0.5 0.02 40); margin:0;">رویکرد منتخب: ترکیبی (لیست/نقشه). روی نوار بالای هر صفحه بزنید تا جابه‌جا شوید. صفحه اول تعاملی است — تاگل لیست/نقشه، افزودن به سبد و باز کردن محصول واقعا کار می‌کنند.</p>
+  </div>
+
+  <!-- screen switcher -->
+  <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px;">
+    <sc-for list="{{ screenTabs }}" as="tab" hint-placeholder-count="8">
+      <div onclick="{{ goScreen }}" data-s="{{ tab.id }}" style="{{ tab.style }}">{{ tab.label }}</div>
+    </sc-for>
+  </div>
+
+  <div style="display:flex; gap:28px; overflow-x:auto; padding-bottom:20px;">
+
+    <!-- PHONE FRAME -->
+    <div style="width:375px; flex:0 0 auto; border:10px solid oklch(0.15 0.005 40); border-radius:44px; background:oklch(0.15 0.005 40); box-shadow:0 20px 50px oklch(0 0 0/0.25);">
+      <div style="background:white; border-radius:34px; overflow:hidden; height:780px; display:flex; flex-direction:column; position:relative;">
+
+        <!-- status bar -->
+        <div style="height:28px; flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; padding:0 22px; font-size:11px; font-weight:600; color:oklch(0.2 0.01 40);">
+          <span>9:41</span>
+          <span>🔋 📶</span>
+        </div>
+
+        <!-- ============ SCREEN: BROWSE (hybrid) ============ -->
+        <sc-if value="{{ isBrowse }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+          <div style="padding:14px 16px 10px; display:flex; flex-direction:column; gap:10px; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="width:30px; height:30px; border-radius:8px; background:oklch(0.94 0.02 40); display:flex; align-items:center; justify-content:center; font-size:14px;">☰</div>
+              <div style="font-size:13px; font-weight:700; color:oklch(0.28 0.02 40);">پاساژ گلستان</div>
+              <div style="width:30px; height:30px; border-radius:50%; background:oklch(0.55 0.14 40); color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">ع</div>
+            </div>
+            <div style="height:38px; border-radius:10px; background:oklch(0.95 0.005 60); display:flex; align-items:center; gap:6px; padding:0 12px; font-size:12.5px; color:oklch(0.55 0.01 40);">
+              <span>🔍</span><span>جست‌وجوی فروشگاه یا محصول…</span>
+            </div>
+            <div style="display:flex; border:1.5px solid oklch(0.55 0.14 40); border-radius:999px; overflow:hidden; font-size:12px; font-weight:600;">
+              <div onclick="{{ setView }}" data-v="list" style="{{ listTabStyle }}">📋 لیست</div>
+              <div onclick="{{ setView }}" data-v="map" style="{{ mapTabStyle }}">🗺️ نقشه</div>
+            </div>
+          </div>
+
+          <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:10px 16px; display:flex; gap:6px; overflow-x:auto;">
+              <sc-for list="{{ categoryChips }}" as="c" hint-placeholder-count="5">
+                <div onclick="{{ setCat }}" data-c="{{ c.id }}" style="{{ c.style }}">{{ c.label }}</div>
+              </sc-for>
+            </div>
+            <div style="padding:0 16px 8px; font-size:11.5px; color:oklch(0.5 0.02 40);">{{ shopCountLabel }}</div>
+            <div style="flex:1; overflow-y:auto; padding:0 16px 90px; display:flex; flex-direction:column; gap:10px;">
+              <sc-for list="{{ shops }}" as="shop" hint-placeholder-count="6">
+                <div onclick="{{ openProfile }}" data-id="{{ shop.id }}" style="display:flex; gap:10px; align-items:center; border:1px solid oklch(0.9 0.005 60); border-radius:12px; padding:10px; background:white; cursor:pointer;">
+                  <div style="{{ shop.avatarStyle }}">{{ shop.initial }}</div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:13px; font-weight:700; color:oklch(0.24 0.02 40); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ shop.name }}</div>
+                    <div style="font-size:11px; color:oklch(0.55 0.01 40); margin-top:2px;">{{ shop.category }} · طبقه {{ shop.floor }}</div>
+                  </div>
+                  <div style="{{ shop.modeBadgeStyle }}">{{ shop.modeLabel }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isMap }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:10px 16px; display:flex; gap:6px;">
+              <sc-for list="{{ floorTabs }}" as="f" hint-placeholder-count="4">
+                <div onclick="{{ setFloor }}" data-f="{{ f.id }}" style="{{ f.style }}">{{ f.label }}</div>
+              </sc-for>
+            </div>
+            <div style="flex:1; position:relative; margin:0 16px 16px; border-radius:14px; background:repeating-linear-gradient(135deg, oklch(0.95 0.005 60), oklch(0.95 0.005 60) 10px, oklch(0.98 0.003 60) 10px, oklch(0.98 0.003 60) 20px); border:1px solid oklch(0.88 0.005 60);">
+              <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:oklch(0.6 0.01 40); font-family:monospace;">پلان {{ activeFloorLabel }}</div>
+              <sc-for list="{{ mapPins }}" as="pin" hint-placeholder-count="3">
+                <div onclick="{{ openProfile }}" data-id="{{ pin.id }}" style="{{ pin.style }}" title="{{ pin.name }}"></div>
+              </sc-for>
+              <div style="position:absolute; left:10px; right:10px; bottom:10px; background:white; border:1px solid oklch(0.88 0.005 60); border-radius:12px; padding:10px; box-shadow:0 -4px 14px oklch(0 0 0/0.08); display:flex; gap:10px; align-items:center;">
+                <div style="width:38px; height:38px; border-radius:8px; background:oklch(0.55 0.14 40); color:white; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;">م</div>
+                <div style="flex:1;">
+                  <div style="font-size:12px; font-weight:700; color:oklch(0.25 0.02 40);">موبایل کوروش</div>
+                  <div style="font-size:10.5px; color:oklch(0.55 0.01 40);">{{ activeFloorLabel }} · پلاک ۱۴</div>
+                </div>
+                <div style="font-size:10.5px; border:1px solid oklch(0.55 0.14 40); color:oklch(0.55 0.14 40); border-radius:7px; padding:5px 10px; font-weight:600;">مسیریابی</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- bottom nav -->
+          <div style="flex:0 0 auto; display:flex; border-top:1px solid oklch(0.92 0.005 60); padding:8px 0 10px;">
+            <div style="flex:1; text-align:center; font-size:10px; color:oklch(0.55 0.14 40); font-weight:700;">🏠<br/>خانه</div>
+            <div onclick="{{ goCart }}" style="flex:1; text-align:center; font-size:10px; color:oklch(0.55 0.01 40); cursor:pointer;">🛒<br/>سبد</div>
+            <div onclick="{{ goTracking }}" style="flex:1; text-align:center; font-size:10px; color:oklch(0.55 0.01 40); cursor:pointer;">📦<br/>سفارش‌ها</div>
+            <div style="flex:1; text-align:center; font-size:10px; color:oklch(0.55 0.01 40);">👤<br/>پروفایل</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ============ SCREEN: STORE PROFILE ============ -->
+        <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <div style="height:130px; background:linear-gradient(135deg, oklch(0.55 0.14 40), oklch(0.42 0.13 30)); position:relative; flex:0 0 auto;">
+            <div onclick="{{ goScreen }}" data-s="browse" style="position:absolute; top:12px; right:14px; width:30px; height:30px; border-radius:50%; background:oklch(1 0 0/0.25); color:white; display:flex; align-items:center; justify-content:center; cursor:pointer;">→</div>
+          </div>
+          <div style="padding:0 18px; margin-top:-34px;">
+            <div style="width:68px; height:68px; border-radius:16px; background:oklch(0.55 0.14 40); color:white; font-size:22px; font-weight:700; display:flex; align-items:center; justify-content:center; border:3px solid white;">م</div>
+            <div style="margin-top:10px; font-size:16px; font-weight:800; color:oklch(0.24 0.02 40);">موبایل کوروش</div>
+            <div style="font-size:12px; color:oklch(0.5 0.01 40); margin-top:2px;">لوازم جانبی موبایل · طبقه ۱، پلاک ۱۴</div>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+              <div style="flex:1; text-align:center; background:oklch(0.55 0.14 40); color:white; border-radius:10px; padding:10px; font-size:12.5px; font-weight:700;">📞 تماس</div>
+              <div style="flex:1; text-align:center; border:1.5px solid oklch(0.55 0.14 40); color:oklch(0.55 0.14 40); border-radius:10px; padding:10px; font-size:12.5px; font-weight:700;">🧭 مسیریابی</div>
+            </div>
+            <div style="margin-top:14px; font-size:12px; line-height:1.8; color:oklch(0.4 0.01 40); border-top:1px solid oklch(0.92 0.005 60); padding-top:12px;">
+              فروش گوشی، قاب و لوازم جانبی اصل با گارانتی. ۱۰ سال سابقه در پاساژ گلستان.<br/>
+              ساعات کاری: ۱۰ صبح تا ۹ شب (شنبه تا پنجشنبه)
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px;">
+              <div style="font-size:13px; font-weight:700; color:oklch(0.28 0.02 40);">محصولات</div>
+              <div style="font-size:10.5px; background:oklch(0.94 0.09 145); color:oklch(0.4 0.12 145); border-radius:6px; padding:3px 8px; font-weight:700;">قابل خرید آنلاین</div>
+            </div>
+          </div>
+          <div style="padding:10px 18px 90px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <sc-for list="{{ profileProducts }}" as="p" hint-placeholder-count="4">
+              <div onclick="{{ openCommerce }}" style="border:1px solid oklch(0.9 0.005 60); border-radius:12px; overflow:hidden; cursor:pointer; background:white;">
+                <div style="height:90px; background:oklch(0.93 0.01 40); display:flex; align-items:center; justify-content:center; font-size:22px;">📱</div>
+                <div style="padding:8px;">
+                  <div style="font-size:11.5px; font-weight:700; color:oklch(0.25 0.02 40); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ p.name }}</div>
+                  <div style="font-size:11.5px; color:oklch(0.55 0.14 40); font-weight:700; margin-top:3px;">{{ p.price }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ============ SCREEN: CATALOG SHOWCASE ============ -->
+        <sc-if value="{{ isShowcase }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <div style="height:220px; background:oklch(0.9 0.02 60); display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; flex:0 0 auto;">
+            👗
+            <div onclick="{{ goScreen }}" data-s="browse" style="position:absolute; top:12px; right:14px; width:30px; height:30px; border-radius:50%; background:white; box-shadow:0 2px 6px oklch(0 0 0/0.15); display:flex; align-items:center; justify-content:center; cursor:pointer;">→</div>
+          </div>
+          <div style="padding:16px 18px;">
+            <div style="font-size:10.5px; background:oklch(0.95 0.06 80); color:oklch(0.5 0.12 70); border-radius:6px; padding:3px 8px; font-weight:700; display:inline-block; margin-bottom:8px;">حالت نمایشی — فقط حضوری قابل خرید</div>
+            <div style="font-size:16px; font-weight:800; color:oklch(0.24 0.02 40);">مانتو کتان طرح دار</div>
+            <div style="font-size:12px; color:oklch(0.5 0.01 40); margin-top:4px;">برند: رافیا · دسته: پوشاک زنانه</div>
+            <div style="display:flex; gap:6px; margin-top:12px;">
+              <sc-for list="{{ showcaseGallery }}" as="g" hint-placeholder-count="4">
+                <div style="width:52px; height:52px; border-radius:8px; background:oklch(0.92 0.02 60); display:flex; align-items:center; justify-content:center; font-size:16px;">🧵</div>
+              </sc-for>
+            </div>
+            <div style="margin-top:14px; font-size:12.5px; line-height:1.8; color:oklch(0.4 0.01 40); border-top:1px solid oklch(0.92 0.005 60); padding-top:12px;">
+              مانتو کتان تابستانه با طرح گلدار، سایزبندی ۳۸ تا ۴۶. جنس خنک و مناسب استفاده روزانه. برای مشاهده رنگ‌بندی کامل به فروشگاه مراجعه کنید.
+            </div>
+          </div>
+          <div style="margin-top:auto; padding:14px 18px 22px; display:flex; gap:8px; border-top:1px solid oklch(0.92 0.005 60);">
+            <div style="flex:1; text-align:center; background:oklch(0.55 0.14 40); color:white; border-radius:10px; padding:12px; font-size:13px; font-weight:700;">📞 تماس با فروشگاه</div>
+            <div style="flex:1; text-align:center; border:1.5px solid oklch(0.55 0.14 40); color:oklch(0.55 0.14 40); border-radius:10px; padding:12px; font-size:13px; font-weight:700;">🧭 مسیریابی</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ============ SCREEN: CATALOG COMMERCE ============ -->
+        <sc-if value="{{ isCommerce }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <div style="height:200px; background:oklch(0.93 0.01 40); display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; flex:0 0 auto;">
+            📱
+            <div onclick="{{ goScreen }}" data-s="profile" style="position:absolute; top:12px; right:14px; width:30px; height:30px; border-radius:50%; background:white; box-shadow:0 2px 6px oklch(0 0 0/0.15); display:flex; align-items:center; justify-content:center; cursor:pointer;">→</div>
+          </div>
+          <div style="padding:16px 18px;">
+            <div style="font-size:16px; font-weight:800; color:oklch(0.24 0.02 40);">قاب محافظ iPhone 15</div>
+            <div style="font-size:12px; color:oklch(0.5 0.01 40); margin-top:4px;">برند: اسپیگن · موجود در انبار: ۱۲ عدد</div>
+            <div style="display:flex; align-items:baseline; gap:8px; margin-top:10px;">
+              <div style="font-size:18px; font-weight:800; color:oklch(0.55 0.14 40);">۴۸۵,۰۰۰ تومان</div>
+              <div style="font-size:12px; color:oklch(0.6 0.01 40); text-decoration:line-through;">۵۹۰,۰۰۰</div>
+              <div style="font-size:10px; background:oklch(0.55 0.18 25); color:white; border-radius:5px; padding:2px 6px; font-weight:700;">۱۸٪</div>
+            </div>
+            <div style="margin-top:14px;">
+              <div style="font-size:11.5px; font-weight:700; color:oklch(0.4 0.01 40); margin-bottom:6px;">رنگ</div>
+              <div style="display:flex; gap:8px;">
+                <sc-for list="{{ colorVariants }}" as="cv" hint-placeholder-count="3">
+                  <div onclick="{{ setColor }}" data-c="{{ cv.id }}" style="{{ cv.style }}"></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="margin-top:14px; font-size:12.5px; line-height:1.8; color:oklch(0.4 0.01 40); border-top:1px solid oklch(0.92 0.005 60); padding-top:12px;">
+              قاب سیلیکونی ضدضربه با محافظت گوشه ۴ لایه، دارای گارانتی اصالت ۶ ماهه.
+            </div>
+          </div>
+          <div style="margin-top:auto; padding:14px 18px 22px; display:flex; gap:8px; border-top:1px solid oklch(0.92 0.005 60); align-items:center;">
+            <div style="display:flex; align-items:center; border:1.5px solid oklch(0.85 0.005 60); border-radius:10px;">
+              <div onclick="{{ decQty }}" style="padding:10px 14px; cursor:pointer; font-weight:700;">−</div>
+              <div style="padding:0 6px; font-size:13px; font-weight:700; min-width:16px; text-align:center;">{{ qty }}</div>
+              <div onclick="{{ incQty }}" style="padding:10px 14px; cursor:pointer; font-weight:700;">+</div>
+            </div>
+            <div onclick="{{ addToCart }}" style="flex:1; text-align:center; background:oklch(0.55 0.14 40); color:white; border-radius:10px; padding:12px; font-size:13px; font-weight:700; cursor:pointer;">{{ addToCartLabel }}</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ============ SCREEN: CART ============ -->
+        <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column;">
+          <div style="padding:14px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div onclick="{{ goScreen }}" data-s="browse" style="cursor:pointer;">→</div>
+            <div style="font-size:14px; font-weight:700; color:oklch(0.26 0.02 40);">سبد خرید</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:10px;">
+            <sc-if value="{{ cartHasItems }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ cartItems }}" as="ci" hint-placeholder-count="2">
+                <div style="display:flex; gap:10px; border:1px solid oklch(0.9 0.005 60); border-radius:12px; padding:10px;">
+                  <div style="width:52px; height:52px; border-radius:8px; background:oklch(0.93 0.01 40); display:flex; align-items:center; justify-content:center; font-size:18px;">📱</div>
+                  <div style="flex:1;">
+                    <div style="font-size:12.5px; font-weight:700; color:oklch(0.25 0.02 40);">{{ ci.name }}</div>
+                    <div style="font-size:11px; color:oklch(0.5 0.01 40); margin-top:2px;">{{ ci.variant }} · تعداد {{ ci.qty }}</div>
+                    <div style="font-size:12px; font-weight:700; color:oklch(0.55 0.14 40); margin-top:4px;">{{ ci.total }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-if>
+            <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align:center; padding:60px 20px; color:oklch(0.6 0.01 40); font-size:13px;">سبد خرید خالی است</div>
+            </sc-if>
+          </div>
+          <div style="padding:14px 18px 22px; border-top:1px solid oklch(0.92 0.005 60);">
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:12px;">
+              <span style="color:oklch(0.5 0.01 40);">جمع کل</span>
+              <span style="font-weight:800; color:oklch(0.24 0.02 40);">{{ cartTotal }}</span>
+            </div>
+            <div onclick="{{ goCheckout }}" style="text-align:center; background:oklch(0.55 0.14 40); color:white; border-radius:10px; padding:12px; font-size:13px; font-weight:700; cursor:pointer;">ادامه فرایند خرید</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ============ SCREEN: CHECKOUT ============ -->
+        <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column;">
+          <div style="padding:14px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div onclick="{{ goScreen }}" data-s="cart" style="cursor:pointer;">→</div>
+            <div style="font-size:14px; font-weight:700; color:oklch(0.26 0.02 40);">تسویه حساب</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:14px;">
+            <div>
+              <div style="font-size:12px; font-weight:700; color:oklch(0.4 0.01 40); margin-bottom:6px;">آدرس تحویل</div>
+              <div style="border:1px solid oklch(0.55 0.14 40); border-radius:10px; padding:10px; font-size:12px; color:oklch(0.35 0.01 40);">تهران، خیابان ولیعصر، پلاک ۱۲، واحد ۳</div>
+            </div>
+            <div>
+              <div style="font-size:12px; font-weight:700; color:oklch(0.4 0.01 40); margin-bottom:6px;">روش پرداخت</div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px; border:1.5px solid oklch(0.55 0.14 40); border-radius:10px; padding:10px; font-size:12px;"><span style="width:16px; height:16px; border-radius:50%; background:oklch(0.55 0.14 40);"></span> درگاه زرین‌پال</div>
+                <div style="display:flex; align-items:center; gap:8px; border:1.5px solid oklch(0.85 0.005 60); border-radius:10px; padding:10px; font-size:12px; color:oklch(0.5 0.01 40);"><span style="width:16px; height:16px; border-radius:50%; border:1.5px solid oklch(0.7 0.01 40);"></span> پرداخت در محل (حضوری)</div>
+              </div>
+            </div>
+            <div style="border-top:1px solid oklch(0.92 0.005 60); padding-top:12px; display:flex; flex-direction:column; gap:6px; font-size:12.5px;">
+              <div style="display:flex; justify-content:space-between; color:oklch(0.5 0.01 40);"><span>جمع کالاها</span><span>۴۸۵,۰۰۰ تومان</span></div>
+              <div style="display:flex; justify-content:space-between; color:oklch(0.5 0.01 40);"><span>ارسال</span><span>رایگان</span></div>
+              <div style="display:flex; justify-content:space-between; font-weight:800; color:oklch(0.24 0.02 40); font-size:14px;"><span>مبلغ نهایی</span><span>۴۸۵,۰۰۰ تومان</span></div>
+            </div>
+          </div>
+          <div style="padding:14px 18px 22px; border-top:1px solid oklch(0.92 0.005 60);">
+            <div onclick="{{ placeOrder }}" style="text-align:center; background:oklch(0.55 0.14 40); color:white; border-radius:10px; padding:12px; font-size:13px; font-weight:700; cursor:pointer;">پرداخت و ثبت سفارش</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ============ SCREEN: ORDER TRACKING ============ -->
+        <sc-if value="{{ isTracking }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column;">
+          <div style="padding:14px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div onclick="{{ goScreen }}" data-s="browse" style="cursor:pointer;">→</div>
+            <div style="font-size:14px; font-weight:700; color:oklch(0.26 0.02 40);">پیگیری سفارش</div>
+          </div>
+          <div style="flex:1; overflow-y:auto; padding:18px;">
+            <div style="font-size:12px; color:oklch(0.5 0.01 40); margin-bottom:4px;">سفارش #۱۰۴۸۲ · موبایل کوروش</div>
+            <div style="font-size:14px; font-weight:800; color:oklch(0.55 0.14 40); margin-bottom:20px;">در حال آماده‌سازی</div>
+            <sc-for list="{{ trackingSteps }}" as="ts" hint-placeholder-count="4">
+              <div style="display:flex; gap:12px;">
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                  <div style="{{ ts.dotStyle }}"></div>
+                  <div style="{{ ts.lineStyle }}"></div>
+                </div>
+                <div style="padding-bottom:22px;">
+                  <div style="font-size:12.5px; font-weight:700; color:{{ ts.textColor }};">{{ ts.label }}</div>
+                  <div style="font-size:10.5px; color:oklch(0.55 0.01 40); margin-top:2px;">{{ ts.time }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    screen: 'browse',
+    view: 'list',
+    cat: 'all',
+    floor: 'f1',
+    color: 'black',
+    qty: 1,
+    added: false,
+    cartItems: [
+      { name: 'قاب محافظ iPhone 15', variant: 'رنگ مشکی', qty: 1, total: '۴۸۵,۰۰۰ تومان' },
+    ],
+  };
+
+  buildTab(id, label) {
+    const active = this.state.screen === id;
+    return {
+      id, label,
+      style: {
+        padding: '7px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 600, cursor: 'pointer',
+        border: active ? '1.5px solid oklch(0.55 0.14 40)' : '1.5px solid oklch(0.85 0.005 60)',
+        background: active ? 'oklch(0.55 0.14 40)' : 'white',
+        color: active ? 'white' : 'oklch(0.45 0.01 40)',
+      }
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const screenTabs = [
+      this.buildTab('browse', 'خانه / مرور'),
+      this.buildTab('profile', 'پروفایل فروشگاه'),
+      this.buildTab('showcase', 'کاتالوگ — نمایشی'),
+      this.buildTab('commerce', 'کاتالوگ — فروشگاهی'),
+      this.buildTab('cart', 'سبد خرید'),
+      this.buildTab('checkout', 'تسویه حساب'),
+      this.buildTab('tracking', 'پیگیری سفارش'),
+    ];
+
+    const isList = s.view === 'list';
+    const activeChip = { flex:1, textAlign:'center', padding:'8px 0', borderRadius:'999px', background:'oklch(0.55 0.14 40)', color:'white', fontWeight:600 };
+    const inactiveChip = { flex:1, textAlign:'center', padding:'8px 0', borderRadius:'999px', color:'oklch(0.45 0.01 40)' };
+
+    const categoryList = [
+      { id: 'all', label: 'همه' },
+      { id: 'mobile', label: 'موبایل' },
+      { id: 'clothing', label: 'پوشاک' },
+      { id: 'home', label: 'لوازم‌خانگی' },
+    ];
+    const categoryChips = categoryList.map(c => ({
+      id: c.id, label: c.label,
+      style: {
+        flex:'0 0 auto', padding:'6px 14px', borderRadius:'999px', fontSize:'11px', cursor:'pointer',
+        border: s.cat === c.id ? '1.5px solid oklch(0.28 0.02 40)' : '1.5px solid oklch(0.85 0.005 60)',
+        background: s.cat === c.id ? 'oklch(0.28 0.02 40)' : 'white',
+        color: s.cat === c.id ? 'white' : 'oklch(0.45 0.01 40)',
+      }
+    }));
+
+    const allShops = [
+      { id:1, name:'موبایل کوروش', category:'موبایل', floor:'۱', initial:'م', mode:'commerce' },
+      { id:2, name:'گالری پوشاک رافیا', category:'پوشاک', floor:'۲', initial:'ر', mode:'showcase' },
+      { id:3, name:'لوازم جانبی اپل‌مارت', category:'موبایل', floor:'۱', initial:'ا', mode:'commerce' },
+      { id:4, name:'کیف و کفش شیک‌پوش', category:'پوشاک', floor:'همکف', initial:'ش', mode:'showcase' },
+      { id:5, name:'دیجی‌هوم', category:'لوازم‌خانگی', floor:'۳', initial:'د', mode:'commerce' },
+      { id:6, name:'موبایل مدرن', category:'موبایل', floor:'۱', initial:'م', mode:'mixed' },
+    ];
+    const shops = allShops.map(sh => ({
+      ...sh,
+      avatarStyle: { width:'44px', height:'44px', borderRadius:'10px', background:'oklch(0.55 0.14 40)', color:'white', fontSize:'15px', fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center', flex:'0 0 auto' },
+      modeLabel: sh.mode === 'commerce' ? 'خرید آنلاین' : (sh.mode === 'showcase' ? 'نمایشی' : 'ترکیبی'),
+      modeBadgeStyle: {
+        fontSize:'9.5px', fontWeight:700, borderRadius:'6px', padding:'3px 7px', flex:'0 0 auto',
+        background: sh.mode === 'commerce' ? 'oklch(0.94 0.09 145)' : (sh.mode === 'showcase' ? 'oklch(0.95 0.06 80)' : 'oklch(0.93 0.04 260)'),
+        color: sh.mode === 'commerce' ? 'oklch(0.4 0.12 145)' : (sh.mode === 'showcase' ? 'oklch(0.5 0.12 70)' : 'oklch(0.42 0.1 260)'),
+      }
+    }));
+
+    const floorList = [
+      { id:'f0', label:'همکف' },
+      { id:'f1', label:'طبقه ۱' },
+      { id:'f2', label:'طبقه ۲' },
+      { id:'f3', label:'طبقه ۳' },
+    ];
+    const floorTabs = floorList.map(f => ({
+      id:f.id, label:f.label,
+      style: {
+        flex:1, textAlign:'center', padding:'7px 0', borderRadius:'999px', fontSize:'10.5px', cursor:'pointer',
+        border: s.floor === f.id ? '1.5px solid oklch(0.28 0.02 40)' : '1.5px solid oklch(0.85 0.005 60)',
+        background: s.floor === f.id ? 'oklch(0.28 0.02 40)' : 'white',
+        color: s.floor === f.id ? 'white' : 'oklch(0.45 0.01 40)',
+      }
+    }));
+    const activeFloorLabel = floorList.find(f => f.id === s.floor)?.label ?? '';
+
+    const pinPositions = [
+      { id:1, name:'موبایل کوروش', top:'30%', right:'28%' },
+      { id:3, name:'اپل‌مارت', top:'55%', right:'55%' },
+      { id:6, name:'موبایل مدرن', top:'20%', right:'65%' },
+    ];
+    const mapPins = pinPositions.map(p => ({
+      id: p.id, name: p.name,
+      style: {
+        position:'absolute', top:p.top, right:p.right, width:'20px', height:'20px',
+        borderRadius:'50% 50% 50% 0', background:'oklch(0.55 0.14 40)', transform:'rotate(-45deg)',
+        border:'2px solid white', cursor:'pointer', boxShadow:'0 2px 6px oklch(0 0 0/0.25)',
+      }
+    }));
+
+    const profileProducts = [
+      { name: 'قاب محافظ iPhone 15', price: '۴۸۵,۰۰۰ تومان' },
+      { name: 'شارژر فست‌شارژ ۲۰وات', price: '۳۹۰,۰۰۰ تومان' },
+      { name: 'کابل تایپ‌سی ۲متری', price: '۱۲۵,۰۰۰ تومان' },
+      { name: 'هندزفری بلوتوثی', price: '۶۹۰,۰۰۰ تومان' },
+    ];
+
+    const colorList = [
+      { id: 'black', hex: 'oklch(0.2 0 0)' },
+      { id: 'blue', hex: 'oklch(0.5 0.15 250)' },
+      { id: 'red', hex: 'oklch(0.55 0.18 25)' },
+    ];
+    const colorVariants = colorList.map(c => ({
+      id: c.id,
+      style: {
+        width:'30px', height:'30px', borderRadius:'50%', background:c.hex, cursor:'pointer',
+        border: s.color === c.id ? '3px solid oklch(0.55 0.14 40)' : '2px solid oklch(0.9 0.005 60)',
+      }
+    }));
+
+    const cartHasItems = s.cartItems.length > 0;
+
+    const trackingList = [
+      { label:'سفارش ثبت شد', time:'امروز، ۱۰:۱۲', done:true },
+      { label:'در حال آماده‌سازی', time:'امروز، ۱۰:۴۰', done:true, current:true },
+      { label:'ارسال شده', time:'—', done:false },
+      { label:'تحویل داده شد', time:'—', done:false },
+    ];
+    const trackingSteps = trackingList.map((t, i) => ({
+      label: t.label, time: t.time,
+      textColor: t.done ? 'oklch(0.24 0.02 40)' : 'oklch(0.6 0.01 40)',
+      dotStyle: {
+        width:'12px', height:'12px', borderRadius:'50%',
+        background: t.done ? 'oklch(0.55 0.14 40)' : 'oklch(0.85 0.005 60)',
+        border: t.current ? '3px solid oklch(0.85 0.09 70)' : 'none',
+      },
+      lineStyle: i < trackingList.length - 1 ? { width:'2px', flex:1, minHeight:'20px', background: t.done ? 'oklch(0.55 0.14 40)' : 'oklch(0.88 0.005 60)' } : {},
+    }));
+
+    return {
+      screenTabs,
+      isBrowse: s.screen === 'browse',
+      isProfile: s.screen === 'profile',
+      isShowcase: s.screen === 'showcase',
+      isCommerce: s.screen === 'commerce',
+      isCart: s.screen === 'cart',
+      isCheckout: s.screen === 'checkout',
+      isTracking: s.screen === 'tracking',
+      goScreen: (e) => this.setState({ screen: e.currentTarget.getAttribute('data-s') }),
+      goCart: () => this.setState({ screen: 'cart' }),
+      goTracking: () => this.setState({ screen: 'tracking' }),
+      goCheckout: () => this.setState({ screen: 'checkout' }),
+      placeOrder: () => this.setState({ screen: 'tracking' }),
+      openProfile: () => this.setState({ screen: 'profile' }),
+      openCommerce: () => this.setState({ screen: 'commerce' }),
+
+      isList, isMap: !isList,
+      setView: (e) => this.setState({ view: e.currentTarget.getAttribute('data-v') }),
+      listTabStyle: isList ? activeChip : inactiveChip,
+      mapTabStyle: !isList ? activeChip : inactiveChip,
+
+      categoryChips,
+      setCat: (e) => this.setState({ cat: e.currentTarget.getAttribute('data-c') }),
+      shopCountLabel: `${shops.length} فروشگاه`,
+      shops,
+
+      floorTabs,
+      setFloor: (e) => this.setState({ floor: e.currentTarget.getAttribute('data-f') }),
+      activeFloorLabel,
+      mapPins,
+
+      profileProducts,
+
+      showcaseGallery: [1,2,3,4],
+
+      colorVariants,
+      setColor: (e) => this.setState({ color: e.currentTarget.getAttribute('data-c') }),
+      qty: s.qty,
+      incQty: () => this.setState(st => ({ qty: st.qty + 1 })),
+      decQty: () => this.setState(st => ({ qty: Math.max(1, st.qty - 1) })),
+      addToCartLabel: s.added ? 'افزوده شد ✓' : 'افزودن به سبد',
+      addToCart: () => this.setState({ added: true }),
+
+      cartItems: s.cartItems,
+      cartHasItems,
+      cartEmpty: !cartHasItems,
+      cartTotal: '۴۸۵,۰۰۰ تومان',
+
+      trackingSteps,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

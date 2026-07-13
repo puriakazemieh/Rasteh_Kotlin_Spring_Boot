@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin:0; background:oklch(0.94 0.006 60); overflow-x:auto; overflow-y:auto; -webkit-overflow-scrolling:touch; height:auto; min-height:100%; }
+    * { font-family:'Vazirmatn', sans-serif; box-sizing:border-box; }
+  </style>
+</helmet>
+
+<div dir="rtl" style="padding:36px 40px 80px; direction:rtl;">
+  <div style="margin-bottom:24px;">
+    <h1 style="font-size:20px; margin:0 0 4px; color:oklch(0.26 0.02 40);">اپ فروشنده (موبایل) — پاساژ گلستان</h1>
+    <p style="font-size:13px; color:oklch(0.5 0.02 40); margin:0;">ثبت‌نام، داشبورد، مدیریت محصولات و سفارش‌ها، تنظیمات فروشگاه — همه از موبایل. روی نوار بالا بزنید تا جابه‌جا شوید.</p>
+  </div>
+
+  <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px;">
+    <sc-for list="{{ screenTabs }}" as="tab" hint-placeholder-count="6">
+      <div onclick="{{ goScreen }}" data-s="{{ tab.id }}" style="{{ tab.style }}">{{ tab.label }}</div>
+    </sc-for>
+  </div>
+
+  <div style="display:flex; gap:28px; overflow-x:auto; padding-bottom:20px;">
+    <div style="width:375px; flex:0 0 auto; border:10px solid oklch(0.15 0.005 40); border-radius:44px; background:oklch(0.15 0.005 40); box-shadow:0 20px 50px oklch(0 0 0/0.25);">
+      <div style="background:white; border-radius:34px; overflow:hidden; height:780px; display:flex; flex-direction:column; position:relative;">
+
+        <div style="height:28px; flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; padding:0 22px; font-size:11px; font-weight:600; color:oklch(0.2 0.01 40);">
+          <span>9:41</span><span>🔋 📶</span>
+        </div>
+
+        <!-- ===== SIGNUP ===== -->
+        <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1; overflow-y:auto; padding:16px 18px 24px; display:flex; flex-direction:column;">
+          <div style="font-size:15px; font-weight:800; color:oklch(0.24 0.02 40); margin-bottom:4px;">ثبت‌نام فروشگاه</div>
+          <div style="font-size:11.5px; color:oklch(0.5 0.01 40); margin-bottom:14px;">مرحله {{ signupStepLabel }}</div>
+          <div style="display:flex; gap:5px; margin-bottom:18px;">
+            <sc-for list="{{ signupProgress }}" as="sp" hint-placeholder-count="3">
+              <div style="{{ sp.style }}"></div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ isSignupStep1 }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div><label style="font-size:11.5px; font-weight:700; color:oklch(0.35 0.01 40); display:block; margin-bottom:5px;">نام فروشگاه</label><div style="height:38px; border:1.5px solid oklch(0.85 0.005 60); border-radius:9px; display:flex; align-items:center; padding:0 11px; font-size:12.5px; color:oklch(0.3 0.01 40);">کیف و کفش آریانا</div></div>
+              <div><label style="font-size:11.5px; font-weight:700; color:oklch(0.35 0.01 40); display:block; margin-bottom:5px;">دسته‌بندی</label><div style="height:38px; border:1.5px solid oklch(0.85 0.005 60); border-radius:9px; display:flex; align-items:center; justify-content:space-between; padding:0 11px; font-size:12.5px; color:oklch(0.3 0.01 40); overflow:hidden;"><span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">کیف و کفش</span><span style="flex:0 0 auto;">▾</span></div></div>
+              <div style="display:flex; gap:10px;">
+                <div style="flex:1;"><label style="font-size:11.5px; font-weight:700; color:oklch(0.35 0.01 40); display:block; margin-bottom:5px;">طبقه</label><div style="height:38px; border:1.5px solid oklch(0.85 0.005 60); border-radius:9px; display:flex; align-items:center; padding:0 11px; font-size:12.5px; color:oklch(0.3 0.01 40);">همکف</div></div>
+                <div style="flex:1;"><label style="font-size:11.5px; font-weight:700; color:oklch(0.35 0.01 40); display:block; margin-bottom:5px;">پلاک</label><div style="height:38px; border:1.5px solid oklch(0.85 0.005 60); border-radius:9px; display:flex; align-items:center; padding:0 11px; font-size:12.5px; color:oklch(0.3 0.01 40);">۸</div></div>
+              </div>
+              <div><label style="font-size:11.5px; font-weight:700; color:oklch(0.35 0.01 40); display:block; margin-bottom:5px;">شماره تماس</label><div style="height:38px; border:1.5px solid oklch(0.85 0.005 60); border-radius:9px; display:flex; align-items:center; padding:0 11px; font-size:12.5px; color:oklch(0.3 0.01 40);">۰۹۱۲۱۱۱۲۲۳۳</div></div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSignupStep2 }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:12.5px; font-weight:700; color:oklch(0.3 0.01 40); margin-bottom:12px;">حالت عرضه محصولات</div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div onclick="{{ setCatalogMode }}" data-m="showcase" style="{{ modeCardStyle_showcase }}">
+                <div style="font-size:20px;">🖼️</div>
+                <div><div style="font-size:12.5px; font-weight:700; color:oklch(0.24 0.02 40);">کاتالوگ نمایشی</div><div style="font-size:10.5px; color:oklch(0.5 0.01 40); margin-top:2px;">بدون خرید آنلاین</div></div>
+              </div>
+              <div onclick="{{ setCatalogMode }}" data-m="commerce" style="{{ modeCardStyle_commerce }}">
+                <div style="font-size:20px;">🛒</div>
+                <div><div style="font-size:12.5px; font-weight:700; color:oklch(0.24 0.02 40);">فروشگاهی کامل</div><div style="font-size:10.5px; color:oklch(0.5 0.01 40); margin-top:2px;">قیمت، سبد، پرداخت</div></div>
+              </div>
+              <div onclick="{{ setCatalogMode }}" data-m="mixed" style="{{ modeCardStyle_mixed }}">
+                <div style="font-size:20px;">🔀</div>
+                <div><div style="font-size:12.5px; font-weight:700; color:oklch(0.24 0.02 40);">ترکیبی</div><div style="font-size:10.5px; color:oklch(0.5 0.01 40); margin-top:2px;">تعیین به ازای هر محصول</div></div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSignupStep3 }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align:center; padding:30px 10px;">
+              <div style="font-size:36px; margin-bottom:10px;">⏳</div>
+              <div style="font-size:14px; font-weight:800; color:oklch(0.24 0.02 40); margin-bottom:6px;">درخواست ثبت شد</div>
+              <div style="font-size:12px; color:oklch(0.5 0.01 40); line-height:1.8;">برای بررسی به ادمین پاساژ ارسال شد. پس از تایید اعلان می‌گیرید.</div>
+            </div>
+          </sc-if>
+
+          <div style="margin-top:auto; padding-top:16px; display:flex; gap:8px;">
+            <sc-if value="{{ canGoBackSignup }}" hint-placeholder-val="{{ false }}">
+              <div onclick="{{ signupBack }}" style="padding:11px 18px; border-radius:9px; border:1.5px solid oklch(0.85 0.005 60); font-size:12.5px; font-weight:700; color:oklch(0.4 0.01 40); cursor:pointer;">بازگشت</div>
+            </sc-if>
+            <sc-if value="{{ canGoNextSignup }}" hint-placeholder-val="{{ true }}">
+              <div onclick="{{ signupNext }}" style="flex:1; text-align:center; padding:11px; border-radius:9px; background:oklch(0.55 0.14 40); color:white; font-size:12.5px; font-weight:700; cursor:pointer;">{{ signupNextLabel }}</div>
+            </sc-if>
+            <sc-if value="{{ isSignupStep3 }}" hint-placeholder-val="{{ false }}">
+              <div onclick="{{ goScreen }}" data-s="dashboard" style="flex:1; text-align:center; padding:11px; border-radius:9px; background:oklch(0.55 0.14 40); color:white; font-size:12.5px; font-weight:700; cursor:pointer;">مشاهده داشبورد</div>
+            </sc-if>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== DASHBOARD ===== -->
+        <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <div style="padding:16px 18px 12px; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div style="font-size:11.5px; color:oklch(0.5 0.01 40);">فروشگاه شما</div>
+            <div style="font-size:15px; font-weight:800; color:oklch(0.24 0.02 40); margin-top:2px;">موبایل کوروش</div>
+          </div>
+          <div style="padding:14px 18px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <sc-for list="{{ statCards }}" as="st" hint-placeholder-count="4">
+              <div style="border:1px solid oklch(0.9 0.005 60); border-radius:11px; padding:12px;">
+                <div style="font-size:10.5px; color:oklch(0.5 0.01 40);">{{ st.label }}</div>
+                <div style="font-size:16px; font-weight:800; color:oklch(0.24 0.02 40); margin-top:4px;">{{ st.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="padding:4px 18px; font-size:12.5px; font-weight:700; color:oklch(0.3 0.01 40);">سفارش‌های اخیر</div>
+          <div style="padding:8px 18px 90px; display:flex; flex-direction:column; gap:8px;">
+            <sc-for list="{{ recentOrders }}" as="ord" hint-placeholder-count="3">
+              <div style="border:1px solid oklch(0.9 0.005 60); border-radius:10px; padding:10px; display:flex; align-items:center; gap:10px;">
+                <div style="font-size:11.5px; font-weight:700; color:oklch(0.3 0.01 40); width:56px;">{{ ord.id }}</div>
+                <div style="flex:1; font-size:11.5px; color:oklch(0.4 0.01 40); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ ord.item }}</div>
+                <div style="{{ ord.statusStyle }}">{{ ord.status }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== PRODUCTS ===== -->
+        <sc-if value="{{ isProducts }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <div style="padding:16px 18px 10px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid oklch(0.92 0.005 60);">
+            <div style="font-size:15px; font-weight:800; color:oklch(0.24 0.02 40);">محصولات</div>
+            <div style="background:oklch(0.55 0.14 40); color:white; border-radius:8px; padding:7px 12px; font-size:11.5px; font-weight:700;">+ افزودن</div>
+          </div>
+          <div style="padding:12px 18px 90px; display:flex; flex-direction:column; gap:8px;">
+            <sc-for list="{{ productRows }}" as="pr" hint-placeholder-count="5">
+              <div style="border:1px solid oklch(0.9 0.005 60); border-radius:11px; padding:10px; display:flex; align-items:center; gap:10px;">
+                <div style="width:38px; height:38px; border-radius:8px; background:oklch(0.93 0.01 40); display:flex; align-items:center; justify-content:center; font-size:15px; flex:0 0 auto;">📦</div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:12px; font-weight:700; color:oklch(0.3 0.01 40); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ pr.name }}</div>
+                  <div style="font-size:11px; color:oklch(0.5 0.01 40); margin-top:2px;">{{ pr.price }}</div>
+                </div>
+                <div onclick="{{ toggleProductMode }}" data-i="{{ pr.idx }}" style="{{ pr.modeToggleStyle }}">{{ pr.modeLabel }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== STORE SETTINGS ===== -->
+        <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; overflow-y:auto; padding:16px 18px 90px; display:flex; flex-direction:column; gap:14px;">
+          <div style="font-size:15px; font-weight:800; color:oklch(0.24 0.02 40);">تنظیمات فروشگاه</div>
+          <div style="display:flex; gap:14px; align-items:center;">
+            <div style="width:58px; height:58px; border-radius:12px; background:oklch(0.55 0.14 40); color:white; font-size:20px; font-weight:700; display:flex; align-items:center; justify-content:center;">م</div>
+            <div style="font-size:11.5px; color:oklch(0.55 0.14 40); text-decoration:underline;">تغییر لوگو</div>
+          </div>
+          <div><label style="font-size:11.5px; font-weight:700; color:oklch(0.35 0.01 40); display:block; margin-bottom:5px;">ساعات کاری</label><div style="height:38px; border:1.5px solid oklch(0.85 0.005 60); border-radius:9px; display:flex; align-items:center; padding:0 11px; font-size:12px; color:oklch(0.3 0.01 40);">شنبه تا پنجشنبه، ۱۰-۲۱</div></div>
+          <div><label style="font-size:11.5px; font-weight:700; color:oklch(0.35 0.01 40); display:block; margin-bottom:5px;">توضیحات</label><div style="min-height:60px; border:1.5px solid oklch(0.85 0.005 60); border-radius:9px; padding:10px; font-size:12px; color:oklch(0.3 0.01 40);">فروش گوشی، قاب و لوازم جانبی اصل با گارانتی...</div></div>
+          <div><label style="font-size:11.5px; font-weight:700; color:oklch(0.35 0.01 40); display:block; margin-bottom:5px;">حالت کاتالوگ</label><div style="font-size:11.5px; background:oklch(0.93 0.04 260); color:oklch(0.42 0.1 260); border-radius:7px; padding:7px 11px; display:inline-block; font-weight:700;">🔀 ترکیبی</div></div>
+        </div>
+        </sc-if>
+
+        <!-- bottom nav -->
+        <div style="flex:0 0 auto; display:flex; border-top:1px solid oklch(0.92 0.005 60); padding:8px 0 10px;">
+          <div onclick="{{ goScreen }}" data-s="dashboard" style="{{ navStyle_dashboard }}">📊<br/>داشبورد</div>
+          <div onclick="{{ goScreen }}" data-s="products" style="{{ navStyle_products }}">📦<br/>محصولات</div>
+          <div onclick="{{ goScreen }}" data-s="settings" style="{{ navStyle_settings }}">⚙️<br/>تنظیمات</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'signup', signupStep: 1, catalogMode: 'mixed' };
+
+  tabBuild(id, label) {
+    const active = this.state.screen === id;
+    return {
+      id, label,
+      style: {
+        padding:'7px 14px', borderRadius:'999px', fontSize:'12px', fontWeight:600, cursor:'pointer',
+        border: active ? '1.5px solid oklch(0.55 0.14 40)' : '1.5px solid oklch(0.85 0.005 60)',
+        background: active ? 'oklch(0.55 0.14 40)' : 'white',
+        color: active ? 'white' : 'oklch(0.45 0.01 40)',
+      }
+    };
+  }
+
+  navStyle(id) {
+    const active = this.state.screen === id;
+    return { flex:1, textAlign:'center', fontSize:'10px', cursor:'pointer', color: active ? 'oklch(0.55 0.14 40)' : 'oklch(0.55 0.01 40)', fontWeight: active ? 700 : 500 };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const screenTabs = [
+      this.tabBuild('signup', 'ثبت‌نام فروشگاه'),
+      this.tabBuild('dashboard', 'داشبورد'),
+      this.tabBuild('products', 'محصولات'),
+      this.tabBuild('settings', 'تنظیمات'),
+    ];
+
+    const signupProgress = [1,2,3].map(n => ({
+      style: { flex:1, height:'4px', borderRadius:'99px', background: n <= s.signupStep ? 'oklch(0.55 0.14 40)' : 'oklch(0.88 0.005 60)' }
+    }));
+
+    const modeCard = (id) => {
+      const active = s.catalogMode === id;
+      return { display:'flex', gap:'12px', alignItems:'center', border: active ? '2px solid oklch(0.55 0.14 40)' : '1.5px solid oklch(0.88 0.005 60)', borderRadius:'11px', padding:'12px 14px', cursor:'pointer', background: active ? 'oklch(0.98 0.02 40)' : 'white' };
+    };
+
+    const statCards = [
+      { label:'بازدید امروز', value:'۱۲۴' },
+      { label:'سفارش‌های در انتظار', value:'۳' },
+      { label:'فروش این ماه', value:'۸.۴M' },
+      { label:'محصولات فعال', value:'۲۸' },
+    ];
+
+    const orderList = [
+      { id:'#۱۰۴۸۲', item:'قاب iPhone 15', status:'در انتظار' },
+      { id:'#۱۰۴۷۹', item:'شارژر فست‌شارژ ×۲', status:'ارسال شده' },
+      { id:'#۱۰۴۷۱', item:'هندزفری بلوتوثی', status:'تحویل شد' },
+    ];
+    const recentOrders = orderList.map(o => ({
+      ...o,
+      statusStyle: {
+        fontSize:'10px', fontWeight:700, borderRadius:'6px', padding:'4px 8px', flex:'0 0 auto',
+        background: o.status === 'در انتظار' ? 'oklch(0.95 0.06 80)' : (o.status === 'ارسال شده' ? 'oklch(0.93 0.04 260)' : 'oklch(0.94 0.09 145)'),
+        color: o.status === 'در انتظار' ? 'oklch(0.5 0.12 70)' : (o.status === 'ارسال شده' ? 'oklch(0.42 0.1 260)' : 'oklch(0.4 0.12 145)'),
+      }
+    }));
+
+    const productList = [
+      { name:'قاب محافظ iPhone 15', mode:'commerce', price:'۴۸۵,۰۰۰ تومان' },
+      { name:'مانتو کتان طرح‌دار', mode:'showcase', price:'—' },
+      { name:'شارژر فست‌شارژ ۲۰وات', mode:'commerce', price:'۳۹۰,۰۰۰ تومان' },
+      { name:'کیف چرم دست‌دوز', mode:'showcase', price:'—' },
+      { name:'هندزفری بلوتوثی', mode:'commerce', price:'۶۹۰,۰۰۰ تومان' },
+    ];
+    const productRows = productList.map((p, idx) => ({
+      idx, name: p.name, price: p.price,
+      modeLabel: p.mode === 'commerce' ? 'فروشگاهی' : 'نمایشی',
+      modeToggleStyle: {
+        fontSize:'10px', fontWeight:700, borderRadius:'6px', padding:'4px 8px', cursor:'pointer', flex:'0 0 auto',
+        background: p.mode === 'commerce' ? 'oklch(0.94 0.09 145)' : 'oklch(0.95 0.06 80)',
+        color: p.mode === 'commerce' ? 'oklch(0.4 0.12 145)' : 'oklch(0.5 0.12 70)',
+      }
+    }));
+
+    return {
+      screenTabs,
+      goScreen: (e) => this.setState({ screen: e.currentTarget.getAttribute('data-s') }),
+      isSignup: s.screen === 'signup', isDashboard: s.screen === 'dashboard', isProducts: s.screen === 'products', isSettings: s.screen === 'settings',
+      navStyle_dashboard: this.navStyle('dashboard'), navStyle_products: this.navStyle('products'), navStyle_settings: this.navStyle('settings'),
+
+      signupStepLabel: `${s.signupStep} از ۳`,
+      isSignupStep1: s.signupStep === 1, isSignupStep2: s.signupStep === 2, isSignupStep3: s.signupStep === 3,
+      signupProgress,
+      canGoBackSignup: s.signupStep > 1 && s.signupStep < 3,
+      canGoNextSignup: s.signupStep < 3,
+      signupNextLabel: s.signupStep === 2 ? 'ثبت درخواست' : 'مرحله بعد',
+      signupNext: () => this.setState(st => ({ signupStep: Math.min(3, st.signupStep + 1) })),
+      signupBack: () => this.setState(st => ({ signupStep: Math.max(1, st.signupStep - 1) })),
+
+      catalogMode: s.catalogMode,
+      setCatalogMode: (e) => this.setState({ catalogMode: e.currentTarget.getAttribute('data-m') }),
+      modeCardStyle_showcase: modeCard('showcase'), modeCardStyle_commerce: modeCard('commerce'), modeCardStyle_mixed: modeCard('mixed'),
+
+      statCards, recentOrders,
+      productRows, toggleProductMode: () => {},
+    };
+  }
+}
+
+</script>
+</body>
+</html>
