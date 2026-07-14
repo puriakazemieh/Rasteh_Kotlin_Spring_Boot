@@ -20,4 +20,8 @@ class ProductController(
     /** جزئیاتِ یک کالا. */
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long) = productService.getPublic(id)
+
+    /** فروشندگانِ دیگرِ همین کالا (ارزان‌ترین اول). */
+    @GetMapping("/{id}/other-sellers")
+    fun otherSellers(@PathVariable id: Long) = productService.otherSellers(id)
 }

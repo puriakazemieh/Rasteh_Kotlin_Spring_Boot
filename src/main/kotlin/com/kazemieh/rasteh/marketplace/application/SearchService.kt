@@ -59,6 +59,7 @@ class SearchService(
     fun searchProducts(
         query: String?,
         shopId: Long?,
+        locationId: Long?,
         condition: String?,
         minPrice: Long?,
         maxPrice: Long?,
@@ -72,6 +73,7 @@ class SearchService(
                 predicates += cb.like(cb.lower(root.get("name")), "%${query.trim().lowercase()}%")
             }
             shopId?.let { predicates += cb.equal(root.get<ShopEntity>("shop").get<Long>("id"), it) }
+            locationId?.let { predicates += cb.equal(root.get<ShopEntity>("shop").get<Any>("location").get<Long>("id"), it) }
             condition?.let {
                 runCatching { ProductCondition.valueOf(it) }.getOrNull()?.let { c ->
                     predicates += cb.equal(root.get<ProductCondition>("condition"), c)

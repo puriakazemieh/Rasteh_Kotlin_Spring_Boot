@@ -25,9 +25,10 @@ class SearchController(
     fun products(
         @RequestParam(required = false) query: String?,
         @RequestParam(required = false) shopId: Long?,
+        @RequestParam(required = false) locationId: Long?,
         @RequestParam(required = false) condition: String?,
         @RequestParam(required = false) minPrice: Long?,
         @RequestParam(required = false) maxPrice: Long?,
         @RequestParam(required = false) sort: String?,
-    ) = searchService.searchProducts(query, shopId, condition, minPrice, maxPrice, sort)
+    ) = searchService.searchProducts(query, shopId, locationId, condition, minPrice, maxPrice, sort)
 }

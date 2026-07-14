@@ -31,6 +31,14 @@ class ShopProductService(
         return productRepository.findAllByShopIdAndActiveTrueOrderByIdDesc(shopId).map(ProductMapper::toResponse)
     }
 
+    /** «دیدن در فروشگاه‌های دیگر» — کالاهایِ هم‌نام در فروشگاه‌های تأییدشدهٔ دیگر (ارزان‌ترین اول). */
+    @Transactional(readOnly = true)
+    fun otherSellers(productId: Long): List<ProductResponse> {
+        val product = productRepository.findById(productId).orElseThrow { ProductNotFoundException() }
+        val shopId = product.shop?.id ?: return emptyList()
+        return productRepository.findOtherSellers(product.name, shopId, ShopStatus.APPROVED).map(ProductMapper::toResponse)
+    }
+
     /** جزئیاتِ یک کالا (فقط اگر فعال و فروشگاه تأییدشده باشد). */
     @Transactional(readOnly = true)
     fun getPublic(productId: Long): ProductResponse {

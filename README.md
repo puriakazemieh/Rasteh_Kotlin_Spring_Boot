@@ -78,6 +78,14 @@
 
 قابلیت‌های نیازمندِ زیرساختِ سنگین (live/escrow/concierge/visualsearch/parking) طبقِ پلن به‌عنوانِ «آینده» می‌مانند.
 
+**دلتاهایِ بازطراحیِ نهایی (برای فازهای کلاینتِ D2/D4/D7):**
+- جست‌وجوی محصول بر اساسِ محل: `GET /api/search/products?locationId=` (تبِ محصولِ rastehSearch).
+- «فروشندگانِ دیگر»: `GET /api/products/{id}/other-sellers` (ارزان‌ترین اول) — صفحهٔ محصول/compare.
+- گزارشِ تخلف: `POST /api/reports` · `GET /api/admin/reports` · `POST /api/admin/reports/{id}/resolve`.
+- مدیریتِ راسته/محلِ ادمین: `POST|PUT /api/admin/rastehs` · `POST /api/admin/locations`
+  · `POST /api/admin/rastehs/{id}/locations/{locationId}`.
+- migration `010_reports.sql`.
+
 ## اجرا (روی دستگاهِ محلی)
 
 > توجه: در محیطِ ابری امکانِ build نیست (۴۰۳ هنگام دانلودِ توزیعِ Gradle). روی دستگاهِ خودتان اجرا کنید.
