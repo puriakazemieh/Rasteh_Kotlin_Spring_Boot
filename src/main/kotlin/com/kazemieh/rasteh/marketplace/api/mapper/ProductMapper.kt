@@ -12,6 +12,7 @@ object ProductMapper {
             id = p.id,
             shopId = shop?.id,
             shopName = shop?.name,
+            shopPhone = shop?.phone,
             name = p.name,
             description = p.description,
             price = p.price,
