@@ -1,6 +1,7 @@
 package com.kazemieh.rasteh.shared.security
 
 import com.kazemieh.rasteh.shared.security.jwt.JwtAuthFilter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,7 +23,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private val jwtAuthFilter: JwtAuthFilter,
     private val entryPoint: RestAuthEntryPoint,
-    private val deniedHandler: RestAccessDeniedHandler
+    private val deniedHandler: RestAccessDeniedHandler,
+    // منشأهای مجازِ اضافی برای CORS از پیکربندی (کاما-جدا)؛ برای محیط‌های موقتِ
+    // تونل (مثلِ ورک‌فلوی serve-live) استفاده می‌شود بی‌آنکه کد تغییر کند.
+    @Value("\${app.cors.origins:}")
+    private val extraCorsOrigins: String
 ) {
 
     @Bean
@@ -39,14 +44,16 @@ class SecurityConfig(
 
         config.allowCredentials = true
 
-        // دامنه‌های مجاز شما
-        config.allowedOrigins = listOf(
+        // دامنه‌های مجاز شما + منشأهای اضافیِ پیکربندی‌شده (APP_CORS_ORIGINS)
+        val baseOrigins = listOf(
             "http://miaad.puriademo.ir",
             "https://miaad.puriademo.ir",
             "http://milad.puriademo.ir",
             "https://milad.puriademo.ir",
             "http://localhost:8081"
         )
+        val extraOrigins = extraCorsOrigins.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        config.allowedOrigins = (baseOrigins + extraOrigins).distinct()
 
         config.allowedHeaders = listOf("*")
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
