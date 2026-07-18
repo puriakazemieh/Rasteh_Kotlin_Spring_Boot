@@ -13,6 +13,7 @@ object ProductMapper {
             shopId = shop?.id,
             shopName = shop?.name,
             shopPhone = shop?.phone,
+            isBuyable = shop?.type == ShopType.BUYABLE,
             name = p.name,
             description = p.description,
             price = p.price,

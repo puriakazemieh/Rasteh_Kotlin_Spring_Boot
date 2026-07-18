@@ -8,6 +8,7 @@ data class ProductResponse(
     val shopId: Long?,
     val shopName: String?,
     val shopPhone: String?,
+    val isBuyable: Boolean,
     val name: String,
     val description: String?,
     val price: BigDecimal,
