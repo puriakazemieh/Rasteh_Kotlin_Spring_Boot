@@ -21,3 +21,24 @@ data class ReferralResponse(
 data class RedeemReferralRequest(
     @field:NotBlank val code: String,
 )
+
+data class WarrantyResponse(
+    val id: Long,
+    val title: String,
+    val serial: String?,
+    val validUntil: OffsetDateTime?,
+    val createdAt: OffsetDateTime?,
+)
+
+data class CreateWarrantyRequest(
+    @field:NotBlank val title: String,
+    val serial: String? = null,
+    val validUntil: OffsetDateTime? = null,
+)
+
+data class ActivityItemResponse(
+    val type: String,      // SAVE | ORDER
+    val title: String,
+    val subtitle: String?,
+    val createdAt: OffsetDateTime?,
+)

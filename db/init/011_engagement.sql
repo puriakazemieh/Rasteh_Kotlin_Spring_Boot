@@ -23,3 +23,13 @@ CREATE TABLE IF NOT EXISTS referrals (
 CREATE INDEX IF NOT EXISTS idx_referrals_inviter ON referrals(inviter_user_id);
 CREATE INDEX IF NOT EXISTS idx_referrals_code ON referrals(code);
 CREATE INDEX IF NOT EXISTS idx_referrals_invitee ON referrals(invitee_user_id);
+
+CREATE TABLE IF NOT EXISTS warranties (
+    id          BIGSERIAL PRIMARY KEY,
+    user_id     BIGINT NOT NULL,
+    title       VARCHAR(160) NOT NULL,
+    serial      VARCHAR(80),
+    valid_until TIMESTAMPTZ,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_warranties_user ON warranties(user_id);

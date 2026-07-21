@@ -21,3 +21,19 @@ class ReferralController(private val service: ReferralService) {
     @PostMapping("/redeem")
     fun redeem(@AuthenticationPrincipal p: UserPrincipal, @Valid @RequestBody req: RedeemReferralRequest) = service.redeem(p.id, req)
 }
+
+@RestController
+@RequestMapping("/api/warranties")
+class WarrantyController(private val service: WarrantyService) {
+    @PostMapping
+    fun create(@AuthenticationPrincipal p: UserPrincipal, @Valid @RequestBody req: CreateWarrantyRequest) = service.create(p.id, req)
+    @GetMapping("/mine")
+    fun mine(@AuthenticationPrincipal p: UserPrincipal) = service.listMine(p.id)
+}
+
+@RestController
+@RequestMapping("/api/activity")
+class ActivityController(private val service: ActivityService) {
+    @GetMapping
+    fun feed(@AuthenticationPrincipal p: UserPrincipal) = service.feed(p.id)
+}
