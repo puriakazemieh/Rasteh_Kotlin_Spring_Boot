@@ -74,7 +74,7 @@ class ActivityService(
     @Transactional(readOnly = true)
     fun feed(userId: Long): List<ActivityItemResponse> {
         val saves = bookmarkRepository.findAllByUserIdOrderByIdDesc(userId).map { b ->
-            val name = b.shop?.name ?: b.product?.title ?: "مورد"
+            val name = b.shop?.name ?: b.product?.name ?: "مورد"
             ActivityItemResponse("SAVE", "نشان‌کردنِ «$name»", null, b.createdAt)
         }
         val orders = orderRepository.findAllByCustomerIdOrderByIdDesc(userId).map { o ->
