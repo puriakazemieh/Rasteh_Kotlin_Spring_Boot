@@ -1,6 +1,8 @@
 package com.kazemieh.rasteh.engagement
 
+import com.kazemieh.rasteh.engagement.entity.EscrowEntity
 import com.kazemieh.rasteh.engagement.entity.EventEntity
+import com.kazemieh.rasteh.engagement.entity.LiveSessionEntity
 import com.kazemieh.rasteh.engagement.entity.ParkingEntity
 import com.kazemieh.rasteh.engagement.entity.ReferralEntity
 import com.kazemieh.rasteh.engagement.entity.WarrantyEntity
@@ -91,6 +93,34 @@ class ParkingService(private val repository: ParkingRepository) {
         p.fee = hourlyRate.multiply(BigDecimal(hours))
         p.paid = true
         return toResponse(p)
+    }
+}
+
+@Service
+class LiveSessionService(private val repository: LiveSessionRepository) {
+    private fun toResponse(l: LiveSessionEntity) = LiveSessionResponse(l.id, l.shopId, l.shopName, l.title, l.status, l.pinnedProductId, l.viewerCount)
+
+    @Transactional(readOnly = true)
+    fun listLive(): List<LiveSessionResponse> = repository.findAllByStatusOrderByViewerCountDesc("LIVE").map(::toResponse)
+}
+
+@Service
+class EscrowService(private val repository: EscrowRepository) {
+    private fun toResponse(e: EscrowEntity) = EscrowResponse(e.id, e.orderId, e.amount, e.status, e.releasedAt, e.createdAt)
+
+    @Transactional
+    fun open(userId: Long, req: CreateEscrowRequest): EscrowResponse =
+        toResponse(repository.save(EscrowEntity(userId = userId, orderId = req.orderId, amount = req.amount)))
+
+    @Transactional(readOnly = true)
+    fun listMine(userId: Long): List<EscrowResponse> = repository.findAllByUserIdOrderByIdDesc(userId).map(::toResponse)
+
+    @Transactional
+    fun release(userId: Long, id: Long): EscrowResponse {
+        val e = repository.findById(id).orElseThrow { BadRequestException("Escrow not found", ErrorCodes.INVALID_INPUT) }
+        if (e.userId != userId) throw BadRequestException("Not your escrow", ErrorCodes.INVALID_INPUT)
+        if (e.status == "HELD") { e.status = "RELEASED"; e.releasedAt = OffsetDateTime.now() }
+        return toResponse(e)
     }
 }
 

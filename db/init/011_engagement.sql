@@ -45,3 +45,26 @@ CREATE TABLE IF NOT EXISTS parking_sessions (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_parking_user ON parking_sessions(user_id);
+
+CREATE TABLE IF NOT EXISTS live_sessions (
+    id                BIGSERIAL PRIMARY KEY,
+    shop_id           BIGINT,
+    shop_name         VARCHAR(120),
+    title             VARCHAR(160) NOT NULL,
+    status            VARCHAR(20) NOT NULL DEFAULT 'LIVE',
+    pinned_product_id BIGINT,
+    viewer_count      INT NOT NULL DEFAULT 0,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_live_status ON live_sessions(status);
+
+CREATE TABLE IF NOT EXISTS escrows (
+    id          BIGSERIAL PRIMARY KEY,
+    user_id     BIGINT NOT NULL,
+    order_id    BIGINT,
+    amount      NUMERIC(15,0) NOT NULL DEFAULT 0,
+    status      VARCHAR(20) NOT NULL DEFAULT 'HELD',
+    released_at TIMESTAMPTZ,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_escrows_user ON escrows(user_id);

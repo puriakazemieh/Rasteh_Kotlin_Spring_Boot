@@ -1,6 +1,8 @@
 package com.kazemieh.rasteh.engagement
 
+import com.kazemieh.rasteh.engagement.entity.EscrowEntity
 import com.kazemieh.rasteh.engagement.entity.EventEntity
+import com.kazemieh.rasteh.engagement.entity.LiveSessionEntity
 import com.kazemieh.rasteh.engagement.entity.ParkingEntity
 import com.kazemieh.rasteh.engagement.entity.ReferralEntity
 import com.kazemieh.rasteh.engagement.entity.WarrantyEntity
@@ -25,4 +27,12 @@ interface WarrantyRepository : JpaRepository<WarrantyEntity, Long> {
 
 interface ParkingRepository : JpaRepository<ParkingEntity, Long> {
     fun findAllByUserIdOrderByIdDesc(userId: Long): List<ParkingEntity>
+}
+
+interface LiveSessionRepository : JpaRepository<LiveSessionEntity, Long> {
+    fun findAllByStatusOrderByViewerCountDesc(status: String): List<LiveSessionEntity>
+}
+
+interface EscrowRepository : JpaRepository<EscrowEntity, Long> {
+    fun findAllByUserIdOrderByIdDesc(userId: Long): List<EscrowEntity>
 }

@@ -1,6 +1,7 @@
 package com.kazemieh.rasteh.engagement
 
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import java.time.OffsetDateTime
 
 data class EventResponse(
@@ -54,4 +55,28 @@ data class ParkingResponse(
 
 data class CheckinParkingRequest(
     @field:NotBlank val spot: String,
+)
+
+data class LiveSessionResponse(
+    val id: Long,
+    val shopId: Long?,
+    val shopName: String?,
+    val title: String,
+    val status: String,
+    val pinnedProductId: Long?,
+    val viewerCount: Int,
+)
+
+data class EscrowResponse(
+    val id: Long,
+    val orderId: Long?,
+    val amount: java.math.BigDecimal,
+    val status: String,
+    val releasedAt: OffsetDateTime?,
+    val createdAt: OffsetDateTime?,
+)
+
+data class CreateEscrowRequest(
+    @field:NotNull val amount: java.math.BigDecimal,
+    val orderId: Long? = null,
 )

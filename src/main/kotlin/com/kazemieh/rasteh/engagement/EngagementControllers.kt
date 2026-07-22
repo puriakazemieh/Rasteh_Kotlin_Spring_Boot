@@ -48,3 +48,21 @@ class ParkingController(private val service: ParkingService) {
     @PostMapping("/{id}/pay")
     fun pay(@AuthenticationPrincipal p: UserPrincipal, @PathVariable id: Long) = service.pay(p.id, id)
 }
+
+@RestController
+@RequestMapping("/api/live")
+class LiveSessionController(private val service: LiveSessionService) {
+    @GetMapping
+    fun live() = service.listLive()
+}
+
+@RestController
+@RequestMapping("/api/escrow")
+class EscrowController(private val service: EscrowService) {
+    @PostMapping
+    fun open(@AuthenticationPrincipal p: UserPrincipal, @Valid @RequestBody req: CreateEscrowRequest) = service.open(p.id, req)
+    @GetMapping("/mine")
+    fun mine(@AuthenticationPrincipal p: UserPrincipal) = service.listMine(p.id)
+    @PostMapping("/{id}/release")
+    fun release(@AuthenticationPrincipal p: UserPrincipal, @PathVariable id: Long) = service.release(p.id, id)
+}
