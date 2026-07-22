@@ -53,7 +53,10 @@ class SecurityConfig(
             "http://localhost:8081"
         )
         val extraOrigins = extraCorsOrigins.split(",").map { it.trim() }.filter { it.isNotEmpty() }
-        config.allowedOrigins = (baseOrigins + extraOrigins).distinct()
+        // از allowedOriginPatterns استفاده می‌کنیم چون با allowCredentials=true هم «*» و هم
+        // دامنه‌های مشخص (مثلِ تونل‌های موقتِ کلودفلر) را به‌درستی می‌پذیرد؛ allowedOrigins با
+        // credentials نمی‌تواند «*» را قبول کند و مرورگر پاسخ را بلاک می‌کرد (لودینگِ بی‌پایان).
+        config.allowedOriginPatterns = (baseOrigins + extraOrigins).distinct()
 
         config.allowedHeaders = listOf("*")
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
