@@ -42,3 +42,16 @@ data class ActivityItemResponse(
     val subtitle: String?,
     val createdAt: OffsetDateTime?,
 )
+
+data class ParkingResponse(
+    val id: Long,
+    val spot: String,
+    val enteredAt: OffsetDateTime,
+    val exitedAt: OffsetDateTime?,
+    val fee: java.math.BigDecimal,
+    val paid: Boolean,
+)
+
+data class CheckinParkingRequest(
+    @field:NotBlank val spot: String,
+)

@@ -1,6 +1,7 @@
 package com.kazemieh.rasteh.engagement
 
 import com.kazemieh.rasteh.engagement.entity.EventEntity
+import com.kazemieh.rasteh.engagement.entity.ParkingEntity
 import com.kazemieh.rasteh.engagement.entity.ReferralEntity
 import com.kazemieh.rasteh.engagement.entity.WarrantyEntity
 import com.kazemieh.rasteh.interaction.persistence.BookmarkRepository
@@ -9,6 +10,9 @@ import com.kazemieh.rasteh.shared.error.BadRequestException
 import com.kazemieh.rasteh.shared.error.ErrorCodes
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
+import java.time.Duration
+import java.time.OffsetDateTime
 import kotlin.random.Random
 
 @Service
@@ -63,6 +67,31 @@ class WarrantyService(private val repository: WarrantyRepository) {
 
     @Transactional(readOnly = true)
     fun listMine(userId: Long): List<WarrantyResponse> = repository.findAllByUserIdOrderByIdDesc(userId).map(::toResponse)
+}
+
+@Service
+class ParkingService(private val repository: ParkingRepository) {
+    private val hourlyRate = BigDecimal(20_000)
+    private fun toResponse(p: ParkingEntity) = ParkingResponse(p.id, p.spot, p.enteredAt, p.exitedAt, p.fee, p.paid)
+
+    @Transactional
+    fun checkin(userId: Long, req: CheckinParkingRequest): ParkingResponse =
+        toResponse(repository.save(ParkingEntity(userId = userId, spot = req.spot.trim())))
+
+    @Transactional(readOnly = true)
+    fun listMine(userId: Long): List<ParkingResponse> = repository.findAllByUserIdOrderByIdDesc(userId).map(::toResponse)
+
+    @Transactional
+    fun pay(userId: Long, id: Long): ParkingResponse {
+        val p = repository.findById(id).orElseThrow { BadRequestException("Parking session not found", ErrorCodes.INVALID_INPUT) }
+        if (p.userId != userId) throw BadRequestException("Not your parking session", ErrorCodes.INVALID_INPUT)
+        val now = OffsetDateTime.now()
+        val hours = maxOf(1, Duration.between(p.enteredAt, now).toHours().toInt() + if (Duration.between(p.enteredAt, now).toMinutesPart() > 0) 1 else 0)
+        p.exitedAt = now
+        p.fee = hourlyRate.multiply(BigDecimal(hours))
+        p.paid = true
+        return toResponse(p)
+    }
 }
 
 @Service

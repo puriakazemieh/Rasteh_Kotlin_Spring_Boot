@@ -1,6 +1,7 @@
 package com.kazemieh.rasteh.engagement
 
 import com.kazemieh.rasteh.engagement.entity.EventEntity
+import com.kazemieh.rasteh.engagement.entity.ParkingEntity
 import com.kazemieh.rasteh.engagement.entity.ReferralEntity
 import com.kazemieh.rasteh.engagement.entity.WarrantyEntity
 import org.springframework.data.jpa.repository.JpaRepository
@@ -20,4 +21,8 @@ interface ReferralRepository : JpaRepository<ReferralEntity, Long> {
 
 interface WarrantyRepository : JpaRepository<WarrantyEntity, Long> {
     fun findAllByUserIdOrderByIdDesc(userId: Long): List<WarrantyEntity>
+}
+
+interface ParkingRepository : JpaRepository<ParkingEntity, Long> {
+    fun findAllByUserIdOrderByIdDesc(userId: Long): List<ParkingEntity>
 }

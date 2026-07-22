@@ -33,3 +33,15 @@ CREATE TABLE IF NOT EXISTS warranties (
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_warranties_user ON warranties(user_id);
+
+CREATE TABLE IF NOT EXISTS parking_sessions (
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    spot       VARCHAR(40) NOT NULL,
+    entered_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    exited_at  TIMESTAMPTZ,
+    fee        NUMERIC(15,0) NOT NULL DEFAULT 0,
+    paid       BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_parking_user ON parking_sessions(user_id);

@@ -37,3 +37,14 @@ class ActivityController(private val service: ActivityService) {
     @GetMapping
     fun feed(@AuthenticationPrincipal p: UserPrincipal) = service.feed(p.id)
 }
+
+@RestController
+@RequestMapping("/api/parking")
+class ParkingController(private val service: ParkingService) {
+    @PostMapping("/checkin")
+    fun checkin(@AuthenticationPrincipal p: UserPrincipal, @Valid @RequestBody req: CheckinParkingRequest) = service.checkin(p.id, req)
+    @GetMapping("/mine")
+    fun mine(@AuthenticationPrincipal p: UserPrincipal) = service.listMine(p.id)
+    @PostMapping("/{id}/pay")
+    fun pay(@AuthenticationPrincipal p: UserPrincipal, @PathVariable id: Long) = service.pay(p.id, id)
+}
