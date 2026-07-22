@@ -10,7 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/shop-orders")
 class OrderController(
     private val orderService: OrderService
 ) {

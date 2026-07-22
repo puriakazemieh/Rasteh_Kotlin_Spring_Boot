@@ -99,6 +99,7 @@ class SecurityConfig(
                 ).permitAll()
                 it.requestMatchers(
                     "/api/products/**",
+                    "/api/catalog/products/**",
                     "/api/categories/**",
                     "/api/campaigns/**",
                     "/api/banners",

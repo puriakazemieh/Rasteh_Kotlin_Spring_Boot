@@ -18,7 +18,7 @@ class CatalogController(
     @GetMapping("/categories")
     fun categories() = catalogService.categoriesTree()
 
-    @GetMapping("/products")
+    @GetMapping("/catalog/products")
     fun products(
         @RequestParam(required = false) q: String?,
         @RequestParam(required = false) categoryId: Long?,
@@ -48,7 +48,7 @@ class CatalogController(
             currentUserId = principal?.id
         )
 
-    @GetMapping("/products/{slug}")
+    @GetMapping("/catalog/products/{slug}")
     fun productDetail(
         @PathVariable slug: String,
         @AuthenticationPrincipal principal: UserPrincipal?,
