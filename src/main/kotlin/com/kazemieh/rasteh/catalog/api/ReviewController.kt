@@ -8,8 +8,8 @@ import com.kazemieh.rasteh.shared.security.UserPrincipal
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
-@RestController
-@RequestMapping("/api/reviews")
+@RestController("catalogReviewController")
+@RequestMapping("/api/product-reviews")
 class ReviewController(
     private val reviewService: ReviewService
 ) {

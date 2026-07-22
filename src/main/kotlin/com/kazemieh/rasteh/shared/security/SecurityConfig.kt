@@ -89,6 +89,7 @@ class SecurityConfig(
                     "/api/locations/**",
                     "/api/shops/*",
                     "/api/reviews/**",
+                    "/api/product-reviews/**",
                     "/api/search/**",
                     "/api/flash/**",
                     "/api/groupbuys/**",

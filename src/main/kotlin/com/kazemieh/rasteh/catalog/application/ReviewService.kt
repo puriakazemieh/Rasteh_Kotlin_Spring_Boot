@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
 
-@Service
+@Service("catalogReviewService")
 class ReviewService(
     private val reviewRepository: ProductReviewRepository,
     private val productRepository: ProductRepository,
