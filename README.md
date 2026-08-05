@@ -1,5 +1,7 @@
 # Rasteh — سرور (Kotlin + Spring Boot)
 
+> وضعیت production-readiness از 2026-08-05 در [`../Rasteh_KMP/plans/README.md`](../Rasteh_KMP/plans/README.md)، [`docs/adr/`](./docs/adr/) و [`../Rasteh_KMP/docs/product/MVP_SCOPE.md`](../Rasteh_KMP/docs/product/MVP_SCOPE.md) ثبت شده است. فهرست فازهای زیر inventory تاریخی implementation است و به‌معنای آمادگی انتشار یا فعال‌بودن قابلیت‌های مالی نیست. در تعارض، ADRها و برنامهٔ production-readiness حاکم‌اند.
+
 بک‌اندِ مارکت‌پلیسِ محلیِ پاساژ/راسته. نقشهٔ راه در [`RASTEH_SERVER_PLAN.md`](./RASTEH_SERVER_PLAN.md)
 و مرجعِ طراحی در پوشهٔ [`design_handoff_unified_app/`](./design_handoff_unified_app) است.
 
@@ -19,7 +21,7 @@
   - `POST /api/shops` — ثبتِ درخواستِ فروشگاه (becomeVendor؛ وضعیتِ PENDING). `GET /api/shops/mine` · `GET /api/shops/{id}`.
   - `GET/POST /api/admin/shops` + `.../{id}/approve|reject|suspend` — صفِ تأیید (ADMIN/SUPERADMIN). تأیید → نقشِ VENDOR به مالک اعطا می‌شود.
 - migration `002_marketplace.sql` بازنویسی شد به مدلِ v2؛ `MarketplaceSeeder` راسته‌ها/محل‌های نمونه را می‌سازد.
-- `DataSeeder` سه حسابِ نقش‌محورِ نمونه می‌سازد (رمزِ همه `pass1234`): ادمین `09120000000` · فروشنده `09122222222` · خریدار `09121111111`.
+- دادهٔ seed فقط برای profile توسعه/تست مجاز است؛ هیچ credential نمونه یا دادهٔ شخصی در این README نگهداری نمی‌شود. production باید بدون seed و با secretهای بیرونی fail-fast شود.
 
 **فازِ ۲ (کاتالوگِ دوحالتهٔ فروشگاه‌محور) — `marketplace` گسترش یافت:**
 - موجودیتِ `ShopProduct` (نام، قیمت، قیمتِ قبلی، درصدِ تخفیف، وضعیت new/used، موجودی، دسته، اموجی، تصویر، فعال).
@@ -29,8 +31,7 @@
   - عمومی: `GET /api/locations/{id}/shops?rastehId=` — فهرستِ فروشگاه‌هایِ محل (**rastehSearch**).
   - ونـدور (احرازشده، مالک یا ادمین): `GET /api/vendor/products/shop/{shopId}` · `POST /api/vendor/products`
     · `PUT /api/vendor/products/{id}` · `DELETE /api/vendor/products/{id}` — **manageListings/addProduct**.
-- migration `003_catalog.sql` (جدولِ `shop_products`)؛ `MarketplaceShopSeeder` سه فروشگاهِ تأییدشدهٔ نمونه
-  با کالا می‌سازد (فروشندهٔ نمونه: `09122222222` / رمز `vendor1234`).
+- migration `003_catalog.sql` (جدولِ `shop_products`)؛ دادهٔ نمونهٔ marketplace فقط در development/test قابل‌استفاده است و نباید credential یا دادهٔ شخصی مستند/commit شود.
 
 **فازِ ۳ (چت + پیشنهادِ قیمت + بوکمارک) — ماژولِ `interaction`:**
 - **چت** (`Conversation`/`Message`): `POST /api/chat/conversations` (ساخت/گرفتن) · `GET /api/chat/conversations`
