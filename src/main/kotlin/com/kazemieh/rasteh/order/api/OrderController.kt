@@ -7,6 +7,7 @@ import com.kazemieh.rasteh.shared.security.UserPrincipal
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -41,8 +42,10 @@ class OrderController(
     }
 
     @PatchMapping("/{id}/shipping")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun updateShipping(
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long,
         @Valid @RequestBody req: AdminUpdateShippingRequest
     ) {
@@ -50,5 +53,6 @@ class OrderController(
     }
 
     @GetMapping("/{id}/track")
-    fun track(@PathVariable id: Long) = orderService.trackOrder(id)
+    fun track(@AuthenticationPrincipal principal: UserPrincipal, @PathVariable id: Long) =
+        orderService.trackMyOrder(principal.id, id)
 }

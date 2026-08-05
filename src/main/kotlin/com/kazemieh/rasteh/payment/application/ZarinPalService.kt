@@ -7,13 +7,14 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
+import java.net.URI
 
 @Service
 class ZarinPalService(
     @Value("\${zarinpal.merchant-id}") private val merchantId: String,
     @Value("\${zarinpal.sandbox:false}") private val isSandbox: Boolean,
     @Value("\${zarinpal.access-token:}") private val accessToken: String,
-    @Value("\${app.ngrok-url:}") private val ngrokUrl: String,
+    @Value("\${zarinpal.callback-url:}") private val callbackUrl: String,
     private val restTemplate: RestTemplate
 ) {
     private val logger = LoggerFactory.getLogger(ZarinPalService::class.java)
@@ -35,16 +36,16 @@ class ZarinPalService(
         return headers
     }
 
-    fun createPaymentRequest(amountInToman: Long, orderId: String): String? {
+    fun createPaymentRequest(amountInIrr: Long, orderId: String): String? {
         val url = "$baseUrl/request.json"
-
-        val baseUrlForCallback = if (ngrokUrl.isNotBlank()) ngrokUrl else "http://localhost:8080"
-        val callbackUrl = "$baseUrlForCallback/api/payment/callback?order_id=$orderId"
+        val verifiedCallbackUrl = requireHttpsCallbackUrl()
 
         val requestBody = mapOf(
             "merchant_id" to merchantId,
-            "amount" to amountInToman * 10,
-            "callback_url" to callbackUrl,
+            // The canonical contract stores Iranian Rial as integer minor units.
+            // ZarinPal v4 receives exactly that amount; no presentation-unit conversion belongs here.
+            "amount" to amountInIrr,
+            "callback_url" to verifiedCallbackUrl,
             "description" to "تراکنش سفارش شماره $orderId"
         )
 
@@ -62,17 +63,14 @@ class ZarinPalService(
                 null
             }
         } catch (e: Exception) {
-            logger.error(
-                "Error creating Zarinpal payment request. Merchant ID used: $merchantId, IsSandbox: $isSandbox",
-                e
-            )
+            logger.error("Error creating Zarinpal payment request (sandbox=$isSandbox)", e)
             null
         }
     }
 
-    fun verifyPayment(authority: String, amountInToman: Long): ZarinPalVerificationResponse {
+    fun verifyPayment(authority: String, amountInIrr: Long): ZarinPalVerificationResponse {
         val url = "$baseUrl/verify.json"
-        val verifyBody = mapOf("merchant_id" to merchantId, "amount" to amountInToman * 10, "authority" to authority)
+        val verifyBody = mapOf("merchant_id" to merchantId, "amount" to amountInIrr, "authority" to authority)
 
         val entity = HttpEntity(verifyBody, createHeaders(includeAuth = false))
 
@@ -116,5 +114,17 @@ class ZarinPalService(
             logger.error("Error in Zarinpal getUnverifiedTransactions", e)
             emptyList()
         }
+    }
+
+    fun startPayUrlFor(authority: String): String = startPayUrl + authority
+
+    private fun requireHttpsCallbackUrl(): String {
+        val normalized = callbackUrl.trim()
+        val uri = runCatching { URI(normalized) }.getOrNull()
+        require(!merchantId.isBlank()) { "ZarinPal merchant configuration is required when payments are enabled" }
+        require(uri?.scheme == "https" && !uri.host.isNullOrBlank()) {
+            "ZarinPal requires an explicit HTTPS callback URL when payments are enabled"
+        }
+        return normalized
     }
 }

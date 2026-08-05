@@ -19,6 +19,12 @@ class PaymentEntity(
     @Column(name = "wallet_transaction_id")
     var walletTransactionId: Long? = null,
 
+    @Column(name = "user_id")
+    var userId: Long? = null,
+
+    @Column(name = "idempotency_key", length = 100)
+    var idempotencyKey: String? = null,
+
     @Column(name = "amount", nullable = false, precision = 12, scale = 2)
     var amount: BigDecimal = BigDecimal.ZERO,
 

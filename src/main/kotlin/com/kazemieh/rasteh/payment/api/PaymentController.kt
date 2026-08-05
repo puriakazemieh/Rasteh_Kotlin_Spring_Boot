@@ -20,15 +20,20 @@ class PaymentController(
     @PostMapping("/request")
     fun requestPayment(
         @AuthenticationPrincipal principal: UserPrincipal,
-        @RequestBody request: PaymentRequestDto
+        @RequestBody request: PaymentRequestDto,
     ): ResponseEntity<PaymentResponseDto> {
         val orderIdLong = request.orderId.toLongOrNull()
             ?: throw IllegalArgumentException("Invalid Order ID format")
 
         val order = orderService.getMyOrder(principal.id, orderIdLong)
-        val amount = order.totalPrice
+        val amount = order.gatewayPaidAmount
 
-        val paymentUrl = paymentService.startPayment(orderIdLong, amount, principal.id)
+        val paymentUrl = paymentService.startPayment(
+            orderId = orderIdLong,
+            amount = amount,
+            userId = principal.id,
+            idempotencyKey = request.idempotencyKey,
+        )
         
         return if (paymentUrl != null) {
             ResponseEntity.ok(PaymentResponseDto(paymentUrl))
@@ -41,18 +46,17 @@ class PaymentController(
     fun handleCallback(
         @RequestParam(value = "Authority", required = false) authority: String?,
         @RequestParam(value = "Status", required = false) status: String?,
-        @RequestParam("order_id") orderId: String,
         response: HttpServletResponse
     ) {
         if (authority != null && status != null) {
             val isSuccess = paymentService.verifyPayment(authority, status)
             
             if (isSuccess) {
-                response.sendRedirect("myapp://payment-result?status=success&orderId=$orderId")
+                response.sendRedirect("myapp://payment-result?status=success")
                 return
             }
         }
         
-        response.sendRedirect("myapp://payment-result?status=failed&orderId=$orderId")
+        response.sendRedirect("myapp://payment-result?status=failed")
     }
 }

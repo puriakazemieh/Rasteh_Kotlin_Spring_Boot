@@ -10,16 +10,25 @@ import com.kazemieh.rasteh.wallet.persistence.entity.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import com.kazemieh.rasteh.shared.error.BadRequestException
 
 @Service
 class WalletService(
     private val walletRepository: WalletRepository,
     private val transactionRepository: WalletTransactionRepository,
     private val withdrawalRepository: WithdrawalRequestRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    @Value("\${app.wallet.enabled:false}") private val walletEnabled: Boolean
 ) {
+
+    private fun requireWalletEnabled() {
+        if (!walletEnabled) throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Wallet is disabled")
+    }
 
     @Transactional
     fun getOrCreateWallet(userId: Long): WalletEntity {
@@ -52,7 +61,11 @@ class WalletService(
 
     @Transactional
     fun requestWithdrawal(userId: Long, req: WithdrawalRequest): WithdrawalRequestResponse {
-        val wallet = getOrCreateWallet(userId)
+        requireWalletEnabled()
+        if (req.amount <= BigDecimal.ZERO) {
+            throw BadRequestException("Withdrawal amount must be positive", "INVALID_WALLET_AMOUNT")
+        }
+        val wallet = walletRepository.findByUserIdForUpdate(userId) ?: getOrCreateWallet(userId)
         if (wallet.balance < req.amount) {
             throw InsufficientBalanceException()
         }
@@ -95,7 +108,11 @@ class WalletService(
 
     @Transactional
     fun createPendingTransaction(userId: Long, amount: BigDecimal, type: TransactionType, description: String?): WalletTransactionEntity {
-        val wallet = getOrCreateWallet(userId)
+        requireWalletEnabled()
+        if (amount <= BigDecimal.ZERO) {
+            throw BadRequestException("Transaction amount must be positive", "INVALID_WALLET_AMOUNT")
+        }
+        val wallet = walletRepository.findByUserIdForUpdate(userId) ?: getOrCreateWallet(userId)
         return transactionRepository.save(
             WalletTransactionEntity(
                 wallet = wallet,
@@ -109,6 +126,7 @@ class WalletService(
 
     @Transactional
     fun confirmTransaction(transactionId: Long, referenceId: String) {
+        requireWalletEnabled()
         val tx = transactionRepository.findById(transactionId).orElseThrow { RuntimeException("Transaction not found") }
         val wallet = tx.wallet!!
         wallet.balance += tx.amount
@@ -118,7 +136,8 @@ class WalletService(
 
     @Transactional
     fun addTransaction(userId: Long, amount: BigDecimal, type: TransactionType, description: String?, referenceId: String?): WalletTransactionEntity {
-        val wallet = getOrCreateWallet(userId)
+        requireWalletEnabled()
+        val wallet = walletRepository.findByUserIdForUpdate(userId) ?: getOrCreateWallet(userId)
         wallet.balance += amount
         
         if (wallet.balance < BigDecimal.ZERO) {

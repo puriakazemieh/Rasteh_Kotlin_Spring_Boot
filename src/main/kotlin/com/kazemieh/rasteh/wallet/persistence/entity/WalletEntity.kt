@@ -21,6 +21,10 @@ class WalletEntity(
     @Column(name = "balance", nullable = false, precision = 12, scale = 2)
     var balance: BigDecimal = BigDecimal.ZERO,
 
+    @Version
+    @Column(name = "version", nullable = false)
+    var version: Long = 0,
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     var createdAt: OffsetDateTime? = null,

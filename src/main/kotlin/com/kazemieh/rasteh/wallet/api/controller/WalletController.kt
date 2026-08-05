@@ -7,6 +7,7 @@ import com.kazemieh.rasteh.wallet.application.WalletService
 import com.kazemieh.rasteh.wallet.persistence.entity.TransactionType
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -31,7 +32,11 @@ class WalletController(
         walletService.getTransactions(principal.id, pageable)
 
     @PostMapping("/top-up")
-    fun topUp(@AuthenticationPrincipal principal: UserPrincipal, @RequestBody req: TopUpRequest): String? {
+    fun topUp(
+        @AuthenticationPrincipal principal: UserPrincipal,
+        @Valid @RequestBody req: TopUpRequest,
+        @RequestHeader("Idempotency-Key") idempotencyKey: String,
+    ): String? {
         val tx = walletService.createPendingTransaction(
             userId = principal.id,
             amount = req.amount,
@@ -43,11 +48,12 @@ class WalletController(
             orderId = null,
             amount = req.amount,
             userId = principal.id,
-            walletTransactionId = tx.id
+            walletTransactionId = tx.id,
+            idempotencyKey = idempotencyKey,
         )
     }
 
     @PostMapping("/withdraw")
-    fun withdraw(@AuthenticationPrincipal principal: UserPrincipal, @RequestBody req: WithdrawalRequest): WithdrawalRequestResponse =
+    fun withdraw(@AuthenticationPrincipal principal: UserPrincipal, @Valid @RequestBody req: WithdrawalRequest): WithdrawalRequestResponse =
         walletService.requestWithdrawal(principal.id, req)
 }

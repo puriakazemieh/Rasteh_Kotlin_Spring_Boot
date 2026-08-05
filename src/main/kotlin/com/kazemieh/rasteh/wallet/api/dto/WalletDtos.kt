@@ -2,6 +2,8 @@ package com.kazemieh.rasteh.wallet.api.dto
 
 import com.kazemieh.rasteh.wallet.persistence.entity.TransactionType
 import com.kazemieh.rasteh.wallet.persistence.entity.WithdrawalStatus
+import jakarta.validation.constraints.DecimalMin
+import jakarta.validation.constraints.NotBlank
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
@@ -20,11 +22,14 @@ data class WalletTransactionResponse(
 )
 
 data class TopUpRequest(
+    @field:DecimalMin(value = "0.01", inclusive = true)
     val amount: BigDecimal
 )
 
 data class WithdrawalRequest(
+    @field:DecimalMin(value = "0.01", inclusive = true)
     val amount: BigDecimal,
+    @field:NotBlank
     val iban: String
 )
 

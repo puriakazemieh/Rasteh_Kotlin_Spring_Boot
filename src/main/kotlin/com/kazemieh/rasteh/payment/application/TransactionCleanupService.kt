@@ -6,6 +6,7 @@ import com.kazemieh.rasteh.order.persistence.entity.OrderStatus
 import com.kazemieh.rasteh.payment.persistence.PaymentRepository
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
@@ -16,7 +17,8 @@ class TransactionCleanupService(
     private val orderService: OrderService,
     private val paymentRepository: PaymentRepository,
     private val paymentService: PaymentService,
-    private val zarinPalService: ZarinPalService
+    private val zarinPalService: ZarinPalService,
+    @Value("\${app.payment.enabled:false}") private val paymentEnabled: Boolean
 ) {
     private val logger = LoggerFactory.getLogger(TransactionCleanupService::class.java)
 
@@ -48,6 +50,10 @@ class TransactionCleanupService(
     @Scheduled(fixedRate = 900000)
     @Transactional
     fun verifyPendingPaymentsInZarinpal() {
+        if (!paymentEnabled) {
+            logger.debug("Payment recovery job skipped because payments are disabled")
+            return
+        }
         logger.info("Starting job: Checking unverified payments from ZarinPal")
         
         val unverifiedAuthorities = zarinPalService.getUnverifiedTransactions()

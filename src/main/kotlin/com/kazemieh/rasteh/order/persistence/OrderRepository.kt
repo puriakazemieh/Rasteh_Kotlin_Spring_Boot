@@ -5,6 +5,8 @@ import com.kazemieh.rasteh.order.persistence.entity.OrderStatus
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import jakarta.persistence.LockModeType
+import org.springframework.data.jpa.repository.Lock
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.util.Optional
@@ -12,6 +14,10 @@ import java.util.Optional
 interface OrderRepository : JpaRepository<OrderEntity, Long> {
     fun findAllByUserIdOrderByCreatedAtDesc(userId: Long): List<OrderEntity>
     fun findByIdAndUserId(id: Long, userId: Long): OrderEntity?
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT o FROM OrderEntity o WHERE o.id = :id AND o.user.id = :userId")
+    fun findByIdAndUserIdForUpdate(@Param("id") id: Long, @Param("userId") userId: Long): OrderEntity?
     override fun findById(id: Long): Optional<OrderEntity>
 
     // آمار داشبورد مدیریت

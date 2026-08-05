@@ -3,6 +3,7 @@ package com.kazemieh.rasteh.marketplace.order
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.Valid
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
@@ -13,7 +14,7 @@ data class OrderItemRequest(
 
 data class CreateOrderRequest(
     @field:NotNull val shopId: Long,
-    @field:NotEmpty val items: List<OrderItemRequest>,
+    @field:NotEmpty @field:Valid val items: List<OrderItemRequest>,
     val note: String? = null,
 )
 

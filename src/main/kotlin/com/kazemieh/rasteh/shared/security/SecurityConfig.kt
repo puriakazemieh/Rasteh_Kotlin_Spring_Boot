@@ -79,8 +79,12 @@ class SecurityConfig(
                 it.accessDeniedHandler(deniedHandler)
             }
             .authorizeHttpRequests {
+                // مسیرهای مدیریتی هرگز صرفاً با داشتن یک توکن کاربر قابل دسترسی نیستند.
+                // annotationهای متد، محدودیت‌های دقیق‌تر هر endpoint را اعمال می‌کنند.
+                it.requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 // فروشگاه‌هایِ خودم — احرازشده (باید قبل از permitAll عمومیِ شاپ باشد)
                 it.requestMatchers(HttpMethod.GET, "/api/shops/mine").authenticated()
+                it.requestMatchers(HttpMethod.GET, "/api/payment/callback").permitAll()
                 // مرورِ عمومیِ راسته/محل/شهر و نمای فروشگاه — بدونِ احراز
                 it.requestMatchers(
                     HttpMethod.GET,

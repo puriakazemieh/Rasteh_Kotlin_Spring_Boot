@@ -39,7 +39,8 @@ class MarketplaceOrderService(
         var total = BigDecimal.ZERO
 
         for (line in req.items) {
-            val product = productRepository.findById(line.productId).orElseThrow { ProductNotPurchasableException(line.productId) }
+            if (line.quantity <= 0) throw com.kazemieh.rasteh.shared.error.InvalidQuantityException(line.quantity)
+            val product = productRepository.findByIdForUpdate(line.productId) ?: throw ProductNotPurchasableException(line.productId)
             // تک‌ونـدوری: هر کالا باید از همین فروشگاه باشد.
             if (product.shop?.id != shop.id) throw OrderVendorMismatchException()
             if (!product.active || product.price <= BigDecimal.ZERO) throw ProductNotPurchasableException(product.id)
@@ -92,9 +93,17 @@ class MarketplaceOrderService(
             ?: throw MarketplaceOrderNotFoundException(orderId)
         val isVendor = order.shop?.owner?.id == userId
         val isCustomer = order.customer?.id == userId
+        val allowed = when (order.status) {
+            OrderStatus.PENDING -> status in setOf(OrderStatus.CONFIRMED, OrderStatus.CANCELLED)
+            OrderStatus.CONFIRMED -> status in setOf(OrderStatus.PREPARING, OrderStatus.CANCELLED)
+            OrderStatus.PREPARING -> status in setOf(OrderStatus.READY, OrderStatus.CANCELLED)
+            OrderStatus.READY -> status == OrderStatus.COMPLETED
+            OrderStatus.COMPLETED, OrderStatus.CANCELLED -> false
+        }
+        if (!allowed) throw com.kazemieh.rasteh.shared.error.InvalidOrderStatusException(status.name)
         when {
             isAdmin || isVendor -> order.status = status
-            isCustomer && status == OrderStatus.CANCELLED -> order.status = OrderStatus.CANCELLED
+            isCustomer && status == OrderStatus.CANCELLED && order.status in setOf(OrderStatus.PENDING, OrderStatus.CONFIRMED) -> order.status = status
             else -> throw MarketplaceOrderNotFoundException(orderId)
         }
         return OrderMapper.toResponse(order)

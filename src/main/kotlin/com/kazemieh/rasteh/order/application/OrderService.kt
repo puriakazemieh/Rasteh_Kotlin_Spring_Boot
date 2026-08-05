@@ -44,6 +44,11 @@ class OrderService(
         val o = orderRepository.findByIdAndUserId(orderId, userId) ?: throw OrderNotFoundException(orderId)
         return OrderMapper.toDetailResponse(o, objectMapper)
     }
+
+    @Transactional
+    fun lockMyOrderForPayment(userId: Long, orderId: Long) {
+        orderRepository.findByIdAndUserIdForUpdate(orderId, userId) ?: throw OrderNotFoundException(orderId)
+    }
     
     @Transactional(readOnly = true)
     fun getOrderByIdForPayment(orderId: Long): OrderEntity {
@@ -53,6 +58,12 @@ class OrderService(
     @Transactional(readOnly = true)
     fun trackOrder(orderId: Long): OrderTrackingResponse {
         val order = orderRepository.findById(orderId).orElseThrow { OrderNotFoundException(orderId) }
+        return OrderMapper.toOrderTrackingResponse(order)
+    }
+
+    @Transactional(readOnly = true)
+    fun trackMyOrder(userId: Long, orderId: Long): OrderTrackingResponse {
+        val order = orderRepository.findByIdAndUserId(orderId, userId) ?: throw OrderNotFoundException(orderId)
         return OrderMapper.toOrderTrackingResponse(order)
     }
 

@@ -5,9 +5,14 @@ import com.kazemieh.rasteh.marketplace.persistence.entity.ShopProductEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.jpa.repository.Lock
+import jakarta.persistence.LockModeType
 import org.springframework.data.repository.query.Param
 
 interface ShopProductRepository : JpaRepository<ShopProductEntity, Long>, JpaSpecificationExecutor<ShopProductEntity> {
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select p from ShopProductEntity p where p.id = :id")
+    fun findByIdForUpdate(@Param("id") id: Long): ShopProductEntity?
     fun findAllByShopIdAndActiveTrueOrderByIdDesc(shopId: Long): List<ShopProductEntity>
     fun findAllByShopIdOrderByIdDesc(shopId: Long): List<ShopProductEntity>
 
