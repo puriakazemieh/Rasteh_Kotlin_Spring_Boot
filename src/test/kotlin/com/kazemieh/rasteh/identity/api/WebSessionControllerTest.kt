@@ -5,6 +5,8 @@ import com.kazemieh.rasteh.identity.api.dto.LoginRequest
 import com.kazemieh.rasteh.identity.api.dto.RegisterRequest
 import com.kazemieh.rasteh.identity.api.dto.UserResponse
 import com.kazemieh.rasteh.identity.application.AuthService
+import com.kazemieh.rasteh.identity.application.UserMeService
+import com.kazemieh.rasteh.shared.security.UserPrincipal
 import com.kazemieh.rasteh.shared.security.WebSessionCookieService
 import io.mockk.every
 import io.mockk.mockk
@@ -16,8 +18,9 @@ import java.time.OffsetDateTime
 
 class WebSessionControllerTest {
     private val authService = mockk<AuthService>()
+    private val userMeService = mockk<UserMeService>()
     private val cookieService = mockk<WebSessionCookieService>(relaxed = true)
-    private val controller = WebSessionController(authService, cookieService)
+    private val controller = WebSessionController(authService, userMeService, cookieService)
 
     @Test
     fun `login writes server-side session cookies and returns only user data`() {
@@ -41,5 +44,14 @@ class WebSessionControllerTest {
 
         assertThat(result).isEqualTo(user)
         verify(exactly = 1) { cookieService.writeSession(any(), "test-access", "test-refresh") }
+    }
+
+    @Test
+    fun `session returns the authenticated cookie user's data`() {
+        val principal = UserPrincipal(3, "user@example.test", "hash", "USER", true)
+        val user = UserResponse(3, "user@example.test", null, null, null, null, null, "USER", true, OffsetDateTime.now(), OffsetDateTime.now())
+        every { userMeService.getMe(3) } returns user
+
+        assertThat(controller.session(principal)).isEqualTo(user)
     }
 }

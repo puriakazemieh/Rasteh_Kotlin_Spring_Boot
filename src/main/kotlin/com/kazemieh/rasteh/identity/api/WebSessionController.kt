@@ -7,12 +7,15 @@ import com.kazemieh.rasteh.identity.api.dto.RefreshRequest
 import com.kazemieh.rasteh.identity.api.dto.RegisterRequest
 import com.kazemieh.rasteh.identity.api.dto.UserResponse
 import com.kazemieh.rasteh.identity.application.AuthService
+import com.kazemieh.rasteh.identity.application.UserMeService
+import com.kazemieh.rasteh.shared.security.UserPrincipal
 import com.kazemieh.rasteh.shared.security.WebSessionCookieService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.web.csrf.CsrfToken
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,10 +31,17 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/web/auth")
 class WebSessionController(
     private val authService: AuthService,
+    private val userMeService: UserMeService,
     private val cookieService: WebSessionCookieService,
 ) {
     @GetMapping("/csrf")
     fun csrf(token: CsrfToken): CsrfToken = token
+
+    @GetMapping("/session")
+    fun session(@AuthenticationPrincipal principal: UserPrincipal?): UserResponse {
+        val authenticated = principal ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        return userMeService.getMe(authenticated.id)
+    }
 
     @PostMapping("/login")
     fun login(@Valid @RequestBody request: LoginRequest, response: HttpServletResponse): UserResponse =
