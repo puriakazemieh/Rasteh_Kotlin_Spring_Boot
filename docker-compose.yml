@@ -16,7 +16,6 @@ services:
 
     volumes:
       - ./db/db-data:/var/lib/postgresql/data
-      - ./db/init:/docker-entrypoint-initdb.d:ro
 
     networks:
       - postgres_net

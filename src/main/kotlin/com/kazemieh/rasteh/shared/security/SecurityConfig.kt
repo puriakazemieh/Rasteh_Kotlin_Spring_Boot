@@ -1,6 +1,7 @@
 package com.kazemieh.rasteh.shared.security
 
 import com.kazemieh.rasteh.shared.security.jwt.JwtAuthFilter
+import com.kazemieh.rasteh.shared.observability.RequestCorrelationFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
 import org.springframework.context.annotation.Bean
@@ -24,6 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableMethodSecurity
 class SecurityConfig(
     private val jwtAuthFilter: JwtAuthFilter,
+    private val requestCorrelationFilter: RequestCorrelationFilter,
     private val entryPoint: RestAuthEntryPoint,
     private val deniedHandler: RestAccessDeniedHandler,
     private val webSessionProperties: WebSessionProperties,
@@ -79,6 +81,7 @@ class SecurityConfig(
                 it.accessDeniedHandler(deniedHandler)
             }
             .authorizeHttpRequests {
+                it.requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
                 it.requestMatchers("/web/auth/**").permitAll()
                 // مسیرهای مدیریتی هرگز صرفاً با داشتن یک توکن کاربر قابل دسترسی نیستند.
                 // annotationهای متد، محدودیت‌های دقیق‌تر هر endpoint را اعمال می‌کنند.
@@ -127,7 +130,8 @@ class SecurityConfig(
 
                 it.anyRequest().authenticated()
             }
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(requestCorrelationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterAfter(jwtAuthFilter, RequestCorrelationFilter::class.java)
 
         return http.build()
     }
