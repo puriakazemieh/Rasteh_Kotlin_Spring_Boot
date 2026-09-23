@@ -1,5 +1,6 @@
 package com.kazemieh.rasteh.shared.security.jwt
 
+import com.kazemieh.rasteh.shared.security.WebSessionCookieService
 import io.jsonwebtoken.JwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -15,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtAuthFilter(
     private val jwtService: JwtService,
     private val userDetailsService: UserDetailsService,
+    private val webSessionCookieService: WebSessionCookieService,
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -24,6 +26,7 @@ class JwtAuthFilter(
     ) {
         val header = request.getHeader("Authorization")
         val token = header?.takeIf { it.startsWith("Bearer ") }?.removePrefix("Bearer ")?.trim()
+            ?: webSessionCookieService.accessToken(request)
 
         if (token != null && SecurityContextHolder.getContext().authentication == null) {
             try {

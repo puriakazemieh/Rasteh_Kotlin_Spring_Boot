@@ -1,6 +1,7 @@
 package com.kazemieh.rasteh
 
 import com.kazemieh.rasteh.shared.security.jwt.JwtProperties
+import com.kazemieh.rasteh.shared.security.WebSessionProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
@@ -13,7 +14,7 @@ import org.springframework.web.client.RestTemplate
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync
-@EnableConfigurationProperties(JwtProperties::class)
+@EnableConfigurationProperties(JwtProperties::class, WebSessionProperties::class)
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 class RastehApplication {
     @Bean

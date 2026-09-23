@@ -39,5 +39,9 @@ out/
 ### Kotlin ###
 .kotlin
 
+### Local environment ###
+.env
+local.properties
+
 ### Database ###
 /db/db-data

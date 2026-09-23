@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository
+import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
@@ -24,6 +26,7 @@ class SecurityConfig(
     private val jwtAuthFilter: JwtAuthFilter,
     private val entryPoint: RestAuthEntryPoint,
     private val deniedHandler: RestAccessDeniedHandler,
+    private val webSessionProperties: WebSessionProperties,
     // منشأهای مجازِ اضافی برای CORS از پیکربندی (کاما-جدا)؛ برای محیط‌های موقتِ
     // تونل (مثلِ ورک‌فلوی serve-live) استفاده می‌شود بی‌آنکه کد تغییر کند.
     @Value("\${app.cors.origins:}")
@@ -45,13 +48,7 @@ class SecurityConfig(
         config.allowCredentials = true
 
         // دامنه‌های مجاز شما + منشأهای اضافیِ پیکربندی‌شده (APP_CORS_ORIGINS)
-        val baseOrigins = listOf(
-            "http://miaad.puriademo.ir",
-            "https://miaad.puriademo.ir",
-            "http://milad.puriademo.ir",
-            "https://milad.puriademo.ir",
-            "http://localhost:8081"
-        )
+        val baseOrigins = listOf("http://localhost:8081")
         val extraOrigins = extraCorsOrigins.split(",").map { it.trim() }.filter { it.isNotEmpty() }
         // از allowedOriginPatterns استفاده می‌کنیم چون با allowCredentials=true هم «*» و هم
         // دامنه‌های مشخص (مثلِ تونل‌های موقتِ کلودفلر) را به‌درستی می‌پذیرد؛ allowedOrigins با
@@ -71,7 +68,10 @@ class SecurityConfig(
         http
             .cors { it.configurationSource(corsConfigurationSource()) }
 
-            .csrf { it.disable() }
+            .csrf {
+                it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                it.requireCsrfProtectionMatcher(webCookieUnsafeRequestMatcher())
+            }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .headers { it.frameOptions { frame -> frame.disable() } }
             .exceptionHandling {
@@ -79,6 +79,7 @@ class SecurityConfig(
                 it.accessDeniedHandler(deniedHandler)
             }
             .authorizeHttpRequests {
+                it.requestMatchers("/web/auth/**").permitAll()
                 // مسیرهای مدیریتی هرگز صرفاً با داشتن یک توکن کاربر قابل دسترسی نیستند.
                 // annotationهای متد، محدودیت‌های دقیق‌تر هر endpoint را اعمال می‌کنند.
                 it.requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
@@ -129,5 +130,13 @@ class SecurityConfig(
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
+    }
+
+    private fun webCookieUnsafeRequestMatcher(): RequestMatcher = RequestMatcher { request ->
+        request.method !in setOf("GET", "HEAD", "OPTIONS", "TRACE") &&
+            request.cookies?.any {
+                it.name == webSessionProperties.accessCookieName ||
+                    it.name == webSessionProperties.refreshCookieName
+            } == true
     }
 }

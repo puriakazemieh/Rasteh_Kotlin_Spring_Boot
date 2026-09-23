@@ -55,7 +55,14 @@ class RefreshTokenService(
         val token = repo.findByTokenHash(sha256Hex(raw))
             ?: throw InvalidCredentialsException("Invalid refresh token")
 
-        if (token.revokedAt != null || token.expiresAt.isBefore(now)) {
+        if (token.revokedAt != null) {
+            // A revoked token presented again indicates replay. Revoke every active
+            // refresh token for that owner before rejecting the request.
+            token.user?.let { repo.revokeAllActiveForUser(it.id, now) }
+            throw InvalidCredentialsException("Invalid refresh token")
+        }
+
+        if (token.expiresAt.isBefore(now)) {
             throw InvalidCredentialsException("Invalid refresh token")
         }
 
