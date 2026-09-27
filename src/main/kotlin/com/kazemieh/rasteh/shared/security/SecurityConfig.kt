@@ -2,6 +2,7 @@ package com.kazemieh.rasteh.shared.security
 
 import com.kazemieh.rasteh.shared.security.jwt.JwtAuthFilter
 import com.kazemieh.rasteh.shared.observability.RequestCorrelationFilter
+import com.kazemieh.rasteh.shared.observability.LegacyApiDeprecationFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
 import org.springframework.context.annotation.Bean
@@ -26,6 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private val jwtAuthFilter: JwtAuthFilter,
     private val requestCorrelationFilter: RequestCorrelationFilter,
+    private val legacyApiDeprecationFilter: LegacyApiDeprecationFilter,
     private val entryPoint: RestAuthEntryPoint,
     private val deniedHandler: RestAccessDeniedHandler,
     private val webSessionProperties: WebSessionProperties,
@@ -106,6 +108,8 @@ class SecurityConfig(
                     "/api/live/**"
                 ).permitAll()
                 it.requestMatchers(
+                    HttpMethod.GET,
+                    "/api/v1/offers/**",
                     "/api/products/**",
                     "/api/catalog/products/**",
                     "/api/categories/**",
@@ -131,6 +135,7 @@ class SecurityConfig(
                 it.anyRequest().authenticated()
             }
             .addFilterBefore(requestCorrelationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterAfter(legacyApiDeprecationFilter, RequestCorrelationFilter::class.java)
             .addFilterAfter(jwtAuthFilter, RequestCorrelationFilter::class.java)
 
         return http.build()

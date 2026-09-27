@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.jpa.repository.Lock
 import jakarta.persistence.LockModeType
 import org.springframework.data.repository.query.Param
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 interface ShopProductRepository : JpaRepository<ShopProductEntity, Long>, JpaSpecificationExecutor<ShopProductEntity> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -15,6 +17,7 @@ interface ShopProductRepository : JpaRepository<ShopProductEntity, Long>, JpaSpe
     fun findByIdForUpdate(@Param("id") id: Long): ShopProductEntity?
     fun findAllByShopIdAndActiveTrueOrderByIdDesc(shopId: Long): List<ShopProductEntity>
     fun findAllByShopIdOrderByIdDesc(shopId: Long): List<ShopProductEntity>
+    fun findAllByActiveTrueOrderByIdAsc(pageable: Pageable): Page<ShopProductEntity>
 
     /** «دیدن در فروشگاه‌های دیگر» — کالاهایِ هم‌نامِ فعال در فروشگاه‌های تأییدشدهٔ دیگر (ارزان‌ترین اول). */
     @Query(
