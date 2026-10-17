@@ -15,35 +15,33 @@ import org.springframework.web.bind.annotation.*
 class VendorProductController(
     private val productService: ShopProductService,
 ) {
-    private fun UserPrincipal.isAdmin(): Boolean =
-        authorities.any { it.authority == "ROLE_ADMIN" || it.authority == "ROLE_SUPERADMIN" }
 
     /** کالاهایِ فروشگاهِ خودم (شاملِ غیرفعال) — manageListings. */
     @GetMapping("/shop/{shopId}")
     fun listMine(
         @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable shopId: Long,
-    ) = productService.listVendorByShop(principal.id, principal.isAdmin(), shopId)
+    ) = productService.listVendorByShop(principal.id, false, shopId)
 
     @PostMapping
     fun create(
         @AuthenticationPrincipal principal: UserPrincipal,
         @Valid @RequestBody req: CreateProductRequest,
-    ) = productService.create(principal.id, principal.isAdmin(), req)
+    ) = productService.create(principal.id, false, req)
 
     @PutMapping("/{id}")
     fun update(
         @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long,
         @RequestBody req: UpdateProductRequest,
-    ) = productService.update(principal.id, principal.isAdmin(), id, req)
+    ) = productService.update(principal.id, false, id, req)
 
     @DeleteMapping("/{id}")
     fun delete(
         @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long,
     ): ResponseEntity<Void> {
-        productService.delete(principal.id, principal.isAdmin(), id)
+        productService.delete(principal.id, false, id)
         return ResponseEntity.noContent().build()
     }
 }

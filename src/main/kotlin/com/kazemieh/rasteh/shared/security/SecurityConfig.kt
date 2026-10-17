@@ -88,6 +88,11 @@ class SecurityConfig(
                 // مسیرهای مدیریتی هرگز صرفاً با داشتن یک توکن کاربر قابل دسترسی نیستند.
                 // annotationهای متد، محدودیت‌های دقیق‌تر هر endpoint را اعمال می‌کنند.
                 it.requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                // Mutation namespaces are explicit allow-lists. Resource checks in their services
+                // decide the concrete shop/assignment; unauthorised deep links expose no payload.
+                it.requestMatchers("/api/agent/**").authenticated()
+                it.requestMatchers(HttpMethod.POST, "/api/shops/*/memberships/**").authenticated()
+                it.requestMatchers(HttpMethod.DELETE, "/api/shops/*/memberships/**").authenticated()
                 // فروشگاه‌هایِ خودم — احرازشده (باید قبل از permitAll عمومیِ شاپ باشد)
                 it.requestMatchers(HttpMethod.GET, "/api/shops/mine").authenticated()
                 it.requestMatchers(HttpMethod.GET, "/api/payment/callback").permitAll()

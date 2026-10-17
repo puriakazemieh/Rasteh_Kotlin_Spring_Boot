@@ -12,6 +12,8 @@ import com.kazemieh.rasteh.marketplace.persistence.entity.ShopProductEntity
 import com.kazemieh.rasteh.shared.error.ProductNotFoundException
 import com.kazemieh.rasteh.shared.error.ShopAccessDeniedException
 import com.kazemieh.rasteh.shared.error.ShopNotFoundException
+import com.kazemieh.rasteh.identity.authorization.AuthorizationService
+import com.kazemieh.rasteh.identity.authorization.Capability
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 class ShopProductService(
     private val productRepository: ShopProductRepository,
     private val shopRepository: ShopRepository,
+    private val authorization: AuthorizationService,
 ) {
 
     // ===== عمومی (خواننده) =====
@@ -106,7 +109,7 @@ class ShopProductService(
     }
 
     private fun requireOwnership(shop: ShopEntity, userId: Long, isAdmin: Boolean) {
-        if (isAdmin) return
-        if (shop.owner?.id != userId) throw ShopAccessDeniedException(shop.id)
+        // Legacy boolean is retained only for binary compatibility; decisions are resource-aware.
+        if (!authorization.can(userId, Capability.SHOP_CATALOG_WRITE, shop.id)) throw ShopAccessDeniedException(shop.id)
     }
 }

@@ -55,7 +55,7 @@ class FlywayMigrationTest @Autowired constructor(
     fun `an empty PostgreSQL database reaches the complete local migration version`() {
         val migrations = flyway.info().applied().mapNotNull { it.version?.version }
 
-        assertThat(migrations).containsExactly("0", "1", "2", "3", "4", "5")
+        assertThat(migrations).containsExactly("0", "1", "2", "3", "4", "5", "6", "7")
     }
 
     @Test
@@ -139,7 +139,7 @@ class FlywayMigrationTest @Autowired constructor(
             .also { it.migrate() }
 
         assertThat(migrated.info().applied().mapNotNull { it.version?.version })
-            .containsExactly("0", "1", "2", "3", "4", "5")
+            .containsExactly("0", "1", "2", "3", "4", "5", "6", "7")
     }
 
     private fun legacyDatabaseUrl(): String =
