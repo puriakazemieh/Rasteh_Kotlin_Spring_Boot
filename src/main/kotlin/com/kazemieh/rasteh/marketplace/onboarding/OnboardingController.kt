@@ -9,6 +9,7 @@ import java.util.UUID
  @PostMapping fun draft(@AuthenticationPrincipal p:UserPrincipal,@RequestBody r:ApplicationRequest)=service.draft(p.id,r)
  @PostMapping("/{id}/consent") fun consent(@AuthenticationPrincipal p:UserPrincipal,@PathVariable id:UUID)=service.consent(p.id,id)
  @PostMapping("/{id}/submit") fun submit(@AuthenticationPrincipal p:UserPrincipal,@PathVariable id:UUID)=service.submit(p.id,id)
+ @PostMapping("/{id}/appeal") fun appeal(@AuthenticationPrincipal p:UserPrincipal,@PathVariable id:UUID,@RequestBody body:Map<String,String>)=service.appeal(p.id,id,body["text"].orEmpty())
  @PostMapping("/{id}/evidence") fun evidence(@AuthenticationPrincipal p:UserPrincipal,@PathVariable id:UUID,@RequestBody r:EvidenceRequest)=service.addEvidence(p.id,id,r)
  @GetMapping("/{id}/evidence") fun evidence(@AuthenticationPrincipal p:UserPrincipal,@PathVariable id:UUID)=service.evidenceFor(p.id,id)
  @PostMapping("/{id}/claim") fun claim(@AuthenticationPrincipal p:UserPrincipal,@PathVariable id:UUID)=service.startClaim(p.id,id)
