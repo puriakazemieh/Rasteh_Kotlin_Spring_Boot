@@ -110,6 +110,7 @@ class ShopProductService(
 
     private fun requireOwnership(shop: ShopEntity, userId: Long, isAdmin: Boolean) {
         // Legacy boolean is retained only for binary compatibility; decisions are resource-aware.
+        if (shop.status != ShopStatus.APPROVED) throw ShopAccessDeniedException(shop.id)
         if (!authorization.can(userId, Capability.SHOP_CATALOG_WRITE, shop.id)) throw ShopAccessDeniedException(shop.id)
     }
 }

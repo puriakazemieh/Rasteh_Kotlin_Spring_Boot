@@ -89,6 +89,10 @@ class MarketplaceOrderService(
     @Transactional
     fun updateStatus(userId: Long, isAdmin: Boolean, orderId: Long, statusRaw: String): OrderResponse {
         val order = orderRepository.findById(orderId).orElseThrow { MarketplaceOrderNotFoundException(orderId) }
+        // A suspended/non-active shop may not perform fulfilment mutations. Customer cancellation remains available.
+        if (order.shop?.status != ShopStatus.APPROVED && order.customer?.id != userId) {
+            throw MarketplaceOrderNotFoundException(orderId)
+        }
         val status = runCatching { OrderStatus.valueOf(statusRaw) }.getOrNull()
             ?: throw MarketplaceOrderNotFoundException(orderId)
         val isVendor = order.shop?.owner?.id == userId
