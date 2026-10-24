@@ -80,6 +80,14 @@ class ShopOfferEntity(
     @UpdateTimestamp @Column(name = "updated_at", nullable = false) var updatedAt: OffsetDateTime? = null,
 )
 
+@Entity @Table(name = "inventory_ledger")
+class InventoryLedgerEntity(@Id var id: UUID = UUID.randomUUID(), @Column(name="offer_id") var offerId: UUID = UUID.randomUUID(),
+    @Column(name="delta_on_hand") var deltaOnHand: Int = 0, @Column(name="delta_reserved") var deltaReserved: Int = 0,
+    var reason: String = "", @Column(name="idempotency_key") var idempotencyKey: String = "", @Column(name="actor_user_id") var actorUserId: Long? = null)
+@Entity @Table(name = "offer_reservations")
+class OfferReservationEntity(@Id var id: UUID = UUID.randomUUID(), @Column(name="offer_id") var offerId: UUID = UUID.randomUUID(),
+    var quantity: Int = 0, var status: String = "ACTIVE", @Column(name="expires_at") var expiresAt: OffsetDateTime = OffsetDateTime.now(), @Column(name="idempotency_key") var idempotencyKey: String = "")
+
 enum class LegacyCrosswalkStatus { PENDING, APPROVED, REJECTED }
 
 @Entity

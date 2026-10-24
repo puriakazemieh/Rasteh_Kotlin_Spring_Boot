@@ -24,9 +24,10 @@ data class CanonicalOfferResponse(
     val productId: String,
     val shopLocationId: String,
     val title: String,
-    val price: CanonicalMoney,
+    val price: CanonicalMoney?,
     val saleMode: SaleMode,
     val availableQuantity: Int,
+    val stale: Boolean = false,
 )
 
 object CanonicalOfferMapper {
@@ -36,7 +37,7 @@ object CanonicalOfferMapper {
             productId = "product:${view.productId}",
             shopLocationId = "shop-location:${view.shopLocationId}",
             title = view.title,
-            price = CanonicalMoney(view.priceMinorUnits),
+            price = if (view.saleMode == SaleMode.SHOWCASE) null else CanonicalMoney(view.priceMinorUnits),
             saleMode = view.saleMode,
             availableQuantity = (view.onHand - view.reserved).coerceAtLeast(0),
         )

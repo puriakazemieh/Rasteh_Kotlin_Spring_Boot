@@ -7,6 +7,8 @@ import com.kazemieh.rasteh.canonical.persistence.entity.LegacyProductCrosswalkEn
 import com.kazemieh.rasteh.canonical.persistence.entity.MerchantOrganizationEntity
 import com.kazemieh.rasteh.canonical.persistence.entity.ShopLocationEntity
 import com.kazemieh.rasteh.canonical.persistence.entity.ShopOfferEntity
+import com.kazemieh.rasteh.canonical.persistence.entity.InventoryLedgerEntity
+import com.kazemieh.rasteh.canonical.persistence.entity.OfferReservationEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -30,3 +32,5 @@ interface ShopOfferRepository : JpaRepository<ShopOfferEntity, UUID> {
     fun findAllByActiveTrue(pageable: Pageable): Page<ShopOfferEntity>
     @Lock(LockModeType.PESSIMISTIC_WRITE) fun findLockedById(id: UUID): ShopOfferEntity?
 }
+interface InventoryLedgerRepository : JpaRepository<InventoryLedgerEntity, UUID> { fun findByOfferIdAndIdempotencyKey(offerId: UUID, idempotencyKey: String): InventoryLedgerEntity? }
+interface OfferReservationRepository : JpaRepository<OfferReservationEntity, UUID> { fun findByIdempotencyKey(idempotencyKey: String): OfferReservationEntity?; fun findAllByStatusAndExpiresAtBefore(status: String, expiresAt: java.time.OffsetDateTime): List<OfferReservationEntity> }
