@@ -85,7 +85,7 @@ class CanonicalOfferReadService(
                 productId = product.id,
                 shopLocationId = offer.shopLocationId,
                 title = product.title,
-                priceMinorUnits = offer.priceMinorUnits,
+                priceMinorUnits = offer.priceMinorUnits ?: 0L,
                 saleMode = offer.saleMode,
                 onHand = offer.onHand,
                 reserved = offer.reserved,

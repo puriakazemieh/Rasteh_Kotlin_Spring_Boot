@@ -10,6 +10,8 @@ import com.kazemieh.rasteh.canonical.persistence.entity.ShopOfferEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Lock
+import jakarta.persistence.LockModeType
 import java.util.UUID
 
 interface CanonicalProductRepository : JpaRepository<CanonicalProductEntity, UUID>
@@ -26,4 +28,5 @@ interface LegacyProductCrosswalkRepository : JpaRepository<LegacyProductCrosswal
 
 interface ShopOfferRepository : JpaRepository<ShopOfferEntity, UUID> {
     fun findAllByActiveTrue(pageable: Pageable): Page<ShopOfferEntity>
+    @Lock(LockModeType.PESSIMISTIC_WRITE) fun findLockedById(id: UUID): ShopOfferEntity?
 }
