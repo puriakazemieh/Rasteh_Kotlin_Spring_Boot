@@ -6,8 +6,10 @@ import com.kazemieh.rasteh.marketplace.application.ShopProductService
 import com.kazemieh.rasteh.shared.security.UserPrincipal
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 /** مدیریتِ کالاها توسطِ ونـدور (مالکِ فروشگاه) یا ادمین. */
 @RestController
@@ -27,21 +29,24 @@ class VendorProductController(
     fun create(
         @AuthenticationPrincipal principal: UserPrincipal,
         @Valid @RequestBody req: CreateProductRequest,
-    ) = productService.create(principal.id, false, req)
+    ): Nothing = retired()
 
     @PutMapping("/{id}")
     fun update(
         @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long,
         @RequestBody req: UpdateProductRequest,
-    ) = productService.update(principal.id, false, id, req)
+    ): Nothing = retired()
 
     @DeleteMapping("/{id}")
     fun delete(
         @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long,
-    ): ResponseEntity<Void> {
-        productService.delete(principal.id, false, id)
-        return ResponseEntity.noContent().build()
-    }
+    ): Nothing = retired()
+
+    /** Phase 7 keeps legacy products readable only while clients migrate to canonical offers. */
+    private fun retired(): Nothing = throw ResponseStatusException(
+        HttpStatus.GONE,
+        "Legacy product writes are retired; use /api/v1/offers",
+    )
 }
