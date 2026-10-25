@@ -97,6 +97,15 @@ class OfferMediaEntity(
     var position: Int = 0,
 )
 
+@Entity @Table(name = "catalog_events")
+class CatalogEventEntity(
+    @Id var id: UUID = UUID.randomUUID(),
+    @Column(name = "event_type") var eventType: String = "",
+    @Column(name = "offer_id") var offerId: UUID? = null,
+    @Column(name = "payload_json", columnDefinition = "jsonb") var payloadJson: String = "{}",
+    @CreationTimestamp @Column(name = "created_at", updatable = false) var createdAt: OffsetDateTime? = null,
+)
+
 enum class CatalogMergeStatus { PENDING, APPROVED, REJECTED }
 
 @Entity @Table(name = "catalog_merge_queue")
