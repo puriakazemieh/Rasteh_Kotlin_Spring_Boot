@@ -1,23 +1,25 @@
 package com.kazemieh.rasteh.marketplace.api
 
-import com.kazemieh.rasteh.marketplace.api.dto.CreateShopRequest
 import com.kazemieh.rasteh.marketplace.application.ShopService
 import com.kazemieh.rasteh.shared.security.UserPrincipal
-import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/shops")
 class ShopController(
     private val shopService: ShopService,
 ) {
-    /** ثبتِ درخواستِ فروشگاه (becomeVendor) — کاربرِ احرازشده. */
+    /**
+     * Retired write path. Shop activation must originate in the application/claim
+     * pipeline; otherwise a pending legacy row could bypass consent and review.
+     */
     @PostMapping
     fun register(
         @AuthenticationPrincipal principal: UserPrincipal,
-        @Valid @RequestBody req: CreateShopRequest,
-    ) = shopService.register(principal.id, req)
+    ): Nothing = throw ResponseStatusException(HttpStatus.GONE, "Use /api/shop-applications")
 
     /** فروشگاه‌هایِ خودم (پنلِ ونـدور). */
     @GetMapping("/mine")
