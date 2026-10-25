@@ -88,6 +88,19 @@ class InventoryLedgerEntity(@Id var id: UUID = UUID.randomUUID(), @Column(name="
 class OfferReservationEntity(@Id var id: UUID = UUID.randomUUID(), @Column(name="offer_id") var offerId: UUID = UUID.randomUUID(),
     var quantity: Int = 0, var status: String = "ACTIVE", @Column(name="expires_at") var expiresAt: OffsetDateTime = OffsetDateTime.now(), @Column(name="idempotency_key") var idempotencyKey: String = "")
 
+enum class CatalogMergeStatus { PENDING, APPROVED, REJECTED }
+
+@Entity @Table(name = "catalog_merge_queue")
+class CatalogMergeQueueEntity(
+    @Id var id: UUID = UUID.randomUUID(),
+    @Column(name = "source_product_id") var sourceProductId: UUID = UUID.randomUUID(),
+    @Column(name = "target_product_id") var targetProductId: UUID = UUID.randomUUID(),
+    @Enumerated(EnumType.STRING) @Column(nullable = false) var status: CatalogMergeStatus = CatalogMergeStatus.PENDING,
+    @Column(name = "created_by_user_id") var createdByUserId: Long? = null,
+    @Column(name = "reviewed_by_user_id") var reviewedByUserId: Long? = null,
+    @CreationTimestamp @Column(name = "created_at", updatable = false) var createdAt: OffsetDateTime? = null,
+)
+
 enum class LegacyCrosswalkStatus { PENDING, APPROVED, REJECTED }
 
 @Entity
