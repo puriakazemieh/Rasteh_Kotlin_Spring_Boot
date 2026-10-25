@@ -88,6 +88,15 @@ class InventoryLedgerEntity(@Id var id: UUID = UUID.randomUUID(), @Column(name="
 class OfferReservationEntity(@Id var id: UUID = UUID.randomUUID(), @Column(name="offer_id") var offerId: UUID = UUID.randomUUID(),
     var quantity: Int = 0, var status: String = "ACTIVE", @Column(name="expires_at") var expiresAt: OffsetDateTime = OffsetDateTime.now(), @Column(name="idempotency_key") var idempotencyKey: String = "")
 
+@Entity @Table(name = "offer_media")
+class OfferMediaEntity(
+    @Id var id: UUID = UUID.randomUUID(),
+    @Column(name = "offer_id") var offerId: UUID = UUID.randomUUID(),
+    @Column(name = "object_key") var objectKey: String = "",
+    @Column(name = "media_type") var mediaType: String = "image/jpeg",
+    var position: Int = 0,
+)
+
 enum class CatalogMergeStatus { PENDING, APPROVED, REJECTED }
 
 @Entity @Table(name = "catalog_merge_queue")

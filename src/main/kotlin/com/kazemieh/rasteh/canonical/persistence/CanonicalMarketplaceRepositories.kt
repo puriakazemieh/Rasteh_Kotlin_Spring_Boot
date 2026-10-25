@@ -11,6 +11,7 @@ import com.kazemieh.rasteh.canonical.persistence.entity.InventoryLedgerEntity
 import com.kazemieh.rasteh.canonical.persistence.entity.OfferReservationEntity
 import com.kazemieh.rasteh.canonical.persistence.entity.CatalogMergeQueueEntity
 import com.kazemieh.rasteh.canonical.persistence.entity.CatalogMergeStatus
+import com.kazemieh.rasteh.canonical.persistence.entity.OfferMediaEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -37,3 +38,4 @@ interface ShopOfferRepository : JpaRepository<ShopOfferEntity, UUID> {
 interface InventoryLedgerRepository : JpaRepository<InventoryLedgerEntity, UUID> { fun findByOfferIdAndIdempotencyKey(offerId: UUID, idempotencyKey: String): InventoryLedgerEntity? }
 interface OfferReservationRepository : JpaRepository<OfferReservationEntity, UUID> { fun findByIdempotencyKey(idempotencyKey: String): OfferReservationEntity?; fun findAllByStatusAndExpiresAtBefore(status: String, expiresAt: java.time.OffsetDateTime): List<OfferReservationEntity> }
 interface CatalogMergeQueueRepository : JpaRepository<CatalogMergeQueueEntity, UUID> { fun findAllByStatusOrderByCreatedAtAsc(status: CatalogMergeStatus): List<CatalogMergeQueueEntity> }
+interface OfferMediaRepository : JpaRepository<OfferMediaEntity, UUID> { fun findAllByOfferIdOrderByPositionAsc(offerId: UUID): List<OfferMediaEntity> }
