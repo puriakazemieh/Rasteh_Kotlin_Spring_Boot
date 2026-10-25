@@ -17,6 +17,8 @@ data class CanonicalOfferView(
     val saleMode: SaleMode,
     val onHand: Int,
     val reserved: Int,
+    val stale: Boolean = false,
+    val lastConfirmedAt: java.time.OffsetDateTime? = null,
 )
 
 data class CanonicalOfferResponse(
@@ -28,6 +30,7 @@ data class CanonicalOfferResponse(
     val saleMode: SaleMode,
     val availableQuantity: Int,
     val stale: Boolean = false,
+    val lastConfirmedAt: java.time.OffsetDateTime? = null,
 )
 
 object CanonicalOfferMapper {
@@ -40,6 +43,8 @@ object CanonicalOfferMapper {
             price = if (view.saleMode == SaleMode.SHOWCASE) null else CanonicalMoney(view.priceMinorUnits),
             saleMode = view.saleMode,
             availableQuantity = (view.onHand - view.reserved).coerceAtLeast(0),
+            stale = view.stale,
+            lastConfirmedAt = view.lastConfirmedAt,
         )
 
     fun fromLegacy(

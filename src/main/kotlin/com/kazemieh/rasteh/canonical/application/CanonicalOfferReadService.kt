@@ -89,6 +89,8 @@ class CanonicalOfferReadService(
                 saleMode = offer.saleMode,
                 onHand = offer.onHand,
                 reserved = offer.reserved,
+                stale = offer.stale,
+                lastConfirmedAt = offer.lastConfirmedAt,
             ),
         )
     }
